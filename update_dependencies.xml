@@ -1,0 +1,53 @@
+<project name="KNI update dependencies" default="update">
+    <property name="download" location="dependencies/download"/>
+
+    <target name="update">
+        <mkdir dir="${download}"/>
+
+        <!-- JUnit -->
+
+        <get src="http://repository.jetbrains.com/remote-repos/junit/junit/4.10/junit-4.10.jar"
+             dest="dependencies/junit-4.10.jar"
+             usetimestamp="true"/>
+
+        <!-- Protocol Buffers -->
+
+        <get src="https://protobuf.googlecode.com/svn/rc/protobuf-2.6.0.zip"
+             dest="${download}/protobuf-2.6.0.zip"
+             usetimestamp="true"/>
+
+        <unzip src="${download}/protobuf-2.6.0.zip" dest="dependencies">
+            <patternset>
+                <include name="protobuf-2.6.0/src/google/protobuf/**/*.h"/>
+            </patternset>
+            <cutdirsmapper dirs="2"/>
+        </unzip>
+
+        <get src="http://repository.jetbrains.com/remote-repos/com/google/protobuf/protobuf-java/2.6.0/protobuf-java-2.6.0.jar"
+             dest="dependencies/protobuf-2.6.0.jar"
+             usetimestamp="true"/>
+
+        <get src="http://repository.jetbrains.com/remote-repos/com/google/protobuf/protobuf-java/2.6.0/protobuf-java-2.6.0-sources.jar"
+             dest="dependencies/protobuf-2.6.0-sources.jar"
+             usetimestamp="true"/>
+
+        <!-- Clang -->
+
+        <get src="http://llvm.org/releases/3.5.0/cfe-3.5.0.src.tar.xz"
+             dest="${download}/cfe-3.5.0.src.tar.xz"
+             usetimestamp="true"/>
+
+        <!-- TODO: avoid using Homebrew's xz -->
+        <exec executable="/usr/local/bin/xz">
+            <arg line="--keep --decompress --force ${download}/cfe-3.5.0.src.tar.xz"/>
+        </exec>
+
+        <untar src="${download}/cfe-3.5.0.src.tar" dest="dependencies">
+            <patternset>
+                <include name="cfe-3.5.0.src/include/clang-c/**/*"/>
+            </patternset>
+            <cutdirsmapper dirs="2"/>
+        </untar>
+        <delete file="${download}/cfe-3.5.0.src.tar"/>
+    </target>
+</project>
