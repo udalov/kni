@@ -18,4 +18,5 @@ JAVA_HOME=`/usr/libexec/java_home`
 JAVA_INCLUDE="-I$JAVA_HOME/include -I$JAVA_HOME/include/darwin"
 
 mkdir $CWD/out
-c++ -O2 -Wall -Wl,-no_compact_unwind $JAVA_INCLUDE -Iffi -L../ffi -lffi -lobjc -dynamiclib $CWD/kniobjc.cc -o $CWD/out/libKNIObjCRuntime.dylib
+# TODO: statically link libffi instead of using path to library here
+c++ -O2 -Wall -Wl,-no_compact_unwind $JAVA_INCLUDE -I$PROJECT/dependencies/libffi -L$PROJECT/dependencies/libffi -lffi -lobjc -dynamiclib $CWD/kniobjc.cc -o $CWD/out/libKNIObjCRuntime.dylib

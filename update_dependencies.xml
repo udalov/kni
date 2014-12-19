@@ -1,13 +1,71 @@
-<project name="KNI update dependencies" default="update">
-    <property name="download" location="dependencies/download"/>
+<project name="KNI update dependencies" default="all">
+    <property name="lib" location="${basedir}/dependencies"/>
+    <property name="download" location="${lib}/download"/>
+
+    <target name="init">
+        <mkdir dir="${lib}"/>
+        <mkdir dir="${download}"/>
+    </target>
+
+    <target name="libffi">
+        <!-- TODO: update to newer libffi -->
+
+        <get src="https://codeload.github.com/atgreen/libffi/zip/v3.0.13"
+             dest="${download}/libffi-3.0.13.zip"
+             usetimestamp="true"/>
+
+        <tempfile property="ffi.src" destdir="${java.io.tmpdir}" prefix="kni-libffi-build"/>
+
+        <!-- Invoking native unzip instead of Ant task because the latter doesn't set correct file permissions -->
+        <!-- TODO: check availability of external utilities (unzip, libtool, ...) beforehand -->
+        <exec executable="/usr/bin/unzip" output="/dev/null" failonerror="true">
+            <arg value="${download}/libffi-3.0.13.zip"/>
+            <arg value="-d"/>
+            <arg value="${ffi.src}"/>
+        </exec>
+
+        <move todir="${ffi.src}">
+            <fileset dir="${ffi.src}/libffi-3.0.13"/>
+        </move>
+
+        <exec dir="${ffi.src}" executable="/bin/sh" failonerror="true">
+            <env key="CC" value="cc"/>
+            <env key="CFLAGS" value="-O2 -arch i386 -arch x86_64"/>
+            <env key="LDFLAGS" value="-arch i386 -arch x86_64"/>
+            <arg value="configure"/>
+            <arg value="--enable-debug"/>
+            <arg value="--disable-dependency-tracking"/>
+            <arg value="--enable-static"/>
+            <arg value="--disable-shared"/>
+            <arg value="--with-pic=yes"/>
+        </exec>
+
+        <exec dir="${ffi.src}" executable="/usr/bin/make" failonerror="true"/>
+
+        <pathconvert property="ffi.target">
+            <dirset dir="${ffi.src}" includes="x86_64-*"/>
+        </pathconvert>
+
+        <delete dir="${lib}/libffi"/>
+        <mkdir dir="${lib}/libffi"/>
+
+        <exec dir="${ffi.target}/.libs" executable="/usr/bin/libtool" failonerror="true">
+            <arg value="-static"/>
+            <arg value="-o"/>
+            <arg value="${lib}/libffi/libffi.dylib"/>
+            <arg value="libffi.a"/>
+        </exec>
+
+        <copy todir="${lib}/libffi">
+            <fileset dir="${ffi.target}/include" includes="**/*.h"/>
+        </copy>
+    </target>
 
     <target name="update">
-        <mkdir dir="${download}"/>
-
         <!-- JUnit -->
 
         <get src="http://repository.jetbrains.com/remote-repos/junit/junit/4.10/junit-4.10.jar"
-             dest="dependencies/junit-4.10.jar"
+             dest="${lib}/junit-4.10.jar"
              usetimestamp="true"/>
 
         <!-- Protocol Buffers -->
@@ -16,7 +74,8 @@
              dest="${download}/protobuf-2.6.0.zip"
              usetimestamp="true"/>
 
-        <unzip src="${download}/protobuf-2.6.0.zip" dest="dependencies">
+        <delete dir="${lib}/google"/>
+        <unzip src="${download}/protobuf-2.6.0.zip" dest="${lib}">
             <patternset>
                 <include name="protobuf-2.6.0/src/google/protobuf/**/*.h"/>
             </patternset>
@@ -24,11 +83,11 @@
         </unzip>
 
         <get src="http://repository.jetbrains.com/remote-repos/com/google/protobuf/protobuf-java/2.6.0/protobuf-java-2.6.0.jar"
-             dest="dependencies/protobuf-2.6.0.jar"
+             dest="${lib}/protobuf-2.6.0.jar"
              usetimestamp="true"/>
 
         <get src="http://repository.jetbrains.com/remote-repos/com/google/protobuf/protobuf-java/2.6.0/protobuf-java-2.6.0-sources.jar"
-             dest="dependencies/protobuf-2.6.0-sources.jar"
+             dest="${lib}/protobuf-2.6.0-sources.jar"
              usetimestamp="true"/>
 
         <!-- Clang -->
@@ -38,11 +97,12 @@
              usetimestamp="true"/>
 
         <!-- TODO: avoid using Homebrew's xz -->
-        <exec executable="/usr/local/bin/xz">
+        <exec executable="/usr/local/bin/xz" failonerror="true">
             <arg line="--keep --decompress --force ${download}/cfe-3.5.0.src.tar.xz"/>
         </exec>
 
-        <untar src="${download}/cfe-3.5.0.src.tar" dest="dependencies">
+        <delete dir="${lib}/clang-c"/>
+        <untar src="${download}/cfe-3.5.0.src.tar" dest="${lib}">
             <patternset>
                 <include name="cfe-3.5.0.src/include/clang-c/**/*"/>
             </patternset>
@@ -50,4 +110,6 @@
         </untar>
         <delete file="${download}/cfe-3.5.0.src.tar"/>
     </target>
+
+    <target name="all" depends="init,libffi,update"/>
 </project>
