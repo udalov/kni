@@ -5,6 +5,7 @@
       <module fileurl="file://$PROJECT_DIR$/indexer/indexer.iml" filepath="$PROJECT_DIR$/indexer/indexer.iml" />
       <module fileurl="file://$PROJECT_DIR$/kni.iml" filepath="$PROJECT_DIR$/kni.iml" />
       <module fileurl="file://$PROJECT_DIR$/stub-generator/stub-generator.iml" filepath="$PROJECT_DIR$/stub-generator/stub-generator.iml" />
+      <module fileurl="file://$PROJECT_DIR$/tests/tests.iml" filepath="$PROJECT_DIR$/tests/tests.iml" />
     </modules>
   </component>
 </project>
