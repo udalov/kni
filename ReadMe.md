@@ -7,7 +7,7 @@ This is **work in progress** and currently only basic Objective-C interoperabili
 
 You should have Xcode Command Line Tools installed.
 
-Also, unfortunately, at the moment you need to install system-wide LLVM (preferably 3.5.0) via [Homebrew](http://brew.sh)
+Also, unfortunately, at the moment you need to install system-wide LLVM (3.5.0) via [Homebrew](http://brew.sh)
 (this is likely to improve in the future):
 
 ```sh
@@ -38,6 +38,14 @@ $ ant
 
 or "Build" run configuration to build artifacts needed for the tests.
 Each change to modules "indexer" or "runtime-objc" then needs to be followed by `ant`.
+
+Every time you change .proto or signatures of native methods in Java you need to manually invoke
+
+```sh
+$ ant gen
+```
+
+If you forget to do so and run `ant` as usual, the build will fail, prompting you to invoke `ant gen` first.
 
 ## Running tests
 
