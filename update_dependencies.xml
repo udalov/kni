@@ -20,7 +20,7 @@
         <mkdir dir="${ffi.src}"/>
 
         <!-- Invoking native unzip instead of Ant task because the latter doesn't set correct file permissions -->
-        <!-- TODO: check availability of external utilities (unzip, libtool, ...) beforehand -->
+        <!-- TODO: check availability of external utilities (unzip, tar, libtool, ...) beforehand -->
         <exec executable="/usr/bin/unzip" output="/dev/null" failonerror="true">
             <arg value="${download}/libffi-3.0.13.zip"/>
             <arg value="-d"/>
@@ -114,19 +114,13 @@
              dest="${download}/cfe-3.5.0.src.tar.xz"
              usetimestamp="true"/>
 
-        <!-- TODO: avoid using Homebrew's xz -->
-        <exec executable="/usr/local/bin/xz" failonerror="true">
-            <arg line="--keep --decompress --force ${download}/cfe-3.5.0.src.tar.xz"/>
+        <!-- Ant 'untar' task doesn't support 'xz' compression format -->
+        <exec dir="${download}" executable="/usr/bin/tar" failonerror="true">
+            <arg line="xf cfe-3.5.0.src.tar.xz --strip-components 2 cfe-3.5.0.src/include/clang-c"/>
         </exec>
 
         <delete dir="${lib}/clang-c"/>
-        <untar src="${download}/cfe-3.5.0.src.tar" dest="${lib}">
-            <patternset>
-                <include name="cfe-3.5.0.src/include/clang-c/**/*.h"/>
-            </patternset>
-            <cutdirsmapper dirs="2"/>
-        </untar>
-        <delete file="${download}/cfe-3.5.0.src.tar"/>
+        <move file="${download}/clang-c" todir="${lib}"/>
     </target>
 
     <target name="all" depends="init,libffi,update"/>
