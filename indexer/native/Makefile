@@ -43,7 +43,7 @@ LDFLAGS=-Wl,-rpath,/usr/local/Cellar/llvm/3.5.0/lib -L/usr/local/Cellar/llvm/3.5
 
 SRC_FILES=$(wildcard *.cc)
 OBJ_FILES=$(patsubst %.cc,$(OUT)/%.o,$(SRC_FILES))
-OUT=out
+OUT=../../dist/build/indexer/native
 DYLIB=$(OUT)/lib$(PROJECT_NAME).dylib
 
 TEST_FILES=$(wildcard tests/*.cc)
@@ -70,7 +70,7 @@ dylib: $(OBJ_FILES)
 
 # TODO: do not depend on out/ here
 javah:
-	@javah -classpath ../../out/production/indexer -o Indexer.h org.jetbrains.kni.indexer.IndexerNative
+	@javah -verbose -classpath ../../out/production/indexer -o Indexer.h org.jetbrains.kni.indexer.IndexerNative
 
 $(OUT)/%.o: %.cc
 	$(CXX) $(CXXFLAGS) -c $^ -o $@

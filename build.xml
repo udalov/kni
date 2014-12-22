@@ -11,7 +11,7 @@
 
     <target name="init">
         <mkdir dir="${output}"/>
-        <mkdir dir="${output}/classes"/>
+        <mkdir dir="${output}/build"/>
     </target>
 
     <target name="indexer">
@@ -22,7 +22,7 @@
     </target>
 
     <target name="runtime-objc">
-        <property name="runtime-objc" location="${output}/classes/runtime-objc"/>
+        <property name="runtime-objc" location="${output}/build/runtime-objc"/>
 
         <delete dir="${runtime-objc}"/>
         <mkdir dir="${runtime-objc}"/>
@@ -33,7 +33,7 @@
         </javac>
 
         <!-- TODO: improve workflow somehow when .h changes -->
-        <javah outputfile="${basedir}/runtime-objc/native/kniobjc.h">
+        <javah verbose="true" outputfile="${basedir}/runtime-objc/native/kniobjc.h">
             <class name="kni.objc.Native"/>
             <classpath>
                 <pathelement location="${runtime-objc}"/>
@@ -51,13 +51,15 @@
             <arg value="-L${basedir}/lib/libffi"/>
             <arg line="-lffi -lobjc -dynamiclib"/>
             <arg value="-o"/>
-            <arg value="${output}/libKNIObjCRuntime.dylib"/>
+            <arg value="${runtime-objc}/libKNIObjCRuntime.dylib"/>
             <arg value="${basedir}/runtime-objc/native/kniobjc.cc"/>
         </exec>
 
         <jar jarfile="${output}/kni-objc-runtime.jar">
-            <fileset dir="${runtime-objc}" includes="**/*.class"/>
-            <fileset file="${output}/libKNIObjCRuntime.dylib"/>
+            <fileset dir="${runtime-objc}">
+                <include name="**/*.class"/>
+                <include name="**/*.dylib"/>
+            </fileset>
 
             <manifest>
                 <attribute name="Built-By" value="JetBrains"/>
