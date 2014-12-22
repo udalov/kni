@@ -4,18 +4,15 @@
 #  Usages:
 #
 #  1. make clean
-#     Remove previously compiled files (out/ directory)
+#     Remove previously compiled files
 #
-#  2. make proto
-#     Launch Protocol Buffers compiler to generate C++ and Java classes
+#  2. make
+#     Compile everything and link to dist/build/indexer/native/libKNIIndexer.dylib
 #
-#  3. make
-#     Compile everything and link to out/libKNIIndexer.dylib
-#
-#  4. make test
+#  3. make test
 #     Compile (linking to the .dylib) and run tests
 #
-#  5. make javah
+#  4. make javah
 #     Launch javah on the compiled IndexerNative class (found in out/)
 #     to produce a C header Indexer.h
 #
@@ -54,13 +51,10 @@ TEST_EXE=$(OUT)/tests
 #  Targets
 # ----------------------------------------------------------------------------
 
-.PHONY: all proto mkdir dylib javah clean test
+.PHONY: all mkdir dylib javah clean test
 
 
-all: proto mkdir dylib
-
-proto:
-	$(PROTOBUF)/bin/protoc NativeIndex.proto --cpp_out=. --java_out=../src
+all: mkdir dylib
 
 mkdir:
 	@mkdir -p $(OUT)
