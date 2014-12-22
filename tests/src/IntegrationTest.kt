@@ -6,8 +6,15 @@ import java.nio.file.Files
 import org.jetbrains.kni.indexer.buildNativeIndex
 import org.jetbrains.kni.gen.generateStub
 import org.junit.Assert
+import kotlin.properties.Delegates
 
 class IntegrationTest {
+    private val kniObjCRuntime: File by Delegates.lazy {
+        val target = File("dist/kni-objc-runtime.jar")
+        assert(target.exists()) { "$target is not found. Execute 'ant dist' before running tests" }
+        target
+    }
+
     private fun doTest(testName: String) {
         val path = "tests/testData/integration/$testName"
         val header = File("$path.h").getAbsoluteFile()
@@ -21,10 +28,10 @@ class IntegrationTest {
 
         val stubSource = generateStub(buildNativeIndex(header), dylib, tmpdir)
         val stubClasses = File(tmpdir, "stub")
-        compileKotlin(stubSource, stubClasses, listOf(File("out/production/runtime-objc")))
+        compileKotlin(stubSource, stubClasses, listOf(kniObjCRuntime))
 
         val mainClasses = File(tmpdir, "main")
-        compileKotlin(kotlinSource, mainClasses, listOf(File("out/production/runtime-objc"), stubClasses))
+        compileKotlin(kotlinSource, mainClasses, listOf(kniObjCRuntime, stubClasses))
 
         val result = runKotlin(mainClasses, stubClasses)
         Assert.assertEquals("OK", result)
@@ -43,8 +50,8 @@ class IntegrationTest {
     private fun runKotlin(vararg classpath: File): String {
         val cp = listOf(
                 *classpath,
+                kniObjCRuntime,
                 File("dependencies/kotlinc/lib/kotlin-runtime.jar"),
-                File("out/production/runtime-objc"),
                 File("runtime-objc/native/out")
         ).map { it.getAbsolutePath() }.joinToString(File.pathSeparator)
 

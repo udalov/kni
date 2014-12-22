@@ -1,0 +1,72 @@
+<project name="KNI" default="dist">
+    <property name="output" location="${basedir}/dist"/>
+    <property name="kotlinc" location="${basedir}/dependencies/kotlinc"/>
+
+    <typedef resource="org/jetbrains/jet/buildtools/ant/antlib.xml"
+             classpath="${kotlinc}/lib/kotlin-ant.jar"/>
+
+    <target name="clean">
+        <delete dir="${output}"/>
+    </target>
+
+    <target name="init">
+        <mkdir dir="${output}"/>
+        <mkdir dir="${output}/classes"/>
+    </target>
+
+    <target name="indexer">
+        <exec dir="${basedir}/indexer/native" executable="/usr/bin/make" failonerror="true">
+            <arg value="clean"/>
+            <arg value="test"/>
+        </exec>
+    </target>
+
+    <target name="runtime-objc">
+        <property name="runtime-objc" location="${output}/classes/runtime-objc"/>
+
+        <delete dir="${runtime-objc}"/>
+        <mkdir dir="${runtime-objc}"/>
+        <javac srcdir="${basedir}/runtime-objc/src" destdir="${runtime-objc}"
+               includeantruntime="false" source="1.6" target="1.6">
+            <withKotlin/>
+            <classpath location="${kotlinc}/lib/kotlin-runtime.jar"/>
+        </javac>
+
+        <!-- TODO: improve workflow somehow when .h changes -->
+        <javah outputfile="${basedir}/runtime-objc/native/kniobjc.h">
+            <class name="kni.objc.Native"/>
+            <classpath>
+                <pathelement location="${runtime-objc}"/>
+                <pathelement location="${kotlinc}/lib/kotlin-runtime.jar"/>
+            </classpath>
+        </javah>
+
+        <property name="java.include" location="${java.home}/../include"/>
+        <exec executable="/usr/bin/c++" failonerror="true">
+            <arg line="-O2 -Wall -Wl,-no_compact_unwind"/>
+            <arg value="-I${java.include}"/>
+            <arg value="-I${java.include}/darwin"/>
+            <arg value="-I${basedir}/dependencies/libffi"/>
+            <!-- TODO: statically link libffi instead of using path to library here -->
+            <arg value="-L${basedir}/dependencies/libffi"/>
+            <arg line="-lffi -lobjc -dynamiclib"/>
+            <arg value="-o"/>
+            <arg value="${output}/libKNIObjCRuntime.dylib"/>
+            <arg value="${basedir}/runtime-objc/native/kniobjc.cc"/>
+        </exec>
+
+        <jar jarfile="${output}/kni-objc-runtime.jar">
+            <fileset dir="${runtime-objc}" includes="**/*.class"/>
+            <fileset file="${output}/libKNIObjCRuntime.dylib"/>
+
+            <manifest>
+                <attribute name="Built-By" value="JetBrains"/>
+                <attribute name="Implementation-Vendor" value="JetBrains"/>
+                <attribute name="Implementation-Title" value="KNI Objective-C Runtime"/>
+                <attribute name="Implementation-Version" value="0.1-SNAPSHOT"/>
+            </manifest>
+        </jar>
+    </target>
+
+    <target name="dist" depends="clean,init,indexer,runtime-objc"/>
+</project>
