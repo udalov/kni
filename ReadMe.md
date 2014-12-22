@@ -10,7 +10,7 @@ You should have Xcode Command Line Tools installed.
 Also, unfortunately, at the moment you need to install system-wide LLVM (preferably 3.5.0) via [Homebrew](http://brew.sh)
 (this is likely to improve in the future):
 
-```
+```sh
 $ brew install llvm --with-clang
 ```
 
@@ -21,11 +21,22 @@ on installing a specific version of a formula if, for example, you have a newer 
 
 ## Building
 
-Before the first build you should run `ant -f update_dependencies.xml` or "Update dependencies" run configuration from IDEA
-(Ant support plugin should be turned on).
-This will fetch dependencies and prepare third-party libraries.
+Before the first build you should run
 
-Then run `ant` or "Build" run configuration to build artifacts needed for the tests.
+```sh
+$ ant -f update_dependencies.xml
+```
+
+or "Update dependencies" run configuration from IDEA (Ant support plugin should be turned on).
+This will fetch dependencies and build third-party libraries.
+
+Then run
+
+```sh
+$ ant
+```
+
+or "Build" run configuration to build artifacts needed for the tests.
 Each change to modules "indexer" or "runtime-objc" then needs to be followed by `ant`.
 
 ## Running tests
