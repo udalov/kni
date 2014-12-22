@@ -1,0 +1,10 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="Update dependencies" type="AntRunConfiguration" factoryName="Ant Target">
+    <antsettings antfile="file://$PROJECT_DIR$/update_dependencies.xml" target="all" />
+    <RunnerSettings RunnerId="AntRunConfigurationRunner" />
+    <ConfigurationWrapper RunnerId="AntRunConfigurationRunner" />
+    <method>
+      <option name="Make" enabled="false" />
+    </method>
+  </configuration>
+</component>

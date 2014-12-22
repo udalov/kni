@@ -1,0 +1,10 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="Build" type="AntRunConfiguration" factoryName="Ant Target">
+    <antsettings antfile="file://$PROJECT_DIR$/build.xml" target="dist" />
+    <RunnerSettings RunnerId="AntRunConfigurationRunner" />
+    <ConfigurationWrapper RunnerId="AntRunConfigurationRunner" />
+    <method>
+      <option name="Make" enabled="false" />
+    </method>
+  </configuration>
+</component>
