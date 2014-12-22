@@ -11,5 +11,6 @@
     <orderEntry type="library" name="junit" level="project" />
     <orderEntry type="module" module-name="indexer" />
     <orderEntry type="module" module-name="stub-generator" />
+    <orderEntry type="module" module-name="runtime-objc" />
   </component>
 </module>

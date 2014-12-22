@@ -62,6 +62,18 @@
     </target>
 
     <target name="update">
+        <!-- Kotlin -->
+
+        <get src="https://teamcity.jetbrains.com/guestAuth/repository/download/bt345/bootstrap.tcbuildtag/kotlin-compiler-{build.number}.zip"
+             dest="${download}/kotlin-compiler.zip"
+             usetimestamp="true"/>
+        <delete dir="${lib}/kotlinc"/>
+        <exec executable="/usr/bin/unzip" output="/dev/null" failonerror="true">
+            <arg value="${download}/kotlin-compiler.zip"/>
+            <arg value="-d"/>
+            <arg value="${lib}"/>
+        </exec>
+
         <!-- JUnit -->
 
         <get src="http://repository.jetbrains.com/remote-repos/junit/junit/4.10/junit-4.10.jar"

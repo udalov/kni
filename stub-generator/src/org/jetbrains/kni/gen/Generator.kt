@@ -2,32 +2,49 @@ package org.jetbrains.kni.gen
 
 import java.io.File
 import org.jetbrains.kni.indexer.NativeIndex.*
+import java.util.HashSet
+import java.util.HashMap
 
-public fun generateStub(outputDir: File, translationUnit: TranslationUnit) {
+public fun generateStub(translationUnit: TranslationUnit, dylib: File, outputDir: File): File {
     val result = StringBuilder()
     val out = Printer(result)
 
     out.println("// This file is auto-generated. DO NOT EDIT!")
+    out.println()
+    out.println("[file: suppress(\"UNCHECKED_CAST\")]")
     out.println()
     out.println("package objc")
     out.println()
     out.println("import kni.objc.*")
     out.println()
 
-    for (klass in translationUnit.getClass_List()) {
-        Generator(out).genClass(klass)
+    val namer = Namer(translationUnit)
+    val generator = Generator(out, namer, dylib)
+
+    for (protocol in translationUnit.getProtocolList()) {
+        generator.genProtocol(protocol)
         out.println()
     }
 
-    // TODO: protocols
-    // TODO: categories
+    for (klass in translationUnit.getClass_List()) {
+        generator.genClass(klass)
+        out.println()
+    }
+
+    for (category in translationUnit.getCategoryList()) {
+        generator.genCategory(category)
+        out.println()
+    }
+
+    outputDir.mkdirs()
 
     // TODO: unhardcode
-    outputDir.mkdirs()
-    File(outputDir, "kni-stub.kt").writeText(result.toString())
+    val file = File(outputDir, "kni-stub.kt")
+    file.writeText(result.toString())
+    return file
 }
 
-class Generator(private val out: Printer) {
+class Generator(private val out: Printer, private val namer: Namer, private val dylib: File) {
     fun genClass(klass: ObjCClass) {
         out.print("open class ${klass.getName()}(pointer: Long)")
 
@@ -39,32 +56,80 @@ class Generator(private val out: Printer) {
 
         val baseList =
             listOf("$baseClass(pointer)") +
-            protocols +
-            categories.map { category -> "`$category`" }
+            protocols.map { namer.protocolName(it) } +
+            categories.map { namer.categoryName(it) }
 
         baseList.joinTo(out, separator = ", ", prefix = " : ")
         out.println(" {")
 
         out.push()
 
-        val instanceMethods = klass.getMethodList().filter { !it.getClassMethod() }
-        for ((index, method) in instanceMethods.withIndex()) {
-            genFunction(method.getFunction())
-            if (index != instanceMethods.lastIndex) out.println()
+        for (method in klass.getMethodList().filter { !it.getClassMethod() }) {
+            genFunction(method.getFunction(), open = true)
+            out.println()
         }
+
+        genMetaClass(klass)
+        out.println()
+        genClassObject(klass)
 
         // TODO: properties
 
         out.pop()
 
         out.println("}")
-
-        // TODO: $metaclass and class object
     }
 
-    private fun genFunction(function: Function) {
-        out.print("open fun ")
-        out.print(jvmMethodName(function.getName()))
+    private fun genMetaClass(klass: ObjCClass) {
+        val baseList =
+                (if (klass.hasBaseClass())
+                    listOf(klass.getBaseClass() + ".metaclass")
+                else listOf("ObjCObject")) +
+                klass.getProtocolList().map { namer.protocolName(it) + ".metaclass" }
+        out.println("trait metaclass : ${baseList.join(", ")} {")
+        out.push()
+
+        var first = true
+        for (method in klass.getMethodList().filter { it.getClassMethod() }) {
+            if (first) first = false else out.println()
+            genFunction(method.getFunction(), open = false)
+        }
+
+        out.pop()
+        out.println("}")
+    }
+
+    private fun genClassObject(klass: ObjCClass) {
+        // TODO (!): there may be other hierarchy roots!
+        out.println("class object : NSObject(Native.objc_getClass(\"${klass.getName()}\")), metaclass, ObjCClass {")
+        out.push()
+
+        // TODO: only generate this into class objects of root classes
+        out.println("{ loadLibrary(\"${dylib.getPath()}\") }")
+
+        out.pop()
+        out.println("}")
+    }
+
+    fun genProtocol(protocol: ObjCProtocol) {
+        out.println("trait ${namer.protocolName(protocol.getName())} {")
+        out.push()
+        // TODO: methods
+        out.println("trait metaclass")
+        out.pop()
+        out.println("}")
+    }
+
+    fun genCategory(category: ObjCCategory) {
+        out.println("trait ${namer.categoryName(category.getName())}")
+        // TODO: methods
+    }
+
+    private fun genFunction(function: Function, open: Boolean) {
+        if (open) {
+            out.print("open ")
+        }
+        out.print("fun ${namer.methodName(function.getName())}")
 
         function.getParameterList()
                 .map { p -> p.getName() + ": " + parseType(p.getType()).str }
@@ -89,7 +154,11 @@ class Generator(private val out: Printer) {
                         it.joinTo(out, separator = ", ")
                     }
                 }
-        out.println(")")
+        out.print(")")
+        if (returnType != UnitType) {
+            out.print(" as ${returnType.str}")
+        }
+        out.println()
         out.pop()
 
         out.println("}")
@@ -111,11 +180,53 @@ class Generator(private val out: Printer) {
             else -> "class ${type.str}"
         }
     }
+}
 
-    private fun jvmMethodName(objcSelectorName: String): String {
+class Namer(translationUnit: TranslationUnit) {
+    private val protocolNames = HashMap<String, String>()
+
+    private fun calculateProtocolNames(translationUnit: TranslationUnit) {
+        val existingNames = translationUnit.getClass_List().map { it.getName() }.toMutableSet()
+
+        for (protocol in translationUnit.getProtocolList()) {
+            val protocolName = protocol.getName()
+            var name = protocolName
+            if (name in existingNames) {
+                // Since Objective-C classes and protocols exist in different namespaces and Kotlin classes and traits
+                // don't, we invent a new name here for the trait when a class with the same name exists already
+                // TODO: handle collisions (where both classes X and XProtocol and a protocol X exist)
+                name = protocolName + "Protocol"
+            }
+
+            protocolNames[protocolName] = name
+            existingNames.add(name)
+        }
+    }
+
+    {
+        calculateProtocolNames(translationUnit)
+    }
+
+    fun protocolName(name: String): String {
+        return protocolNames[name]
+    }
+
+    fun categoryName(name: String): String {
+        // ASM verifier incorrectly requires names to be Java identifiers, see CheckMethodAdapter.checkInternalName
+        // TODO: fix ASM
+        return name.replace('+', '_')
+    }
+
+    fun methodName(objcSelectorName: String): String {
         // Objective-C method names are usually of form 'methodName:withParam:andOtherParam:'
         // Here we strip away everything but the first part
         // TODO: handle methods with the same effective signature or invent something different
-        return objcSelectorName.substringBefore(':')
+        return escape(objcSelectorName.substringBefore(':'))
+    }
+
+    private fun escape(name: String): String {
+        // TODO: all Kotlin keywords
+        if (name == "class") return "`$name`"
+        return name
     }
 }

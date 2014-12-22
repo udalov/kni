@@ -8,16 +8,17 @@ import static kotlin.io.IoPackage.writeBytes;
 
 @SuppressWarnings("UnusedDeclaration")
 public class Native {
-    private Native() {}
+    private Native() {
+    }
 
-    public static final String KOTLIN_NATIVE_LIBRARY_PATH = "/libKotlinNative.dylib";
+    public static final String KNI_OBJC_RUNTIME_LIBRARY_PATH = "/libKNIObjCRuntime.dylib";
 
     static {
         try {
-            InputStream resource = Native.class.getResourceAsStream(KOTLIN_NATIVE_LIBRARY_PATH);
+            InputStream resource = Native.class.getResourceAsStream(KNI_OBJC_RUNTIME_LIBRARY_PATH);
             try {
                 byte[] bytes = readBytes(resource, resource.available());
-                File dylib = File.createTempFile("libKotlinNative", ".dylib");
+                File dylib = File.createTempFile("libKNIObjCRuntime", ".dylib");
                 writeBytes(dylib, bytes);
                 System.load(dylib.getAbsolutePath());
             }
@@ -26,7 +27,9 @@ public class Native {
             }
         }
         catch (Throwable e) {
-            throw new IllegalStateException("KotlinNative library couldn't be loaded from " + KOTLIN_NATIVE_LIBRARY_PATH, e);
+            throw new IllegalStateException(
+                    "KNI runtime library couldn't be loaded from " + KNI_OBJC_RUNTIME_LIBRARY_PATH, e
+            );
         }
     }
 
@@ -44,5 +47,10 @@ public class Native {
 
     public static native long objc_getClass(String name);
 
-    public static native Object objc_msgSend(String returnType, ObjCObject receiver, String selectorName, Object... args);
+    public static native Object objc_msgSend(
+            String returnType,
+            ObjCObject receiver,
+            String selectorName,
+            Object... args
+    );
 }
