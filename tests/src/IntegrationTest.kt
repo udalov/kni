@@ -42,19 +42,15 @@ class IntegrationTest {
     }
 
     private fun compileKotlin(file: File, destination: File, classpath: List<File>) {
-        val kotlinc = File("dependencies/kotlinc/bin/kotlinc").getAbsoluteFile()
+        val kotlinc = File("lib/kotlinc/bin/kotlinc").getAbsoluteFile()
         val cp = classpath.joinToString(File.pathSeparator)
         runProcess("$kotlinc $file -d $destination -cp $cp")
     }
 
     private fun runKotlin(vararg classpath: File): String {
-        val cp = listOf(
-                *classpath,
-                kniObjCRuntime,
-                File("dependencies/kotlinc/lib/kotlin-runtime.jar"),
-                File("runtime-objc/native/out")
-        ).map { it.getAbsolutePath() }.joinToString(File.pathSeparator)
-
+        val cp = listOf(*classpath, kniObjCRuntime, File("lib/kotlinc/lib/kotlin-runtime.jar"))
+                .map { it.getAbsolutePath() }
+                .joinToString(File.pathSeparator)
         return runProcess("java -cp $cp test.TestPackage")
     }
 

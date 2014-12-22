@@ -33,7 +33,7 @@ JAVA_HOME=$(shell /usr/libexec/java_home)
 JAVA_INCLUDE=-I$(JAVA_HOME)/include -I$(JAVA_HOME)/include/darwin
 
 CXX=c++
-CXXFLAGS=-O2 -Wall -std=c++0x $(JAVA_INCLUDE) -I../../dependencies -stdlib=libc++
+CXXFLAGS=-O2 -Wall -std=c++0x $(JAVA_INCLUDE) -I../../lib -stdlib=libc++
 # libclang.dylib and libprotobuf.dylib should be installed via Homebrew:
 # brew install llvm --with-clang
 # brew switch llvm 3.5.0

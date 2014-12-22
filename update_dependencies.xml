@@ -1,6 +1,7 @@
 <project name="KNI update dependencies" default="all">
-    <property name="lib" location="${basedir}/dependencies"/>
-    <property name="download" location="${lib}/download"/>
+    <property name="lib" location="${basedir}/lib"/>
+    <property name="dependencies" location="${basedir}/dependencies"/>
+    <property name="download" location="${dependencies}/download"/>
 
     <target name="init">
         <mkdir dir="${lib}"/>
@@ -14,7 +15,9 @@
              dest="${download}/libffi-3.0.13.zip"
              usetimestamp="true"/>
 
-        <tempfile property="ffi.src" destdir="${java.io.tmpdir}" prefix="kni-libffi-build"/>
+        <property name="ffi.src" location="${dependencies}/libffi-build"/>
+        <delete dir="${ffi.src}"/>
+        <mkdir dir="${ffi.src}"/>
 
         <!-- Invoking native unzip instead of Ant task because the latter doesn't set correct file permissions -->
         <!-- TODO: check availability of external utilities (unzip, libtool, ...) beforehand -->
@@ -77,8 +80,9 @@
         <!-- JUnit -->
 
         <get src="http://repository.jetbrains.com/remote-repos/junit/junit/4.10/junit-4.10.jar"
-             dest="${lib}/junit-4.10.jar"
+             dest="${download}/junit-4.10.jar"
              usetimestamp="true"/>
+        <copy file="${download}/junit-4.10.jar" todir="${lib}"/>
 
         <!-- Protocol Buffers -->
 
@@ -95,12 +99,14 @@
         </unzip>
 
         <get src="http://repository.jetbrains.com/remote-repos/com/google/protobuf/protobuf-java/2.6.0/protobuf-java-2.6.0.jar"
-             dest="${lib}/protobuf-2.6.0.jar"
+             dest="${download}/protobuf-2.6.0.jar"
              usetimestamp="true"/>
+        <copy file="${download}/protobuf-2.6.0.jar" todir="${lib}"/>
 
         <get src="http://repository.jetbrains.com/remote-repos/com/google/protobuf/protobuf-java/2.6.0/protobuf-java-2.6.0-sources.jar"
-             dest="${lib}/protobuf-2.6.0-sources.jar"
+             dest="${download}/protobuf-2.6.0-sources.jar"
              usetimestamp="true"/>
+        <copy file="${download}/protobuf-2.6.0-sources.jar" todir="${lib}"/>
 
         <!-- Clang -->
 
@@ -116,7 +122,7 @@
         <delete dir="${lib}/clang-c"/>
         <untar src="${download}/cfe-3.5.0.src.tar" dest="${lib}">
             <patternset>
-                <include name="cfe-3.5.0.src/include/clang-c/**/*"/>
+                <include name="cfe-3.5.0.src/include/clang-c/**/*.h"/>
             </patternset>
             <cutdirsmapper dirs="2"/>
         </untar>

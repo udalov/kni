@@ -1,6 +1,6 @@
 <project name="KNI" default="dist">
     <property name="output" location="${basedir}/dist"/>
-    <property name="kotlinc" location="${basedir}/dependencies/kotlinc"/>
+    <property name="kotlinc" location="${basedir}/lib/kotlinc"/>
 
     <typedef resource="org/jetbrains/jet/buildtools/ant/antlib.xml"
              classpath="${kotlinc}/lib/kotlin-ant.jar"/>
@@ -46,9 +46,9 @@
             <arg line="-O2 -Wall -Wl,-no_compact_unwind"/>
             <arg value="-I${java.include}"/>
             <arg value="-I${java.include}/darwin"/>
-            <arg value="-I${basedir}/dependencies/libffi"/>
+            <arg value="-I${basedir}/lib/libffi"/>
             <!-- TODO: statically link libffi instead of using path to library here -->
-            <arg value="-L${basedir}/dependencies/libffi"/>
+            <arg value="-L${basedir}/lib/libffi"/>
             <arg line="-lffi -lobjc -dynamiclib"/>
             <arg value="-o"/>
             <arg value="${output}/libKNIObjCRuntime.dylib"/>
