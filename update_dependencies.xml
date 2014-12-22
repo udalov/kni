@@ -32,7 +32,7 @@
         </move>
 
         <exec dir="${ffi.src}" executable="/bin/sh" failonerror="true">
-            <env key="CC" value="cc"/>
+            <env key="CC" value="/usr/bin/cc"/>
             <env key="CFLAGS" value="-O2 -arch i386 -arch x86_64"/>
             <env key="LDFLAGS" value="-arch i386 -arch x86_64"/>
             <arg value="configure"/>

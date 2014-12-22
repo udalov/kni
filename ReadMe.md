@@ -19,6 +19,17 @@ Be aware that LLVM build can take a long time (about half an hour on an average 
 See [these instructions](http://stackoverflow.com/questions/3987683/homebrew-install-specific-version-of-formula)
 on installing a specific version of a formula if, for example, you have a newer version already installed.
 
+Also you should have the following executables on your system (corresponding checks will be added in the future).
+Presumably they're all shipped either with Mac OS X itself or Xcode Command Line Tools:
+
+* `/usr/bin/cc`
+* `/usr/bin/c++`
+* `/usr/bin/make`
+* `/usr/bin/libtool`
+* `/usr/bin/unzip`
+* `/usr/bin/tar`
+* `/usr/libexec/java_home`
+
 ## Building
 
 Before the first build you should run `ant -f update_dependencies.xml` or "Update dependencies" run configuration from IDEA
