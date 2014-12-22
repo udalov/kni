@@ -3,16 +3,21 @@
     <property name="dependencies" location="${basedir}/dependencies"/>
     <property name="download" location="${dependencies}/download"/>
 
+    <!-- TODO: update to newer libffi -->
+    <property name="libffi.version" value="3.0.13"/>
+    <property name="junit.version" value="4.10"/>
+    <property name="protobuf.version" value="2.6.0"/>
+    <property name="clang.version" value="3.5.0"/>
+
     <target name="init">
         <mkdir dir="${lib}"/>
+        <mkdir dir="${dependencies}"/>
         <mkdir dir="${download}"/>
     </target>
 
     <target name="libffi">
-        <!-- TODO: update to newer libffi -->
-
-        <get src="https://codeload.github.com/atgreen/libffi/zip/v3.0.13"
-             dest="${download}/libffi-3.0.13.zip"
+        <get src="https://codeload.github.com/atgreen/libffi/zip/v${libffi.version}"
+             dest="${download}/libffi-${libffi.version}.zip"
              usetimestamp="true"/>
 
         <property name="ffi.src" location="${dependencies}/libffi-build"/>
@@ -22,13 +27,13 @@
         <!-- Invoking native unzip instead of Ant task because the latter doesn't set correct file permissions -->
         <!-- TODO: check availability of external utilities (unzip, tar, libtool, ...) beforehand -->
         <exec executable="/usr/bin/unzip" output="/dev/null" failonerror="true">
-            <arg value="${download}/libffi-3.0.13.zip"/>
+            <arg value="${download}/libffi-${libffi.version}.zip"/>
             <arg value="-d"/>
             <arg value="${ffi.src}"/>
         </exec>
 
         <move todir="${ffi.src}">
-            <fileset dir="${ffi.src}/libffi-3.0.13"/>
+            <fileset dir="${ffi.src}/libffi-${libffi.version}"/>
         </move>
 
         <exec dir="${ffi.src}" executable="/bin/sh" failonerror="true">
@@ -64,9 +69,7 @@
         </copy>
     </target>
 
-    <target name="update">
-        <!-- Kotlin -->
-
+    <target name="kotlin">
         <get src="https://teamcity.jetbrains.com/guestAuth/repository/download/bt345/bootstrap.tcbuildtag/kotlin-compiler-{build.number}.zip"
              dest="${download}/kotlin-compiler.zip"
              usetimestamp="true"/>
@@ -76,52 +79,58 @@
             <arg value="-d"/>
             <arg value="${lib}"/>
         </exec>
+    </target>
 
-        <!-- JUnit -->
+    <target name="junit">
+        <property name="junit" value="junit-${junit.version}"/>
 
-        <get src="http://repository.jetbrains.com/remote-repos/junit/junit/4.10/junit-4.10.jar"
-             dest="${download}/junit-4.10.jar"
+        <get src="http://repository.jetbrains.com/remote-repos/junit/junit/${junit.version}/${junit}.jar"
+             dest="${download}/${junit}.jar"
              usetimestamp="true"/>
-        <copy file="${download}/junit-4.10.jar" todir="${lib}"/>
+        <copy file="${download}/${junit}.jar" todir="${lib}"/>
+    </target>
 
-        <!-- Protocol Buffers -->
+    <target name="protobuf">
+        <property name="protobuf" value="protobuf-${protobuf.version}"/>
 
-        <get src="https://protobuf.googlecode.com/svn/rc/protobuf-2.6.0.zip"
-             dest="${download}/protobuf-2.6.0.zip"
+        <get src="https://protobuf.googlecode.com/svn/rc/${protobuf}.zip"
+             dest="${download}/${protobuf}.zip"
              usetimestamp="true"/>
 
         <delete dir="${lib}/google"/>
-        <unzip src="${download}/protobuf-2.6.0.zip" dest="${lib}">
+        <unzip src="${download}/${protobuf}.zip" dest="${lib}">
             <patternset>
-                <include name="protobuf-2.6.0/src/google/protobuf/**/*.h"/>
+                <include name="${protobuf}/src/google/protobuf/**/*.h"/>
             </patternset>
             <cutdirsmapper dirs="2"/>
         </unzip>
 
-        <get src="http://repository.jetbrains.com/remote-repos/com/google/protobuf/protobuf-java/2.6.0/protobuf-java-2.6.0.jar"
-             dest="${download}/protobuf-2.6.0.jar"
+        <get src="http://repository.jetbrains.com/remote-repos/com/google/protobuf/protobuf-java/${protobuf.version}/protobuf-java-${protobuf.version}.jar"
+             dest="${download}/${protobuf}.jar"
              usetimestamp="true"/>
-        <copy file="${download}/protobuf-2.6.0.jar" todir="${lib}"/>
+        <copy file="${download}/${protobuf}.jar" todir="${lib}"/>
 
-        <get src="http://repository.jetbrains.com/remote-repos/com/google/protobuf/protobuf-java/2.6.0/protobuf-java-2.6.0-sources.jar"
-             dest="${download}/protobuf-2.6.0-sources.jar"
+        <get src="http://repository.jetbrains.com/remote-repos/com/google/protobuf/protobuf-java/${protobuf.version}/protobuf-java-${protobuf.version}.jar"
+             dest="${download}/${protobuf}-sources.jar"
              usetimestamp="true"/>
-        <copy file="${download}/protobuf-2.6.0-sources.jar" todir="${lib}"/>
+        <copy file="${download}/${protobuf}-sources.jar" todir="${lib}"/>
+    </target>
 
-        <!-- Clang -->
+    <target name="clang">
+        <property name="cfe" value="cfe-${clang.version}"/>
 
-        <get src="http://llvm.org/releases/3.5.0/cfe-3.5.0.src.tar.xz"
-             dest="${download}/cfe-3.5.0.src.tar.xz"
+        <get src="http://llvm.org/releases/${clang.version}/${cfe}.src.tar.xz"
+             dest="${download}/${cfe}.src.tar.xz"
              usetimestamp="true"/>
 
         <!-- Ant 'untar' task doesn't support 'xz' compression format -->
         <exec dir="${download}" executable="/usr/bin/tar" failonerror="true">
-            <arg line="xf cfe-3.5.0.src.tar.xz --strip-components 2 cfe-3.5.0.src/include/clang-c"/>
+            <arg line="xf ${cfe}.src.tar.xz --strip-components 2 ${cfe}.src/include/clang-c"/>
         </exec>
 
         <delete dir="${lib}/clang-c"/>
         <move file="${download}/clang-c" todir="${lib}"/>
     </target>
 
-    <target name="all" depends="init,libffi,update"/>
+    <target name="all" depends="init,libffi,kotlin,junit,protobuf,clang"/>
 </project>
