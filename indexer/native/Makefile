@@ -32,15 +32,14 @@ PROJECT_NAME=KNIIndexer
 JAVA_HOME=$(shell /usr/libexec/java_home)
 JAVA_INCLUDE=-I$(JAVA_HOME)/include -I$(JAVA_HOME)/include/darwin
 
+PROTOBUF=../../lib/protobuf
+
 CXX=c++
-CXXFLAGS=-O2 -Wall -std=c++0x $(JAVA_INCLUDE) -I../../lib -stdlib=libc++
-# libclang.dylib and libprotobuf.dylib should be installed via Homebrew:
+CXXFLAGS=-O2 -Wall -std=c++0x $(JAVA_INCLUDE) -I../../lib -I$(PROTOBUF)/include -stdlib=libc++
+# libclang.dylib should be installed via Homebrew:
 # brew install llvm --with-clang
-# brew switch llvm 3.5.0
-# brew install protobuf
-# brew switch protobuf 2.6.0
 # TODO: untie dependency on Homebrew
-LDFLAGS=-Wl,-rpath,/usr/local/Cellar/llvm/3.5.0/lib -L/usr/local/Cellar/llvm/3.5.0/lib -L/usr/local/Cellar/protobuf/2.6.0/lib -lclang -lprotobuf
+LDFLAGS=-Wl,-rpath,/usr/local/Cellar/llvm/3.5.0/lib -L/usr/local/Cellar/llvm/3.5.0/lib -L$(PROTOBUF)/lib -lclang -lprotobuf
 
 SRC_FILES=$(wildcard *.cc)
 OBJ_FILES=$(patsubst %.cc,$(OUT)/%.o,$(SRC_FILES))
@@ -61,7 +60,7 @@ TEST_EXE=$(OUT)/tests
 all: proto mkdir dylib
 
 proto:
-	@make -C proto all
+	$(PROTOBUF)/bin/protoc NativeIndex.proto --cpp_out=. --java_out=../src
 
 mkdir:
 	@mkdir -p $(OUT)
@@ -69,6 +68,7 @@ mkdir:
 dylib: $(OBJ_FILES)
 	$(CXX) $(LDFLAGS) -dynamiclib -o $(DYLIB) $^
 
+# TODO: do not depend on out/ here
 javah:
 	@javah -classpath ../../out/production/indexer -o Indexer.h org.jetbrains.kni.indexer.IndexerNative
 

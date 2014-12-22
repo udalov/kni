@@ -24,8 +24,7 @@
         <delete dir="${ffi.src}"/>
         <mkdir dir="${ffi.src}"/>
 
-        <!-- Invoking native unzip instead of Ant task because the latter doesn't set correct file permissions -->
-        <!-- TODO: check availability of external utilities (unzip, tar, libtool, ...) beforehand -->
+        <!-- Ant 'unzip' task can't set correct file permissions -->
         <exec executable="/usr/bin/unzip" output="/dev/null" failonerror="true">
             <arg value="${download}/libffi-${libffi.version}.zip"/>
             <arg value="-d"/>
@@ -73,7 +72,10 @@
         <get src="https://teamcity.jetbrains.com/guestAuth/repository/download/bt345/bootstrap.tcbuildtag/kotlin-compiler-{build.number}.zip"
              dest="${download}/kotlin-compiler.zip"
              usetimestamp="true"/>
+
         <delete dir="${lib}/kotlinc"/>
+
+        <!-- Ant 'unzip' task can't set correct file permissions -->
         <exec executable="/usr/bin/unzip" output="/dev/null" failonerror="true">
             <arg value="${download}/kotlin-compiler.zip"/>
             <arg value="-d"/>
@@ -93,17 +95,36 @@
     <target name="protobuf">
         <property name="protobuf" value="protobuf-${protobuf.version}"/>
 
+        <property name="protobuf.src" location="${dependencies}/protobuf-build"/>
+        <property name="protobuf.target" location="${lib}/protobuf"/>
+
         <get src="https://protobuf.googlecode.com/svn/rc/${protobuf}.zip"
              dest="${download}/${protobuf}.zip"
              usetimestamp="true"/>
 
-        <delete dir="${lib}/google"/>
-        <unzip src="${download}/${protobuf}.zip" dest="${lib}">
-            <patternset>
-                <include name="${protobuf}/src/google/protobuf/**/*.h"/>
-            </patternset>
-            <cutdirsmapper dirs="2"/>
-        </unzip>
+        <delete dir="${protobuf.src}"/>
+        <delete dir="${protobuf.target}"/>
+
+        <exec executable="/usr/bin/unzip" output="/dev/null" failonerror="true">
+            <arg value="${download}/${protobuf}.zip"/>
+            <arg value="-d"/>
+            <arg value="${dependencies}"/>
+        </exec>
+        <move file="${dependencies}/${protobuf}" tofile="${protobuf.src}"/>
+
+        <exec dir="${protobuf.src}" executable="/bin/sh" failonerror="true">
+            <arg value="configure"/>
+            <arg value="--prefix=${protobuf.target}"/>
+        </exec>
+
+        <exec dir="${protobuf.src}" executable="/usr/bin/make" failonerror="true"/>
+        <exec dir="${protobuf.src}" executable="/usr/bin/make" failonerror="true">
+            <arg value="install"/>
+        </exec>
+    </target>
+
+    <target name="protobuf-java">
+        <property name="protobuf" value="protobuf-${protobuf.version}"/>
 
         <get src="http://repository.jetbrains.com/remote-repos/com/google/protobuf/protobuf-java/${protobuf.version}/protobuf-java-${protobuf.version}.jar"
              dest="${download}/${protobuf}.jar"
@@ -132,5 +153,5 @@
         <move file="${download}/clang-c" todir="${lib}"/>
     </target>
 
-    <target name="all" depends="init,libffi,kotlin,junit,protobuf,clang"/>
+    <target name="all" depends="init,libffi,kotlin,junit,protobuf,protobuf-java,clang"/>
 </project>

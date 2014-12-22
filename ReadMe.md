@@ -5,30 +5,19 @@ This is **work in progress** and currently only basic Objective-C interoperabili
 
 ## Prerequisites
 
-Unfortunately, at the moment you need to install system-wide protobuf (2.6.0 or 2.6.1) and LLVM (3.5.0) via [Homebrew](http://brew.sh)
+You should have Xcode Command Line Tools installed.
+
+Also, unfortunately, at the moment you need to install system-wide LLVM (preferably 3.5.0) via [Homebrew](http://brew.sh)
 (this is likely to improve in the future):
 
 ```
-    brew update
-    brew install llvm --with-clang
-    brew install protobuf
+$ brew install llvm --with-clang
 ```
 
 Be aware that LLVM build can take a long time (about half an hour on an average Mac).
 
 See [these instructions](http://stackoverflow.com/questions/3987683/homebrew-install-specific-version-of-formula)
 on installing a specific version of a formula if, for example, you have a newer version already installed.
-
-Also you should have the following executables on your system (corresponding checks will be added in the future).
-Presumably they're all shipped either with Mac OS X itself or Xcode Command Line Tools:
-
-* `/usr/bin/cc`
-* `/usr/bin/c++`
-* `/usr/bin/make`
-* `/usr/bin/libtool`
-* `/usr/bin/unzip`
-* `/usr/bin/tar`
-* `/usr/libexec/java_home`
 
 ## Building
 
