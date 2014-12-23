@@ -2,10 +2,9 @@ package org.jetbrains.kni.gen
 
 import java.io.File
 import org.jetbrains.kni.indexer.NativeIndex.*
-import java.util.HashSet
 import java.util.HashMap
 
-public fun generateStub(translationUnit: TranslationUnit, dylib: File, outputDir: File): File {
+public fun generateStub(translationUnit: TranslationUnit, dylib: File, outputFile: File): File {
     val result = StringBuilder()
     val out = Printer(result)
 
@@ -36,12 +35,9 @@ public fun generateStub(translationUnit: TranslationUnit, dylib: File, outputDir
         out.println()
     }
 
-    outputDir.mkdirs()
-
-    // TODO: unhardcode
-    val file = File(outputDir, "kni-stub.kt")
-    file.writeText(result.toString())
-    return file
+    outputFile.getParentFile().mkdirs()
+    outputFile.writeText(result.toString())
+    return outputFile
 }
 
 class Generator(private val out: Printer, private val namer: Namer, private val dylib: File) {
@@ -64,12 +60,16 @@ class Generator(private val out: Printer, private val namer: Namer, private val 
 
         out.push()
 
-        for (method in klass.getMethodList().filter { !it.getClassMethod() }) {
+        // -[NSObject finalize] conflicts with java.lang.Object.finalize
+        // TODO: unhardcode
+        val methods = klass.getMethodList().filter { it.getFunction().getName() != "finalize" }
+
+        for (method in methods.filter { !it.getClassMethod() }) {
             genFunction(method.getFunction(), open = true)
             out.println()
         }
 
-        genMetaClass(klass)
+        genMetaClass(klass, methods)
         out.println()
         genClassObject(klass)
 
@@ -80,7 +80,7 @@ class Generator(private val out: Printer, private val namer: Namer, private val 
         out.println("}")
     }
 
-    private fun genMetaClass(klass: ObjCClass) {
+    private fun genMetaClass(klass: ObjCClass, methods: List<ObjCMethod>) {
         val baseList =
                 (if (klass.hasBaseClass())
                     listOf(klass.getBaseClass() + ".metaclass")
@@ -90,7 +90,7 @@ class Generator(private val out: Printer, private val namer: Namer, private val 
         out.push()
 
         var first = true
-        for (method in klass.getMethodList().filter { it.getClassMethod() }) {
+        for (method in methods.filter { it.getClassMethod() }) {
             if (first) first = false else out.println()
             genFunction(method.getFunction(), open = false)
         }
@@ -132,7 +132,7 @@ class Generator(private val out: Printer, private val namer: Namer, private val 
         out.print("fun ${namer.methodName(function.getName())}")
 
         function.getParameterList()
-                .map { p -> p.getName() + ": " + parseType(p.getType()).str }
+                .map { p -> namer.parameterName(p.getName()) + ": " + parseType(p.getType()).str }
                 .joinTo(out, separator = ", ", prefix = "(", postfix = ")")
 
         val returnType = parseType(function.getReturnType())
@@ -147,7 +147,7 @@ class Generator(private val out: Printer, private val namer: Namer, private val 
         }
         out.print("Native.objc_msgSend(\"${returnTypeReflectString(returnType)}\", this, \"${function.getName()}\"")
         function.getParameterList()
-                .map { p -> p.getName() }
+                .map { p -> namer.parameterName(p.getName()) }
                 .let {
                     if (it.isNotEmpty()) {
                         out.print(", ")
@@ -155,7 +155,7 @@ class Generator(private val out: Printer, private val namer: Namer, private val 
                     }
                 }
         out.print(")")
-        if (returnType != UnitType) {
+        if (returnType != UnitType && returnType.str != "Any") {
             out.print(" as ${returnType.str}")
         }
         out.println()
@@ -176,8 +176,10 @@ class Generator(private val out: Printer, private val namer: Namer, private val 
             LongType -> "long"
             DoubleType -> "double"
             ObjCClassType -> "interface kni.objc.ObjCClass"
+            OpaquePointerType, is PointerType -> "class kni.objc.Pointer"
+            ObjCObjectType, ObjCSelectorType -> "class kni.objc.${type.str}"
             is FunctionType -> "class kotlin.Function${type.paramTypes.size()}"
-            else -> "class ${type.str}"
+            else -> "class objc.${type.str}"
         }
     }
 }
@@ -224,9 +226,13 @@ class Namer(translationUnit: TranslationUnit) {
         return escape(objcSelectorName.substringBefore(':'))
     }
 
+    fun parameterName(name: String): String {
+        return escape(name)
+    }
+
     private fun escape(name: String): String {
         // TODO: all Kotlin keywords
-        if (name == "class") return "`$name`"
+        if (name in setOf("class", "object", "fun")) return "`$name`"
         return name
     }
 }

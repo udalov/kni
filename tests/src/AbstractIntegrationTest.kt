@@ -24,7 +24,8 @@ abstract class AbstractIntegrationTest {
 
         compileObjectiveC(implementation, dylib)
 
-        val stubSource = generateStub(buildNativeIndex(header), dylib, tmpdir)
+        val stubSource = File(tmpdir, kotlinSource.getPath().substringAfterLast(File.separator))
+        generateStub(buildNativeIndex(header), dylib, stubSource)
         val stubClasses = File(tmpdir, "stub")
         compileKotlin(stubSource, stubClasses, listOf(kniObjCRuntime))
 
