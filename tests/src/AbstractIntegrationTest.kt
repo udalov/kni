@@ -1,6 +1,5 @@
-package org.jetbrains.kni.it
+package org.jetbrains.kni.tests
 
-import org.junit.Test as test
 import java.io.File
 import java.nio.file.Files
 import org.jetbrains.kni.indexer.buildNativeIndex
@@ -8,18 +7,17 @@ import org.jetbrains.kni.gen.generateStub
 import org.junit.Assert
 import kotlin.properties.Delegates
 
-class IntegrationTest {
+abstract class AbstractIntegrationTest {
     private val kniObjCRuntime: File by Delegates.lazy {
         val target = File("dist/kni-objc-runtime.jar")
         assert(target.exists()) { "$target is not found. Execute 'ant dist' before running tests" }
         target
     }
 
-    private fun doTest(testName: String) {
-        val path = "tests/testData/integration/$testName"
-        val header = File("$path.h").getAbsoluteFile()
-        val implementation = File("$path.m").getAbsoluteFile()
-        val kotlinSource = File("$path.kt").getAbsoluteFile()
+    protected fun doTest(source: String) {
+        val header = File(source.replace(".kt", ".h")).getAbsoluteFile()
+        val implementation = File(source.replace(".kt", ".m")).getAbsoluteFile()
+        val kotlinSource = File(source).getAbsoluteFile()
 
         val tmpdir = Files.createTempDirectory("knitest").toFile()
         val dylib = File(tmpdir, "libKNITest.dylib")
@@ -66,10 +64,5 @@ class IntegrationTest {
         assert(exitCode == 0) { "Process exited with code $exitCode, result: $result" }
 
         return result
-    }
-
-
-    test fun simpleClass() {
-        doTest("simpleClass")
     }
 }

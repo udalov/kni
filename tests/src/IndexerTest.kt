@@ -1,8 +1,9 @@
-package org.jetbrains.kni.indexer
+package org.jetbrains.kni.tests
 
 import org.junit.Test as test
 import java.io.File
 import org.junit.Assert
+import org.jetbrains.kni.indexer.buildNativeIndex
 
 class IndexerTest {
     private fun doTest(content: String, expected: String) {
