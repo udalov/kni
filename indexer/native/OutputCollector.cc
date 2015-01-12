@@ -23,6 +23,10 @@ namespace {
         assertNotNull(found);
         return found;
     }
+
+    template<typename T> bool checkByUSR(const std::map<std::string, T *>& map, const std::string& usr) {
+        return (map.find(usr) != map.end());
+    }
 }
 
 void OutputCollector::saveClassByUSR(const std::string& usr, ObjCClass *clazz) {
@@ -49,6 +53,11 @@ ObjCCategory *OutputCollector::loadCategoryByUSR(const std::string& usr) const {
     return loadByUSR(m_categories, usr);
 }
 
+bool OutputCollector::anyCategoryByUSR(const std::string& usr) const {
+    return  checkByUSR(m_classes, usr) ||
+            checkByUSR(m_protocols, usr) ||
+            checkByUSR(m_categories, usr);
+}
 
 void OutputCollector::saveForwardDeclaredClass(const std::string& usr, const std::string& name) {
     m_forwardClasses.insert(make_pair(usr, name));

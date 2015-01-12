@@ -35,7 +35,7 @@ PROTOBUF_LIB=$(BASEDIR)/lib/protobuf/lib
 PROTOBUF_INCLUDE=$(BASEDIR)/lib/protobuf/include
 
 CXX=c++
-CXXFLAGS=-O2 -Wall -std=c++0x $(JAVA_INCLUDE) -I$(CLANG_INCLUDE) -I$(PROTOBUF_INCLUDE) -stdlib=libc++
+CXXFLAGS=-O2 -Wall -std=c++11 $(JAVA_INCLUDE) -I$(CLANG_INCLUDE) -I$(PROTOBUF_INCLUDE) -stdlib=libc++
 LDFLAGS=-Wl,-rpath,$(CLANG_LIB) -L$(CLANG_LIB) -lclang -L$(PROTOBUF_LIB) -lprotobuf
 
 SRC_FILES=$(wildcard *.cc)

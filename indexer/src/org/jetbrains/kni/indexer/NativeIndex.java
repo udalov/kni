@@ -7563,75 +7563,113 @@ public final class NativeIndex {
       com.google.protobuf.MessageOrBuilder {
 
     /**
-     * <code>repeated .ObjCClass class = 1;</code>
+     * <code>required string name = 1;</code>
+     */
+    boolean hasName();
+    /**
+     * <code>required string name = 1;</code>
+     */
+    java.lang.String getName();
+    /**
+     * <code>required string name = 1;</code>
+     */
+    com.google.protobuf.ByteString
+        getNameBytes();
+
+    /**
+     * <code>repeated .ObjCClass class = 2;</code>
      */
     java.util.List<org.jetbrains.kni.indexer.NativeIndex.ObjCClass> 
         getClass_List();
     /**
-     * <code>repeated .ObjCClass class = 1;</code>
+     * <code>repeated .ObjCClass class = 2;</code>
      */
     org.jetbrains.kni.indexer.NativeIndex.ObjCClass getClass_(int index);
     /**
-     * <code>repeated .ObjCClass class = 1;</code>
+     * <code>repeated .ObjCClass class = 2;</code>
      */
     int getClass_Count();
     /**
-     * <code>repeated .ObjCClass class = 1;</code>
+     * <code>repeated .ObjCClass class = 2;</code>
      */
     java.util.List<? extends org.jetbrains.kni.indexer.NativeIndex.ObjCClassOrBuilder> 
         getClass_OrBuilderList();
     /**
-     * <code>repeated .ObjCClass class = 1;</code>
+     * <code>repeated .ObjCClass class = 2;</code>
      */
     org.jetbrains.kni.indexer.NativeIndex.ObjCClassOrBuilder getClass_OrBuilder(
         int index);
 
     /**
-     * <code>repeated .ObjCProtocol protocol = 2;</code>
+     * <code>repeated .ObjCProtocol protocol = 3;</code>
      */
     java.util.List<org.jetbrains.kni.indexer.NativeIndex.ObjCProtocol> 
         getProtocolList();
     /**
-     * <code>repeated .ObjCProtocol protocol = 2;</code>
+     * <code>repeated .ObjCProtocol protocol = 3;</code>
      */
     org.jetbrains.kni.indexer.NativeIndex.ObjCProtocol getProtocol(int index);
     /**
-     * <code>repeated .ObjCProtocol protocol = 2;</code>
+     * <code>repeated .ObjCProtocol protocol = 3;</code>
      */
     int getProtocolCount();
     /**
-     * <code>repeated .ObjCProtocol protocol = 2;</code>
+     * <code>repeated .ObjCProtocol protocol = 3;</code>
      */
     java.util.List<? extends org.jetbrains.kni.indexer.NativeIndex.ObjCProtocolOrBuilder> 
         getProtocolOrBuilderList();
     /**
-     * <code>repeated .ObjCProtocol protocol = 2;</code>
+     * <code>repeated .ObjCProtocol protocol = 3;</code>
      */
     org.jetbrains.kni.indexer.NativeIndex.ObjCProtocolOrBuilder getProtocolOrBuilder(
         int index);
 
     /**
-     * <code>repeated .ObjCCategory category = 3;</code>
+     * <code>repeated .ObjCCategory category = 4;</code>
      */
     java.util.List<org.jetbrains.kni.indexer.NativeIndex.ObjCCategory> 
         getCategoryList();
     /**
-     * <code>repeated .ObjCCategory category = 3;</code>
+     * <code>repeated .ObjCCategory category = 4;</code>
      */
     org.jetbrains.kni.indexer.NativeIndex.ObjCCategory getCategory(int index);
     /**
-     * <code>repeated .ObjCCategory category = 3;</code>
+     * <code>repeated .ObjCCategory category = 4;</code>
      */
     int getCategoryCount();
     /**
-     * <code>repeated .ObjCCategory category = 3;</code>
+     * <code>repeated .ObjCCategory category = 4;</code>
      */
     java.util.List<? extends org.jetbrains.kni.indexer.NativeIndex.ObjCCategoryOrBuilder> 
         getCategoryOrBuilderList();
     /**
-     * <code>repeated .ObjCCategory category = 3;</code>
+     * <code>repeated .ObjCCategory category = 4;</code>
      */
     org.jetbrains.kni.indexer.NativeIndex.ObjCCategoryOrBuilder getCategoryOrBuilder(
+        int index);
+
+    /**
+     * <code>repeated .Function function = 5;</code>
+     */
+    java.util.List<org.jetbrains.kni.indexer.NativeIndex.Function> 
+        getFunctionList();
+    /**
+     * <code>repeated .Function function = 5;</code>
+     */
+    org.jetbrains.kni.indexer.NativeIndex.Function getFunction(int index);
+    /**
+     * <code>repeated .Function function = 5;</code>
+     */
+    int getFunctionCount();
+    /**
+     * <code>repeated .Function function = 5;</code>
+     */
+    java.util.List<? extends org.jetbrains.kni.indexer.NativeIndex.FunctionOrBuilder> 
+        getFunctionOrBuilderList();
+    /**
+     * <code>repeated .Function function = 5;</code>
+     */
+    org.jetbrains.kni.indexer.NativeIndex.FunctionOrBuilder getFunctionOrBuilder(
         int index);
   }
   /**
@@ -7687,27 +7725,41 @@ public final class NativeIndex {
               break;
             }
             case 10: {
-              if (!((mutable_bitField0_ & 0x00000001) == 0x00000001)) {
-                class__ = new java.util.ArrayList<org.jetbrains.kni.indexer.NativeIndex.ObjCClass>();
-                mutable_bitField0_ |= 0x00000001;
-              }
-              class__.add(input.readMessage(org.jetbrains.kni.indexer.NativeIndex.ObjCClass.PARSER, extensionRegistry));
+              com.google.protobuf.ByteString bs = input.readBytes();
+              bitField0_ |= 0x00000001;
+              name_ = bs;
               break;
             }
             case 18: {
               if (!((mutable_bitField0_ & 0x00000002) == 0x00000002)) {
-                protocol_ = new java.util.ArrayList<org.jetbrains.kni.indexer.NativeIndex.ObjCProtocol>();
+                class__ = new java.util.ArrayList<org.jetbrains.kni.indexer.NativeIndex.ObjCClass>();
                 mutable_bitField0_ |= 0x00000002;
               }
-              protocol_.add(input.readMessage(org.jetbrains.kni.indexer.NativeIndex.ObjCProtocol.PARSER, extensionRegistry));
+              class__.add(input.readMessage(org.jetbrains.kni.indexer.NativeIndex.ObjCClass.PARSER, extensionRegistry));
               break;
             }
             case 26: {
               if (!((mutable_bitField0_ & 0x00000004) == 0x00000004)) {
-                category_ = new java.util.ArrayList<org.jetbrains.kni.indexer.NativeIndex.ObjCCategory>();
+                protocol_ = new java.util.ArrayList<org.jetbrains.kni.indexer.NativeIndex.ObjCProtocol>();
                 mutable_bitField0_ |= 0x00000004;
               }
+              protocol_.add(input.readMessage(org.jetbrains.kni.indexer.NativeIndex.ObjCProtocol.PARSER, extensionRegistry));
+              break;
+            }
+            case 34: {
+              if (!((mutable_bitField0_ & 0x00000008) == 0x00000008)) {
+                category_ = new java.util.ArrayList<org.jetbrains.kni.indexer.NativeIndex.ObjCCategory>();
+                mutable_bitField0_ |= 0x00000008;
+              }
               category_.add(input.readMessage(org.jetbrains.kni.indexer.NativeIndex.ObjCCategory.PARSER, extensionRegistry));
+              break;
+            }
+            case 42: {
+              if (!((mutable_bitField0_ & 0x00000010) == 0x00000010)) {
+                function_ = new java.util.ArrayList<org.jetbrains.kni.indexer.NativeIndex.Function>();
+                mutable_bitField0_ |= 0x00000010;
+              }
+              function_.add(input.readMessage(org.jetbrains.kni.indexer.NativeIndex.Function.PARSER, extensionRegistry));
               break;
             }
           }
@@ -7718,14 +7770,17 @@ public final class NativeIndex {
         throw new com.google.protobuf.InvalidProtocolBufferException(
             e.getMessage()).setUnfinishedMessage(this);
       } finally {
-        if (((mutable_bitField0_ & 0x00000001) == 0x00000001)) {
+        if (((mutable_bitField0_ & 0x00000002) == 0x00000002)) {
           class__ = java.util.Collections.unmodifiableList(class__);
         }
-        if (((mutable_bitField0_ & 0x00000002) == 0x00000002)) {
+        if (((mutable_bitField0_ & 0x00000004) == 0x00000004)) {
           protocol_ = java.util.Collections.unmodifiableList(protocol_);
         }
-        if (((mutable_bitField0_ & 0x00000004) == 0x00000004)) {
+        if (((mutable_bitField0_ & 0x00000008) == 0x00000008)) {
           category_ = java.util.Collections.unmodifiableList(category_);
+        }
+        if (((mutable_bitField0_ & 0x00000010) == 0x00000010)) {
+          function_ = java.util.Collections.unmodifiableList(function_);
         }
         this.unknownFields = unknownFields.build();
         makeExtensionsImmutable();
@@ -7758,115 +7813,195 @@ public final class NativeIndex {
       return PARSER;
     }
 
-    public static final int CLASS_FIELD_NUMBER = 1;
+    private int bitField0_;
+    public static final int NAME_FIELD_NUMBER = 1;
+    private java.lang.Object name_;
+    /**
+     * <code>required string name = 1;</code>
+     */
+    public boolean hasName() {
+      return ((bitField0_ & 0x00000001) == 0x00000001);
+    }
+    /**
+     * <code>required string name = 1;</code>
+     */
+    public java.lang.String getName() {
+      java.lang.Object ref = name_;
+      if (ref instanceof java.lang.String) {
+        return (java.lang.String) ref;
+      } else {
+        com.google.protobuf.ByteString bs = 
+            (com.google.protobuf.ByteString) ref;
+        java.lang.String s = bs.toStringUtf8();
+        if (bs.isValidUtf8()) {
+          name_ = s;
+        }
+        return s;
+      }
+    }
+    /**
+     * <code>required string name = 1;</code>
+     */
+    public com.google.protobuf.ByteString
+        getNameBytes() {
+      java.lang.Object ref = name_;
+      if (ref instanceof java.lang.String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
+        name_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
+    }
+
+    public static final int CLASS_FIELD_NUMBER = 2;
     private java.util.List<org.jetbrains.kni.indexer.NativeIndex.ObjCClass> class__;
     /**
-     * <code>repeated .ObjCClass class = 1;</code>
+     * <code>repeated .ObjCClass class = 2;</code>
      */
     public java.util.List<org.jetbrains.kni.indexer.NativeIndex.ObjCClass> getClass_List() {
       return class__;
     }
     /**
-     * <code>repeated .ObjCClass class = 1;</code>
+     * <code>repeated .ObjCClass class = 2;</code>
      */
     public java.util.List<? extends org.jetbrains.kni.indexer.NativeIndex.ObjCClassOrBuilder> 
         getClass_OrBuilderList() {
       return class__;
     }
     /**
-     * <code>repeated .ObjCClass class = 1;</code>
+     * <code>repeated .ObjCClass class = 2;</code>
      */
     public int getClass_Count() {
       return class__.size();
     }
     /**
-     * <code>repeated .ObjCClass class = 1;</code>
+     * <code>repeated .ObjCClass class = 2;</code>
      */
     public org.jetbrains.kni.indexer.NativeIndex.ObjCClass getClass_(int index) {
       return class__.get(index);
     }
     /**
-     * <code>repeated .ObjCClass class = 1;</code>
+     * <code>repeated .ObjCClass class = 2;</code>
      */
     public org.jetbrains.kni.indexer.NativeIndex.ObjCClassOrBuilder getClass_OrBuilder(
         int index) {
       return class__.get(index);
     }
 
-    public static final int PROTOCOL_FIELD_NUMBER = 2;
+    public static final int PROTOCOL_FIELD_NUMBER = 3;
     private java.util.List<org.jetbrains.kni.indexer.NativeIndex.ObjCProtocol> protocol_;
     /**
-     * <code>repeated .ObjCProtocol protocol = 2;</code>
+     * <code>repeated .ObjCProtocol protocol = 3;</code>
      */
     public java.util.List<org.jetbrains.kni.indexer.NativeIndex.ObjCProtocol> getProtocolList() {
       return protocol_;
     }
     /**
-     * <code>repeated .ObjCProtocol protocol = 2;</code>
+     * <code>repeated .ObjCProtocol protocol = 3;</code>
      */
     public java.util.List<? extends org.jetbrains.kni.indexer.NativeIndex.ObjCProtocolOrBuilder> 
         getProtocolOrBuilderList() {
       return protocol_;
     }
     /**
-     * <code>repeated .ObjCProtocol protocol = 2;</code>
+     * <code>repeated .ObjCProtocol protocol = 3;</code>
      */
     public int getProtocolCount() {
       return protocol_.size();
     }
     /**
-     * <code>repeated .ObjCProtocol protocol = 2;</code>
+     * <code>repeated .ObjCProtocol protocol = 3;</code>
      */
     public org.jetbrains.kni.indexer.NativeIndex.ObjCProtocol getProtocol(int index) {
       return protocol_.get(index);
     }
     /**
-     * <code>repeated .ObjCProtocol protocol = 2;</code>
+     * <code>repeated .ObjCProtocol protocol = 3;</code>
      */
     public org.jetbrains.kni.indexer.NativeIndex.ObjCProtocolOrBuilder getProtocolOrBuilder(
         int index) {
       return protocol_.get(index);
     }
 
-    public static final int CATEGORY_FIELD_NUMBER = 3;
+    public static final int CATEGORY_FIELD_NUMBER = 4;
     private java.util.List<org.jetbrains.kni.indexer.NativeIndex.ObjCCategory> category_;
     /**
-     * <code>repeated .ObjCCategory category = 3;</code>
+     * <code>repeated .ObjCCategory category = 4;</code>
      */
     public java.util.List<org.jetbrains.kni.indexer.NativeIndex.ObjCCategory> getCategoryList() {
       return category_;
     }
     /**
-     * <code>repeated .ObjCCategory category = 3;</code>
+     * <code>repeated .ObjCCategory category = 4;</code>
      */
     public java.util.List<? extends org.jetbrains.kni.indexer.NativeIndex.ObjCCategoryOrBuilder> 
         getCategoryOrBuilderList() {
       return category_;
     }
     /**
-     * <code>repeated .ObjCCategory category = 3;</code>
+     * <code>repeated .ObjCCategory category = 4;</code>
      */
     public int getCategoryCount() {
       return category_.size();
     }
     /**
-     * <code>repeated .ObjCCategory category = 3;</code>
+     * <code>repeated .ObjCCategory category = 4;</code>
      */
     public org.jetbrains.kni.indexer.NativeIndex.ObjCCategory getCategory(int index) {
       return category_.get(index);
     }
     /**
-     * <code>repeated .ObjCCategory category = 3;</code>
+     * <code>repeated .ObjCCategory category = 4;</code>
      */
     public org.jetbrains.kni.indexer.NativeIndex.ObjCCategoryOrBuilder getCategoryOrBuilder(
         int index) {
       return category_.get(index);
     }
 
+    public static final int FUNCTION_FIELD_NUMBER = 5;
+    private java.util.List<org.jetbrains.kni.indexer.NativeIndex.Function> function_;
+    /**
+     * <code>repeated .Function function = 5;</code>
+     */
+    public java.util.List<org.jetbrains.kni.indexer.NativeIndex.Function> getFunctionList() {
+      return function_;
+    }
+    /**
+     * <code>repeated .Function function = 5;</code>
+     */
+    public java.util.List<? extends org.jetbrains.kni.indexer.NativeIndex.FunctionOrBuilder> 
+        getFunctionOrBuilderList() {
+      return function_;
+    }
+    /**
+     * <code>repeated .Function function = 5;</code>
+     */
+    public int getFunctionCount() {
+      return function_.size();
+    }
+    /**
+     * <code>repeated .Function function = 5;</code>
+     */
+    public org.jetbrains.kni.indexer.NativeIndex.Function getFunction(int index) {
+      return function_.get(index);
+    }
+    /**
+     * <code>repeated .Function function = 5;</code>
+     */
+    public org.jetbrains.kni.indexer.NativeIndex.FunctionOrBuilder getFunctionOrBuilder(
+        int index) {
+      return function_.get(index);
+    }
+
     private void initFields() {
+      name_ = "";
       class__ = java.util.Collections.emptyList();
       protocol_ = java.util.Collections.emptyList();
       category_ = java.util.Collections.emptyList();
+      function_ = java.util.Collections.emptyList();
     }
     private byte memoizedIsInitialized = -1;
     public final boolean isInitialized() {
@@ -7874,6 +8009,10 @@ public final class NativeIndex {
       if (isInitialized == 1) return true;
       if (isInitialized == 0) return false;
 
+      if (!hasName()) {
+        memoizedIsInitialized = 0;
+        return false;
+      }
       for (int i = 0; i < getClass_Count(); i++) {
         if (!getClass_(i).isInitialized()) {
           memoizedIsInitialized = 0;
@@ -7892,6 +8031,12 @@ public final class NativeIndex {
           return false;
         }
       }
+      for (int i = 0; i < getFunctionCount(); i++) {
+        if (!getFunction(i).isInitialized()) {
+          memoizedIsInitialized = 0;
+          return false;
+        }
+      }
       memoizedIsInitialized = 1;
       return true;
     }
@@ -7899,14 +8044,20 @@ public final class NativeIndex {
     public void writeTo(com.google.protobuf.CodedOutputStream output)
                         throws java.io.IOException {
       getSerializedSize();
+      if (((bitField0_ & 0x00000001) == 0x00000001)) {
+        output.writeBytes(1, getNameBytes());
+      }
       for (int i = 0; i < class__.size(); i++) {
-        output.writeMessage(1, class__.get(i));
+        output.writeMessage(2, class__.get(i));
       }
       for (int i = 0; i < protocol_.size(); i++) {
-        output.writeMessage(2, protocol_.get(i));
+        output.writeMessage(3, protocol_.get(i));
       }
       for (int i = 0; i < category_.size(); i++) {
-        output.writeMessage(3, category_.get(i));
+        output.writeMessage(4, category_.get(i));
+      }
+      for (int i = 0; i < function_.size(); i++) {
+        output.writeMessage(5, function_.get(i));
       }
       getUnknownFields().writeTo(output);
     }
@@ -7917,17 +8068,25 @@ public final class NativeIndex {
       if (size != -1) return size;
 
       size = 0;
+      if (((bitField0_ & 0x00000001) == 0x00000001)) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeBytesSize(1, getNameBytes());
+      }
       for (int i = 0; i < class__.size(); i++) {
         size += com.google.protobuf.CodedOutputStream
-          .computeMessageSize(1, class__.get(i));
+          .computeMessageSize(2, class__.get(i));
       }
       for (int i = 0; i < protocol_.size(); i++) {
         size += com.google.protobuf.CodedOutputStream
-          .computeMessageSize(2, protocol_.get(i));
+          .computeMessageSize(3, protocol_.get(i));
       }
       for (int i = 0; i < category_.size(); i++) {
         size += com.google.protobuf.CodedOutputStream
-          .computeMessageSize(3, category_.get(i));
+          .computeMessageSize(4, category_.get(i));
+      }
+      for (int i = 0; i < function_.size(); i++) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeMessageSize(5, function_.get(i));
       }
       size += getUnknownFields().getSerializedSize();
       memoizedSerializedSize = size;
@@ -8041,6 +8200,7 @@ public final class NativeIndex {
           getClass_FieldBuilder();
           getProtocolFieldBuilder();
           getCategoryFieldBuilder();
+          getFunctionFieldBuilder();
         }
       }
       private static Builder create() {
@@ -8049,23 +8209,31 @@ public final class NativeIndex {
 
       public Builder clear() {
         super.clear();
+        name_ = "";
+        bitField0_ = (bitField0_ & ~0x00000001);
         if (class_Builder_ == null) {
           class__ = java.util.Collections.emptyList();
-          bitField0_ = (bitField0_ & ~0x00000001);
+          bitField0_ = (bitField0_ & ~0x00000002);
         } else {
           class_Builder_.clear();
         }
         if (protocolBuilder_ == null) {
           protocol_ = java.util.Collections.emptyList();
-          bitField0_ = (bitField0_ & ~0x00000002);
+          bitField0_ = (bitField0_ & ~0x00000004);
         } else {
           protocolBuilder_.clear();
         }
         if (categoryBuilder_ == null) {
           category_ = java.util.Collections.emptyList();
-          bitField0_ = (bitField0_ & ~0x00000004);
+          bitField0_ = (bitField0_ & ~0x00000008);
         } else {
           categoryBuilder_.clear();
+        }
+        if (functionBuilder_ == null) {
+          function_ = java.util.Collections.emptyList();
+          bitField0_ = (bitField0_ & ~0x00000010);
+        } else {
+          functionBuilder_.clear();
         }
         return this;
       }
@@ -8094,33 +8262,48 @@ public final class NativeIndex {
       public org.jetbrains.kni.indexer.NativeIndex.TranslationUnit buildPartial() {
         org.jetbrains.kni.indexer.NativeIndex.TranslationUnit result = new org.jetbrains.kni.indexer.NativeIndex.TranslationUnit(this);
         int from_bitField0_ = bitField0_;
+        int to_bitField0_ = 0;
+        if (((from_bitField0_ & 0x00000001) == 0x00000001)) {
+          to_bitField0_ |= 0x00000001;
+        }
+        result.name_ = name_;
         if (class_Builder_ == null) {
-          if (((bitField0_ & 0x00000001) == 0x00000001)) {
+          if (((bitField0_ & 0x00000002) == 0x00000002)) {
             class__ = java.util.Collections.unmodifiableList(class__);
-            bitField0_ = (bitField0_ & ~0x00000001);
+            bitField0_ = (bitField0_ & ~0x00000002);
           }
           result.class__ = class__;
         } else {
           result.class__ = class_Builder_.build();
         }
         if (protocolBuilder_ == null) {
-          if (((bitField0_ & 0x00000002) == 0x00000002)) {
+          if (((bitField0_ & 0x00000004) == 0x00000004)) {
             protocol_ = java.util.Collections.unmodifiableList(protocol_);
-            bitField0_ = (bitField0_ & ~0x00000002);
+            bitField0_ = (bitField0_ & ~0x00000004);
           }
           result.protocol_ = protocol_;
         } else {
           result.protocol_ = protocolBuilder_.build();
         }
         if (categoryBuilder_ == null) {
-          if (((bitField0_ & 0x00000004) == 0x00000004)) {
+          if (((bitField0_ & 0x00000008) == 0x00000008)) {
             category_ = java.util.Collections.unmodifiableList(category_);
-            bitField0_ = (bitField0_ & ~0x00000004);
+            bitField0_ = (bitField0_ & ~0x00000008);
           }
           result.category_ = category_;
         } else {
           result.category_ = categoryBuilder_.build();
         }
+        if (functionBuilder_ == null) {
+          if (((bitField0_ & 0x00000010) == 0x00000010)) {
+            function_ = java.util.Collections.unmodifiableList(function_);
+            bitField0_ = (bitField0_ & ~0x00000010);
+          }
+          result.function_ = function_;
+        } else {
+          result.function_ = functionBuilder_.build();
+        }
+        result.bitField0_ = to_bitField0_;
         onBuilt();
         return result;
       }
@@ -8136,11 +8319,16 @@ public final class NativeIndex {
 
       public Builder mergeFrom(org.jetbrains.kni.indexer.NativeIndex.TranslationUnit other) {
         if (other == org.jetbrains.kni.indexer.NativeIndex.TranslationUnit.getDefaultInstance()) return this;
+        if (other.hasName()) {
+          bitField0_ |= 0x00000001;
+          name_ = other.name_;
+          onChanged();
+        }
         if (class_Builder_ == null) {
           if (!other.class__.isEmpty()) {
             if (class__.isEmpty()) {
               class__ = other.class__;
-              bitField0_ = (bitField0_ & ~0x00000001);
+              bitField0_ = (bitField0_ & ~0x00000002);
             } else {
               ensureClass_IsMutable();
               class__.addAll(other.class__);
@@ -8153,7 +8341,7 @@ public final class NativeIndex {
               class_Builder_.dispose();
               class_Builder_ = null;
               class__ = other.class__;
-              bitField0_ = (bitField0_ & ~0x00000001);
+              bitField0_ = (bitField0_ & ~0x00000002);
               class_Builder_ = 
                 com.google.protobuf.GeneratedMessage.alwaysUseFieldBuilders ?
                    getClass_FieldBuilder() : null;
@@ -8166,7 +8354,7 @@ public final class NativeIndex {
           if (!other.protocol_.isEmpty()) {
             if (protocol_.isEmpty()) {
               protocol_ = other.protocol_;
-              bitField0_ = (bitField0_ & ~0x00000002);
+              bitField0_ = (bitField0_ & ~0x00000004);
             } else {
               ensureProtocolIsMutable();
               protocol_.addAll(other.protocol_);
@@ -8179,7 +8367,7 @@ public final class NativeIndex {
               protocolBuilder_.dispose();
               protocolBuilder_ = null;
               protocol_ = other.protocol_;
-              bitField0_ = (bitField0_ & ~0x00000002);
+              bitField0_ = (bitField0_ & ~0x00000004);
               protocolBuilder_ = 
                 com.google.protobuf.GeneratedMessage.alwaysUseFieldBuilders ?
                    getProtocolFieldBuilder() : null;
@@ -8192,7 +8380,7 @@ public final class NativeIndex {
           if (!other.category_.isEmpty()) {
             if (category_.isEmpty()) {
               category_ = other.category_;
-              bitField0_ = (bitField0_ & ~0x00000004);
+              bitField0_ = (bitField0_ & ~0x00000008);
             } else {
               ensureCategoryIsMutable();
               category_.addAll(other.category_);
@@ -8205,7 +8393,7 @@ public final class NativeIndex {
               categoryBuilder_.dispose();
               categoryBuilder_ = null;
               category_ = other.category_;
-              bitField0_ = (bitField0_ & ~0x00000004);
+              bitField0_ = (bitField0_ & ~0x00000008);
               categoryBuilder_ = 
                 com.google.protobuf.GeneratedMessage.alwaysUseFieldBuilders ?
                    getCategoryFieldBuilder() : null;
@@ -8214,11 +8402,41 @@ public final class NativeIndex {
             }
           }
         }
+        if (functionBuilder_ == null) {
+          if (!other.function_.isEmpty()) {
+            if (function_.isEmpty()) {
+              function_ = other.function_;
+              bitField0_ = (bitField0_ & ~0x00000010);
+            } else {
+              ensureFunctionIsMutable();
+              function_.addAll(other.function_);
+            }
+            onChanged();
+          }
+        } else {
+          if (!other.function_.isEmpty()) {
+            if (functionBuilder_.isEmpty()) {
+              functionBuilder_.dispose();
+              functionBuilder_ = null;
+              function_ = other.function_;
+              bitField0_ = (bitField0_ & ~0x00000010);
+              functionBuilder_ = 
+                com.google.protobuf.GeneratedMessage.alwaysUseFieldBuilders ?
+                   getFunctionFieldBuilder() : null;
+            } else {
+              functionBuilder_.addAllMessages(other.function_);
+            }
+          }
+        }
         this.mergeUnknownFields(other.getUnknownFields());
         return this;
       }
 
       public final boolean isInitialized() {
+        if (!hasName()) {
+          
+          return false;
+        }
         for (int i = 0; i < getClass_Count(); i++) {
           if (!getClass_(i).isInitialized()) {
             
@@ -8233,6 +8451,12 @@ public final class NativeIndex {
         }
         for (int i = 0; i < getCategoryCount(); i++) {
           if (!getCategory(i).isInitialized()) {
+            
+            return false;
+          }
+        }
+        for (int i = 0; i < getFunctionCount(); i++) {
+          if (!getFunction(i).isInitialized()) {
             
             return false;
           }
@@ -8259,12 +8483,88 @@ public final class NativeIndex {
       }
       private int bitField0_;
 
+      private java.lang.Object name_ = "";
+      /**
+       * <code>required string name = 1;</code>
+       */
+      public boolean hasName() {
+        return ((bitField0_ & 0x00000001) == 0x00000001);
+      }
+      /**
+       * <code>required string name = 1;</code>
+       */
+      public java.lang.String getName() {
+        java.lang.Object ref = name_;
+        if (!(ref instanceof java.lang.String)) {
+          com.google.protobuf.ByteString bs =
+              (com.google.protobuf.ByteString) ref;
+          java.lang.String s = bs.toStringUtf8();
+          if (bs.isValidUtf8()) {
+            name_ = s;
+          }
+          return s;
+        } else {
+          return (java.lang.String) ref;
+        }
+      }
+      /**
+       * <code>required string name = 1;</code>
+       */
+      public com.google.protobuf.ByteString
+          getNameBytes() {
+        java.lang.Object ref = name_;
+        if (ref instanceof String) {
+          com.google.protobuf.ByteString b = 
+              com.google.protobuf.ByteString.copyFromUtf8(
+                  (java.lang.String) ref);
+          name_ = b;
+          return b;
+        } else {
+          return (com.google.protobuf.ByteString) ref;
+        }
+      }
+      /**
+       * <code>required string name = 1;</code>
+       */
+      public Builder setName(
+          java.lang.String value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000001;
+        name_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>required string name = 1;</code>
+       */
+      public Builder clearName() {
+        bitField0_ = (bitField0_ & ~0x00000001);
+        name_ = getDefaultInstance().getName();
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>required string name = 1;</code>
+       */
+      public Builder setNameBytes(
+          com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000001;
+        name_ = value;
+        onChanged();
+        return this;
+      }
+
       private java.util.List<org.jetbrains.kni.indexer.NativeIndex.ObjCClass> class__ =
         java.util.Collections.emptyList();
       private void ensureClass_IsMutable() {
-        if (!((bitField0_ & 0x00000001) == 0x00000001)) {
+        if (!((bitField0_ & 0x00000002) == 0x00000002)) {
           class__ = new java.util.ArrayList<org.jetbrains.kni.indexer.NativeIndex.ObjCClass>(class__);
-          bitField0_ |= 0x00000001;
+          bitField0_ |= 0x00000002;
          }
       }
 
@@ -8272,7 +8572,7 @@ public final class NativeIndex {
           org.jetbrains.kni.indexer.NativeIndex.ObjCClass, org.jetbrains.kni.indexer.NativeIndex.ObjCClass.Builder, org.jetbrains.kni.indexer.NativeIndex.ObjCClassOrBuilder> class_Builder_;
 
       /**
-       * <code>repeated .ObjCClass class = 1;</code>
+       * <code>repeated .ObjCClass class = 2;</code>
        */
       public java.util.List<org.jetbrains.kni.indexer.NativeIndex.ObjCClass> getClass_List() {
         if (class_Builder_ == null) {
@@ -8282,7 +8582,7 @@ public final class NativeIndex {
         }
       }
       /**
-       * <code>repeated .ObjCClass class = 1;</code>
+       * <code>repeated .ObjCClass class = 2;</code>
        */
       public int getClass_Count() {
         if (class_Builder_ == null) {
@@ -8292,7 +8592,7 @@ public final class NativeIndex {
         }
       }
       /**
-       * <code>repeated .ObjCClass class = 1;</code>
+       * <code>repeated .ObjCClass class = 2;</code>
        */
       public org.jetbrains.kni.indexer.NativeIndex.ObjCClass getClass_(int index) {
         if (class_Builder_ == null) {
@@ -8302,7 +8602,7 @@ public final class NativeIndex {
         }
       }
       /**
-       * <code>repeated .ObjCClass class = 1;</code>
+       * <code>repeated .ObjCClass class = 2;</code>
        */
       public Builder setClass_(
           int index, org.jetbrains.kni.indexer.NativeIndex.ObjCClass value) {
@@ -8319,7 +8619,7 @@ public final class NativeIndex {
         return this;
       }
       /**
-       * <code>repeated .ObjCClass class = 1;</code>
+       * <code>repeated .ObjCClass class = 2;</code>
        */
       public Builder setClass_(
           int index, org.jetbrains.kni.indexer.NativeIndex.ObjCClass.Builder builderForValue) {
@@ -8333,7 +8633,7 @@ public final class NativeIndex {
         return this;
       }
       /**
-       * <code>repeated .ObjCClass class = 1;</code>
+       * <code>repeated .ObjCClass class = 2;</code>
        */
       public Builder addClass_(org.jetbrains.kni.indexer.NativeIndex.ObjCClass value) {
         if (class_Builder_ == null) {
@@ -8349,7 +8649,7 @@ public final class NativeIndex {
         return this;
       }
       /**
-       * <code>repeated .ObjCClass class = 1;</code>
+       * <code>repeated .ObjCClass class = 2;</code>
        */
       public Builder addClass_(
           int index, org.jetbrains.kni.indexer.NativeIndex.ObjCClass value) {
@@ -8366,7 +8666,7 @@ public final class NativeIndex {
         return this;
       }
       /**
-       * <code>repeated .ObjCClass class = 1;</code>
+       * <code>repeated .ObjCClass class = 2;</code>
        */
       public Builder addClass_(
           org.jetbrains.kni.indexer.NativeIndex.ObjCClass.Builder builderForValue) {
@@ -8380,7 +8680,7 @@ public final class NativeIndex {
         return this;
       }
       /**
-       * <code>repeated .ObjCClass class = 1;</code>
+       * <code>repeated .ObjCClass class = 2;</code>
        */
       public Builder addClass_(
           int index, org.jetbrains.kni.indexer.NativeIndex.ObjCClass.Builder builderForValue) {
@@ -8394,7 +8694,7 @@ public final class NativeIndex {
         return this;
       }
       /**
-       * <code>repeated .ObjCClass class = 1;</code>
+       * <code>repeated .ObjCClass class = 2;</code>
        */
       public Builder addAllClass_(
           java.lang.Iterable<? extends org.jetbrains.kni.indexer.NativeIndex.ObjCClass> values) {
@@ -8409,12 +8709,12 @@ public final class NativeIndex {
         return this;
       }
       /**
-       * <code>repeated .ObjCClass class = 1;</code>
+       * <code>repeated .ObjCClass class = 2;</code>
        */
       public Builder clearClass_() {
         if (class_Builder_ == null) {
           class__ = java.util.Collections.emptyList();
-          bitField0_ = (bitField0_ & ~0x00000001);
+          bitField0_ = (bitField0_ & ~0x00000002);
           onChanged();
         } else {
           class_Builder_.clear();
@@ -8422,7 +8722,7 @@ public final class NativeIndex {
         return this;
       }
       /**
-       * <code>repeated .ObjCClass class = 1;</code>
+       * <code>repeated .ObjCClass class = 2;</code>
        */
       public Builder removeClass_(int index) {
         if (class_Builder_ == null) {
@@ -8435,14 +8735,14 @@ public final class NativeIndex {
         return this;
       }
       /**
-       * <code>repeated .ObjCClass class = 1;</code>
+       * <code>repeated .ObjCClass class = 2;</code>
        */
       public org.jetbrains.kni.indexer.NativeIndex.ObjCClass.Builder getClass_Builder(
           int index) {
         return getClass_FieldBuilder().getBuilder(index);
       }
       /**
-       * <code>repeated .ObjCClass class = 1;</code>
+       * <code>repeated .ObjCClass class = 2;</code>
        */
       public org.jetbrains.kni.indexer.NativeIndex.ObjCClassOrBuilder getClass_OrBuilder(
           int index) {
@@ -8452,7 +8752,7 @@ public final class NativeIndex {
         }
       }
       /**
-       * <code>repeated .ObjCClass class = 1;</code>
+       * <code>repeated .ObjCClass class = 2;</code>
        */
       public java.util.List<? extends org.jetbrains.kni.indexer.NativeIndex.ObjCClassOrBuilder> 
            getClass_OrBuilderList() {
@@ -8463,14 +8763,14 @@ public final class NativeIndex {
         }
       }
       /**
-       * <code>repeated .ObjCClass class = 1;</code>
+       * <code>repeated .ObjCClass class = 2;</code>
        */
       public org.jetbrains.kni.indexer.NativeIndex.ObjCClass.Builder addClass_Builder() {
         return getClass_FieldBuilder().addBuilder(
             org.jetbrains.kni.indexer.NativeIndex.ObjCClass.getDefaultInstance());
       }
       /**
-       * <code>repeated .ObjCClass class = 1;</code>
+       * <code>repeated .ObjCClass class = 2;</code>
        */
       public org.jetbrains.kni.indexer.NativeIndex.ObjCClass.Builder addClass_Builder(
           int index) {
@@ -8478,7 +8778,7 @@ public final class NativeIndex {
             index, org.jetbrains.kni.indexer.NativeIndex.ObjCClass.getDefaultInstance());
       }
       /**
-       * <code>repeated .ObjCClass class = 1;</code>
+       * <code>repeated .ObjCClass class = 2;</code>
        */
       public java.util.List<org.jetbrains.kni.indexer.NativeIndex.ObjCClass.Builder> 
            getClass_BuilderList() {
@@ -8491,7 +8791,7 @@ public final class NativeIndex {
           class_Builder_ = new com.google.protobuf.RepeatedFieldBuilder<
               org.jetbrains.kni.indexer.NativeIndex.ObjCClass, org.jetbrains.kni.indexer.NativeIndex.ObjCClass.Builder, org.jetbrains.kni.indexer.NativeIndex.ObjCClassOrBuilder>(
                   class__,
-                  ((bitField0_ & 0x00000001) == 0x00000001),
+                  ((bitField0_ & 0x00000002) == 0x00000002),
                   getParentForChildren(),
                   isClean());
           class__ = null;
@@ -8502,9 +8802,9 @@ public final class NativeIndex {
       private java.util.List<org.jetbrains.kni.indexer.NativeIndex.ObjCProtocol> protocol_ =
         java.util.Collections.emptyList();
       private void ensureProtocolIsMutable() {
-        if (!((bitField0_ & 0x00000002) == 0x00000002)) {
+        if (!((bitField0_ & 0x00000004) == 0x00000004)) {
           protocol_ = new java.util.ArrayList<org.jetbrains.kni.indexer.NativeIndex.ObjCProtocol>(protocol_);
-          bitField0_ |= 0x00000002;
+          bitField0_ |= 0x00000004;
          }
       }
 
@@ -8512,7 +8812,7 @@ public final class NativeIndex {
           org.jetbrains.kni.indexer.NativeIndex.ObjCProtocol, org.jetbrains.kni.indexer.NativeIndex.ObjCProtocol.Builder, org.jetbrains.kni.indexer.NativeIndex.ObjCProtocolOrBuilder> protocolBuilder_;
 
       /**
-       * <code>repeated .ObjCProtocol protocol = 2;</code>
+       * <code>repeated .ObjCProtocol protocol = 3;</code>
        */
       public java.util.List<org.jetbrains.kni.indexer.NativeIndex.ObjCProtocol> getProtocolList() {
         if (protocolBuilder_ == null) {
@@ -8522,7 +8822,7 @@ public final class NativeIndex {
         }
       }
       /**
-       * <code>repeated .ObjCProtocol protocol = 2;</code>
+       * <code>repeated .ObjCProtocol protocol = 3;</code>
        */
       public int getProtocolCount() {
         if (protocolBuilder_ == null) {
@@ -8532,7 +8832,7 @@ public final class NativeIndex {
         }
       }
       /**
-       * <code>repeated .ObjCProtocol protocol = 2;</code>
+       * <code>repeated .ObjCProtocol protocol = 3;</code>
        */
       public org.jetbrains.kni.indexer.NativeIndex.ObjCProtocol getProtocol(int index) {
         if (protocolBuilder_ == null) {
@@ -8542,7 +8842,7 @@ public final class NativeIndex {
         }
       }
       /**
-       * <code>repeated .ObjCProtocol protocol = 2;</code>
+       * <code>repeated .ObjCProtocol protocol = 3;</code>
        */
       public Builder setProtocol(
           int index, org.jetbrains.kni.indexer.NativeIndex.ObjCProtocol value) {
@@ -8559,7 +8859,7 @@ public final class NativeIndex {
         return this;
       }
       /**
-       * <code>repeated .ObjCProtocol protocol = 2;</code>
+       * <code>repeated .ObjCProtocol protocol = 3;</code>
        */
       public Builder setProtocol(
           int index, org.jetbrains.kni.indexer.NativeIndex.ObjCProtocol.Builder builderForValue) {
@@ -8573,7 +8873,7 @@ public final class NativeIndex {
         return this;
       }
       /**
-       * <code>repeated .ObjCProtocol protocol = 2;</code>
+       * <code>repeated .ObjCProtocol protocol = 3;</code>
        */
       public Builder addProtocol(org.jetbrains.kni.indexer.NativeIndex.ObjCProtocol value) {
         if (protocolBuilder_ == null) {
@@ -8589,7 +8889,7 @@ public final class NativeIndex {
         return this;
       }
       /**
-       * <code>repeated .ObjCProtocol protocol = 2;</code>
+       * <code>repeated .ObjCProtocol protocol = 3;</code>
        */
       public Builder addProtocol(
           int index, org.jetbrains.kni.indexer.NativeIndex.ObjCProtocol value) {
@@ -8606,7 +8906,7 @@ public final class NativeIndex {
         return this;
       }
       /**
-       * <code>repeated .ObjCProtocol protocol = 2;</code>
+       * <code>repeated .ObjCProtocol protocol = 3;</code>
        */
       public Builder addProtocol(
           org.jetbrains.kni.indexer.NativeIndex.ObjCProtocol.Builder builderForValue) {
@@ -8620,7 +8920,7 @@ public final class NativeIndex {
         return this;
       }
       /**
-       * <code>repeated .ObjCProtocol protocol = 2;</code>
+       * <code>repeated .ObjCProtocol protocol = 3;</code>
        */
       public Builder addProtocol(
           int index, org.jetbrains.kni.indexer.NativeIndex.ObjCProtocol.Builder builderForValue) {
@@ -8634,7 +8934,7 @@ public final class NativeIndex {
         return this;
       }
       /**
-       * <code>repeated .ObjCProtocol protocol = 2;</code>
+       * <code>repeated .ObjCProtocol protocol = 3;</code>
        */
       public Builder addAllProtocol(
           java.lang.Iterable<? extends org.jetbrains.kni.indexer.NativeIndex.ObjCProtocol> values) {
@@ -8649,12 +8949,12 @@ public final class NativeIndex {
         return this;
       }
       /**
-       * <code>repeated .ObjCProtocol protocol = 2;</code>
+       * <code>repeated .ObjCProtocol protocol = 3;</code>
        */
       public Builder clearProtocol() {
         if (protocolBuilder_ == null) {
           protocol_ = java.util.Collections.emptyList();
-          bitField0_ = (bitField0_ & ~0x00000002);
+          bitField0_ = (bitField0_ & ~0x00000004);
           onChanged();
         } else {
           protocolBuilder_.clear();
@@ -8662,7 +8962,7 @@ public final class NativeIndex {
         return this;
       }
       /**
-       * <code>repeated .ObjCProtocol protocol = 2;</code>
+       * <code>repeated .ObjCProtocol protocol = 3;</code>
        */
       public Builder removeProtocol(int index) {
         if (protocolBuilder_ == null) {
@@ -8675,14 +8975,14 @@ public final class NativeIndex {
         return this;
       }
       /**
-       * <code>repeated .ObjCProtocol protocol = 2;</code>
+       * <code>repeated .ObjCProtocol protocol = 3;</code>
        */
       public org.jetbrains.kni.indexer.NativeIndex.ObjCProtocol.Builder getProtocolBuilder(
           int index) {
         return getProtocolFieldBuilder().getBuilder(index);
       }
       /**
-       * <code>repeated .ObjCProtocol protocol = 2;</code>
+       * <code>repeated .ObjCProtocol protocol = 3;</code>
        */
       public org.jetbrains.kni.indexer.NativeIndex.ObjCProtocolOrBuilder getProtocolOrBuilder(
           int index) {
@@ -8692,7 +8992,7 @@ public final class NativeIndex {
         }
       }
       /**
-       * <code>repeated .ObjCProtocol protocol = 2;</code>
+       * <code>repeated .ObjCProtocol protocol = 3;</code>
        */
       public java.util.List<? extends org.jetbrains.kni.indexer.NativeIndex.ObjCProtocolOrBuilder> 
            getProtocolOrBuilderList() {
@@ -8703,14 +9003,14 @@ public final class NativeIndex {
         }
       }
       /**
-       * <code>repeated .ObjCProtocol protocol = 2;</code>
+       * <code>repeated .ObjCProtocol protocol = 3;</code>
        */
       public org.jetbrains.kni.indexer.NativeIndex.ObjCProtocol.Builder addProtocolBuilder() {
         return getProtocolFieldBuilder().addBuilder(
             org.jetbrains.kni.indexer.NativeIndex.ObjCProtocol.getDefaultInstance());
       }
       /**
-       * <code>repeated .ObjCProtocol protocol = 2;</code>
+       * <code>repeated .ObjCProtocol protocol = 3;</code>
        */
       public org.jetbrains.kni.indexer.NativeIndex.ObjCProtocol.Builder addProtocolBuilder(
           int index) {
@@ -8718,7 +9018,7 @@ public final class NativeIndex {
             index, org.jetbrains.kni.indexer.NativeIndex.ObjCProtocol.getDefaultInstance());
       }
       /**
-       * <code>repeated .ObjCProtocol protocol = 2;</code>
+       * <code>repeated .ObjCProtocol protocol = 3;</code>
        */
       public java.util.List<org.jetbrains.kni.indexer.NativeIndex.ObjCProtocol.Builder> 
            getProtocolBuilderList() {
@@ -8731,7 +9031,7 @@ public final class NativeIndex {
           protocolBuilder_ = new com.google.protobuf.RepeatedFieldBuilder<
               org.jetbrains.kni.indexer.NativeIndex.ObjCProtocol, org.jetbrains.kni.indexer.NativeIndex.ObjCProtocol.Builder, org.jetbrains.kni.indexer.NativeIndex.ObjCProtocolOrBuilder>(
                   protocol_,
-                  ((bitField0_ & 0x00000002) == 0x00000002),
+                  ((bitField0_ & 0x00000004) == 0x00000004),
                   getParentForChildren(),
                   isClean());
           protocol_ = null;
@@ -8742,9 +9042,9 @@ public final class NativeIndex {
       private java.util.List<org.jetbrains.kni.indexer.NativeIndex.ObjCCategory> category_ =
         java.util.Collections.emptyList();
       private void ensureCategoryIsMutable() {
-        if (!((bitField0_ & 0x00000004) == 0x00000004)) {
+        if (!((bitField0_ & 0x00000008) == 0x00000008)) {
           category_ = new java.util.ArrayList<org.jetbrains.kni.indexer.NativeIndex.ObjCCategory>(category_);
-          bitField0_ |= 0x00000004;
+          bitField0_ |= 0x00000008;
          }
       }
 
@@ -8752,7 +9052,7 @@ public final class NativeIndex {
           org.jetbrains.kni.indexer.NativeIndex.ObjCCategory, org.jetbrains.kni.indexer.NativeIndex.ObjCCategory.Builder, org.jetbrains.kni.indexer.NativeIndex.ObjCCategoryOrBuilder> categoryBuilder_;
 
       /**
-       * <code>repeated .ObjCCategory category = 3;</code>
+       * <code>repeated .ObjCCategory category = 4;</code>
        */
       public java.util.List<org.jetbrains.kni.indexer.NativeIndex.ObjCCategory> getCategoryList() {
         if (categoryBuilder_ == null) {
@@ -8762,7 +9062,7 @@ public final class NativeIndex {
         }
       }
       /**
-       * <code>repeated .ObjCCategory category = 3;</code>
+       * <code>repeated .ObjCCategory category = 4;</code>
        */
       public int getCategoryCount() {
         if (categoryBuilder_ == null) {
@@ -8772,7 +9072,7 @@ public final class NativeIndex {
         }
       }
       /**
-       * <code>repeated .ObjCCategory category = 3;</code>
+       * <code>repeated .ObjCCategory category = 4;</code>
        */
       public org.jetbrains.kni.indexer.NativeIndex.ObjCCategory getCategory(int index) {
         if (categoryBuilder_ == null) {
@@ -8782,7 +9082,7 @@ public final class NativeIndex {
         }
       }
       /**
-       * <code>repeated .ObjCCategory category = 3;</code>
+       * <code>repeated .ObjCCategory category = 4;</code>
        */
       public Builder setCategory(
           int index, org.jetbrains.kni.indexer.NativeIndex.ObjCCategory value) {
@@ -8799,7 +9099,7 @@ public final class NativeIndex {
         return this;
       }
       /**
-       * <code>repeated .ObjCCategory category = 3;</code>
+       * <code>repeated .ObjCCategory category = 4;</code>
        */
       public Builder setCategory(
           int index, org.jetbrains.kni.indexer.NativeIndex.ObjCCategory.Builder builderForValue) {
@@ -8813,7 +9113,7 @@ public final class NativeIndex {
         return this;
       }
       /**
-       * <code>repeated .ObjCCategory category = 3;</code>
+       * <code>repeated .ObjCCategory category = 4;</code>
        */
       public Builder addCategory(org.jetbrains.kni.indexer.NativeIndex.ObjCCategory value) {
         if (categoryBuilder_ == null) {
@@ -8829,7 +9129,7 @@ public final class NativeIndex {
         return this;
       }
       /**
-       * <code>repeated .ObjCCategory category = 3;</code>
+       * <code>repeated .ObjCCategory category = 4;</code>
        */
       public Builder addCategory(
           int index, org.jetbrains.kni.indexer.NativeIndex.ObjCCategory value) {
@@ -8846,7 +9146,7 @@ public final class NativeIndex {
         return this;
       }
       /**
-       * <code>repeated .ObjCCategory category = 3;</code>
+       * <code>repeated .ObjCCategory category = 4;</code>
        */
       public Builder addCategory(
           org.jetbrains.kni.indexer.NativeIndex.ObjCCategory.Builder builderForValue) {
@@ -8860,7 +9160,7 @@ public final class NativeIndex {
         return this;
       }
       /**
-       * <code>repeated .ObjCCategory category = 3;</code>
+       * <code>repeated .ObjCCategory category = 4;</code>
        */
       public Builder addCategory(
           int index, org.jetbrains.kni.indexer.NativeIndex.ObjCCategory.Builder builderForValue) {
@@ -8874,7 +9174,7 @@ public final class NativeIndex {
         return this;
       }
       /**
-       * <code>repeated .ObjCCategory category = 3;</code>
+       * <code>repeated .ObjCCategory category = 4;</code>
        */
       public Builder addAllCategory(
           java.lang.Iterable<? extends org.jetbrains.kni.indexer.NativeIndex.ObjCCategory> values) {
@@ -8889,12 +9189,12 @@ public final class NativeIndex {
         return this;
       }
       /**
-       * <code>repeated .ObjCCategory category = 3;</code>
+       * <code>repeated .ObjCCategory category = 4;</code>
        */
       public Builder clearCategory() {
         if (categoryBuilder_ == null) {
           category_ = java.util.Collections.emptyList();
-          bitField0_ = (bitField0_ & ~0x00000004);
+          bitField0_ = (bitField0_ & ~0x00000008);
           onChanged();
         } else {
           categoryBuilder_.clear();
@@ -8902,7 +9202,7 @@ public final class NativeIndex {
         return this;
       }
       /**
-       * <code>repeated .ObjCCategory category = 3;</code>
+       * <code>repeated .ObjCCategory category = 4;</code>
        */
       public Builder removeCategory(int index) {
         if (categoryBuilder_ == null) {
@@ -8915,14 +9215,14 @@ public final class NativeIndex {
         return this;
       }
       /**
-       * <code>repeated .ObjCCategory category = 3;</code>
+       * <code>repeated .ObjCCategory category = 4;</code>
        */
       public org.jetbrains.kni.indexer.NativeIndex.ObjCCategory.Builder getCategoryBuilder(
           int index) {
         return getCategoryFieldBuilder().getBuilder(index);
       }
       /**
-       * <code>repeated .ObjCCategory category = 3;</code>
+       * <code>repeated .ObjCCategory category = 4;</code>
        */
       public org.jetbrains.kni.indexer.NativeIndex.ObjCCategoryOrBuilder getCategoryOrBuilder(
           int index) {
@@ -8932,7 +9232,7 @@ public final class NativeIndex {
         }
       }
       /**
-       * <code>repeated .ObjCCategory category = 3;</code>
+       * <code>repeated .ObjCCategory category = 4;</code>
        */
       public java.util.List<? extends org.jetbrains.kni.indexer.NativeIndex.ObjCCategoryOrBuilder> 
            getCategoryOrBuilderList() {
@@ -8943,14 +9243,14 @@ public final class NativeIndex {
         }
       }
       /**
-       * <code>repeated .ObjCCategory category = 3;</code>
+       * <code>repeated .ObjCCategory category = 4;</code>
        */
       public org.jetbrains.kni.indexer.NativeIndex.ObjCCategory.Builder addCategoryBuilder() {
         return getCategoryFieldBuilder().addBuilder(
             org.jetbrains.kni.indexer.NativeIndex.ObjCCategory.getDefaultInstance());
       }
       /**
-       * <code>repeated .ObjCCategory category = 3;</code>
+       * <code>repeated .ObjCCategory category = 4;</code>
        */
       public org.jetbrains.kni.indexer.NativeIndex.ObjCCategory.Builder addCategoryBuilder(
           int index) {
@@ -8958,7 +9258,7 @@ public final class NativeIndex {
             index, org.jetbrains.kni.indexer.NativeIndex.ObjCCategory.getDefaultInstance());
       }
       /**
-       * <code>repeated .ObjCCategory category = 3;</code>
+       * <code>repeated .ObjCCategory category = 4;</code>
        */
       public java.util.List<org.jetbrains.kni.indexer.NativeIndex.ObjCCategory.Builder> 
            getCategoryBuilderList() {
@@ -8971,12 +9271,252 @@ public final class NativeIndex {
           categoryBuilder_ = new com.google.protobuf.RepeatedFieldBuilder<
               org.jetbrains.kni.indexer.NativeIndex.ObjCCategory, org.jetbrains.kni.indexer.NativeIndex.ObjCCategory.Builder, org.jetbrains.kni.indexer.NativeIndex.ObjCCategoryOrBuilder>(
                   category_,
-                  ((bitField0_ & 0x00000004) == 0x00000004),
+                  ((bitField0_ & 0x00000008) == 0x00000008),
                   getParentForChildren(),
                   isClean());
           category_ = null;
         }
         return categoryBuilder_;
+      }
+
+      private java.util.List<org.jetbrains.kni.indexer.NativeIndex.Function> function_ =
+        java.util.Collections.emptyList();
+      private void ensureFunctionIsMutable() {
+        if (!((bitField0_ & 0x00000010) == 0x00000010)) {
+          function_ = new java.util.ArrayList<org.jetbrains.kni.indexer.NativeIndex.Function>(function_);
+          bitField0_ |= 0x00000010;
+         }
+      }
+
+      private com.google.protobuf.RepeatedFieldBuilder<
+          org.jetbrains.kni.indexer.NativeIndex.Function, org.jetbrains.kni.indexer.NativeIndex.Function.Builder, org.jetbrains.kni.indexer.NativeIndex.FunctionOrBuilder> functionBuilder_;
+
+      /**
+       * <code>repeated .Function function = 5;</code>
+       */
+      public java.util.List<org.jetbrains.kni.indexer.NativeIndex.Function> getFunctionList() {
+        if (functionBuilder_ == null) {
+          return java.util.Collections.unmodifiableList(function_);
+        } else {
+          return functionBuilder_.getMessageList();
+        }
+      }
+      /**
+       * <code>repeated .Function function = 5;</code>
+       */
+      public int getFunctionCount() {
+        if (functionBuilder_ == null) {
+          return function_.size();
+        } else {
+          return functionBuilder_.getCount();
+        }
+      }
+      /**
+       * <code>repeated .Function function = 5;</code>
+       */
+      public org.jetbrains.kni.indexer.NativeIndex.Function getFunction(int index) {
+        if (functionBuilder_ == null) {
+          return function_.get(index);
+        } else {
+          return functionBuilder_.getMessage(index);
+        }
+      }
+      /**
+       * <code>repeated .Function function = 5;</code>
+       */
+      public Builder setFunction(
+          int index, org.jetbrains.kni.indexer.NativeIndex.Function value) {
+        if (functionBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          ensureFunctionIsMutable();
+          function_.set(index, value);
+          onChanged();
+        } else {
+          functionBuilder_.setMessage(index, value);
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .Function function = 5;</code>
+       */
+      public Builder setFunction(
+          int index, org.jetbrains.kni.indexer.NativeIndex.Function.Builder builderForValue) {
+        if (functionBuilder_ == null) {
+          ensureFunctionIsMutable();
+          function_.set(index, builderForValue.build());
+          onChanged();
+        } else {
+          functionBuilder_.setMessage(index, builderForValue.build());
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .Function function = 5;</code>
+       */
+      public Builder addFunction(org.jetbrains.kni.indexer.NativeIndex.Function value) {
+        if (functionBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          ensureFunctionIsMutable();
+          function_.add(value);
+          onChanged();
+        } else {
+          functionBuilder_.addMessage(value);
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .Function function = 5;</code>
+       */
+      public Builder addFunction(
+          int index, org.jetbrains.kni.indexer.NativeIndex.Function value) {
+        if (functionBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          ensureFunctionIsMutable();
+          function_.add(index, value);
+          onChanged();
+        } else {
+          functionBuilder_.addMessage(index, value);
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .Function function = 5;</code>
+       */
+      public Builder addFunction(
+          org.jetbrains.kni.indexer.NativeIndex.Function.Builder builderForValue) {
+        if (functionBuilder_ == null) {
+          ensureFunctionIsMutable();
+          function_.add(builderForValue.build());
+          onChanged();
+        } else {
+          functionBuilder_.addMessage(builderForValue.build());
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .Function function = 5;</code>
+       */
+      public Builder addFunction(
+          int index, org.jetbrains.kni.indexer.NativeIndex.Function.Builder builderForValue) {
+        if (functionBuilder_ == null) {
+          ensureFunctionIsMutable();
+          function_.add(index, builderForValue.build());
+          onChanged();
+        } else {
+          functionBuilder_.addMessage(index, builderForValue.build());
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .Function function = 5;</code>
+       */
+      public Builder addAllFunction(
+          java.lang.Iterable<? extends org.jetbrains.kni.indexer.NativeIndex.Function> values) {
+        if (functionBuilder_ == null) {
+          ensureFunctionIsMutable();
+          com.google.protobuf.AbstractMessageLite.Builder.addAll(
+              values, function_);
+          onChanged();
+        } else {
+          functionBuilder_.addAllMessages(values);
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .Function function = 5;</code>
+       */
+      public Builder clearFunction() {
+        if (functionBuilder_ == null) {
+          function_ = java.util.Collections.emptyList();
+          bitField0_ = (bitField0_ & ~0x00000010);
+          onChanged();
+        } else {
+          functionBuilder_.clear();
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .Function function = 5;</code>
+       */
+      public Builder removeFunction(int index) {
+        if (functionBuilder_ == null) {
+          ensureFunctionIsMutable();
+          function_.remove(index);
+          onChanged();
+        } else {
+          functionBuilder_.remove(index);
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .Function function = 5;</code>
+       */
+      public org.jetbrains.kni.indexer.NativeIndex.Function.Builder getFunctionBuilder(
+          int index) {
+        return getFunctionFieldBuilder().getBuilder(index);
+      }
+      /**
+       * <code>repeated .Function function = 5;</code>
+       */
+      public org.jetbrains.kni.indexer.NativeIndex.FunctionOrBuilder getFunctionOrBuilder(
+          int index) {
+        if (functionBuilder_ == null) {
+          return function_.get(index);  } else {
+          return functionBuilder_.getMessageOrBuilder(index);
+        }
+      }
+      /**
+       * <code>repeated .Function function = 5;</code>
+       */
+      public java.util.List<? extends org.jetbrains.kni.indexer.NativeIndex.FunctionOrBuilder> 
+           getFunctionOrBuilderList() {
+        if (functionBuilder_ != null) {
+          return functionBuilder_.getMessageOrBuilderList();
+        } else {
+          return java.util.Collections.unmodifiableList(function_);
+        }
+      }
+      /**
+       * <code>repeated .Function function = 5;</code>
+       */
+      public org.jetbrains.kni.indexer.NativeIndex.Function.Builder addFunctionBuilder() {
+        return getFunctionFieldBuilder().addBuilder(
+            org.jetbrains.kni.indexer.NativeIndex.Function.getDefaultInstance());
+      }
+      /**
+       * <code>repeated .Function function = 5;</code>
+       */
+      public org.jetbrains.kni.indexer.NativeIndex.Function.Builder addFunctionBuilder(
+          int index) {
+        return getFunctionFieldBuilder().addBuilder(
+            index, org.jetbrains.kni.indexer.NativeIndex.Function.getDefaultInstance());
+      }
+      /**
+       * <code>repeated .Function function = 5;</code>
+       */
+      public java.util.List<org.jetbrains.kni.indexer.NativeIndex.Function.Builder> 
+           getFunctionBuilderList() {
+        return getFunctionFieldBuilder().getBuilderList();
+      }
+      private com.google.protobuf.RepeatedFieldBuilder<
+          org.jetbrains.kni.indexer.NativeIndex.Function, org.jetbrains.kni.indexer.NativeIndex.Function.Builder, org.jetbrains.kni.indexer.NativeIndex.FunctionOrBuilder> 
+          getFunctionFieldBuilder() {
+        if (functionBuilder_ == null) {
+          functionBuilder_ = new com.google.protobuf.RepeatedFieldBuilder<
+              org.jetbrains.kni.indexer.NativeIndex.Function, org.jetbrains.kni.indexer.NativeIndex.Function.Builder, org.jetbrains.kni.indexer.NativeIndex.FunctionOrBuilder>(
+                  function_,
+                  ((bitField0_ & 0x00000010) == 0x00000010),
+                  getParentForChildren(),
+                  isClean());
+          function_ = null;
+        }
+        return functionBuilder_;
       }
 
       // @@protoc_insertion_point(builder_scope:TranslationUnit)
@@ -9054,11 +9594,12 @@ public final class NativeIndex {
       "thod\022\037\n\010property\030\004 \003(\0132\r.ObjCProperty\"q\n" +
       "\014ObjCCategory\022\014\n\004name\030\001 \002(\t\022\025\n\rbase_prot" +
       "ocol\030\002 \003(\t\022\033\n\006method\030\003 \003(\0132\013.ObjCMethod\022" +
-      "\037\n\010property\030\004 \003(\0132\r.ObjCProperty\"n\n\017Tran" +
-      "slationUnit\022\031\n\005class\030\001 \003(\0132\n.ObjCClass\022\037" +
-      "\n\010protocol\030\002 \003(\0132\r.ObjCProtocol\022\037\n\010categ" +
-      "ory\030\003 \003(\0132\r.ObjCCategoryB\036\n\031org.jetbrain" +
-      "s.kni.indexer\210\001\000"
+      "\037\n\010property\030\004 \003(\0132\r.ObjCProperty\"\231\001\n\017Tra" +
+      "nslationUnit\022\014\n\004name\030\001 \002(\t\022\031\n\005class\030\002 \003(" +
+      "\0132\n.ObjCClass\022\037\n\010protocol\030\003 \003(\0132\r.ObjCPr" +
+      "otocol\022\037\n\010category\030\004 \003(\0132\r.ObjCCategory\022" +
+      "\033\n\010function\030\005 \003(\0132\t.FunctionB\036\n\031org.jetb",
+      "rains.kni.indexer\210\001\000"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
         new com.google.protobuf.Descriptors.FileDescriptor.    InternalDescriptorAssigner() {
@@ -9119,7 +9660,7 @@ public final class NativeIndex {
     internal_static_TranslationUnit_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessage.FieldAccessorTable(
         internal_static_TranslationUnit_descriptor,
-        new java.lang.String[] { "Class_", "Protocol", "Category", });
+        new java.lang.String[] { "Name", "Class_", "Protocol", "Category", "Function", });
   }
 
   // @@protoc_insertion_point(outer_class_scope)

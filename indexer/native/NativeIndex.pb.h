@@ -911,10 +911,22 @@ class TranslationUnit : public ::google::protobuf::Message {
 
   // accessors -------------------------------------------------------
 
-  // repeated .ObjCClass class = 1;
+  // required string name = 1;
+  inline bool has_name() const;
+  inline void clear_name();
+  static const int kNameFieldNumber = 1;
+  inline const ::std::string& name() const;
+  inline void set_name(const ::std::string& value);
+  inline void set_name(const char* value);
+  inline void set_name(const char* value, size_t size);
+  inline ::std::string* mutable_name();
+  inline ::std::string* release_name();
+  inline void set_allocated_name(::std::string* name);
+
+  // repeated .ObjCClass class = 2;
   inline int class__size() const;
   inline void clear_class_();
-  static const int kClassFieldNumber = 1;
+  static const int kClassFieldNumber = 2;
   inline const ::ObjCClass& class_(int index) const;
   inline ::ObjCClass* mutable_class_(int index);
   inline ::ObjCClass* add_class_();
@@ -923,10 +935,10 @@ class TranslationUnit : public ::google::protobuf::Message {
   inline ::google::protobuf::RepeatedPtrField< ::ObjCClass >*
       mutable_class_();
 
-  // repeated .ObjCProtocol protocol = 2;
+  // repeated .ObjCProtocol protocol = 3;
   inline int protocol_size() const;
   inline void clear_protocol();
-  static const int kProtocolFieldNumber = 2;
+  static const int kProtocolFieldNumber = 3;
   inline const ::ObjCProtocol& protocol(int index) const;
   inline ::ObjCProtocol* mutable_protocol(int index);
   inline ::ObjCProtocol* add_protocol();
@@ -935,10 +947,10 @@ class TranslationUnit : public ::google::protobuf::Message {
   inline ::google::protobuf::RepeatedPtrField< ::ObjCProtocol >*
       mutable_protocol();
 
-  // repeated .ObjCCategory category = 3;
+  // repeated .ObjCCategory category = 4;
   inline int category_size() const;
   inline void clear_category();
-  static const int kCategoryFieldNumber = 3;
+  static const int kCategoryFieldNumber = 4;
   inline const ::ObjCCategory& category(int index) const;
   inline ::ObjCCategory* mutable_category(int index);
   inline ::ObjCCategory* add_category();
@@ -947,16 +959,32 @@ class TranslationUnit : public ::google::protobuf::Message {
   inline ::google::protobuf::RepeatedPtrField< ::ObjCCategory >*
       mutable_category();
 
+  // repeated .Function function = 5;
+  inline int function_size() const;
+  inline void clear_function();
+  static const int kFunctionFieldNumber = 5;
+  inline const ::Function& function(int index) const;
+  inline ::Function* mutable_function(int index);
+  inline ::Function* add_function();
+  inline const ::google::protobuf::RepeatedPtrField< ::Function >&
+      function() const;
+  inline ::google::protobuf::RepeatedPtrField< ::Function >*
+      mutable_function();
+
   // @@protoc_insertion_point(class_scope:TranslationUnit)
  private:
+  inline void set_has_name();
+  inline void clear_has_name();
 
   ::google::protobuf::UnknownFieldSet _unknown_fields_;
 
   ::google::protobuf::uint32 _has_bits_[1];
   mutable int _cached_size_;
+  ::std::string* name_;
   ::google::protobuf::RepeatedPtrField< ::ObjCClass > class__;
   ::google::protobuf::RepeatedPtrField< ::ObjCProtocol > protocol_;
   ::google::protobuf::RepeatedPtrField< ::ObjCCategory > category_;
+  ::google::protobuf::RepeatedPtrField< ::Function > function_;
   friend void  protobuf_AddDesc_NativeIndex_2eproto();
   friend void protobuf_AssignDesc_NativeIndex_2eproto();
   friend void protobuf_ShutdownFile_NativeIndex_2eproto();
@@ -2250,7 +2278,83 @@ ObjCCategory::mutable_property() {
 
 // TranslationUnit
 
-// repeated .ObjCClass class = 1;
+// required string name = 1;
+inline bool TranslationUnit::has_name() const {
+  return (_has_bits_[0] & 0x00000001u) != 0;
+}
+inline void TranslationUnit::set_has_name() {
+  _has_bits_[0] |= 0x00000001u;
+}
+inline void TranslationUnit::clear_has_name() {
+  _has_bits_[0] &= ~0x00000001u;
+}
+inline void TranslationUnit::clear_name() {
+  if (name_ != &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
+    name_->clear();
+  }
+  clear_has_name();
+}
+inline const ::std::string& TranslationUnit::name() const {
+  // @@protoc_insertion_point(field_get:TranslationUnit.name)
+  return *name_;
+}
+inline void TranslationUnit::set_name(const ::std::string& value) {
+  set_has_name();
+  if (name_ == &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
+    name_ = new ::std::string;
+  }
+  name_->assign(value);
+  // @@protoc_insertion_point(field_set:TranslationUnit.name)
+}
+inline void TranslationUnit::set_name(const char* value) {
+  set_has_name();
+  if (name_ == &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
+    name_ = new ::std::string;
+  }
+  name_->assign(value);
+  // @@protoc_insertion_point(field_set_char:TranslationUnit.name)
+}
+inline void TranslationUnit::set_name(const char* value, size_t size) {
+  set_has_name();
+  if (name_ == &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
+    name_ = new ::std::string;
+  }
+  name_->assign(reinterpret_cast<const char*>(value), size);
+  // @@protoc_insertion_point(field_set_pointer:TranslationUnit.name)
+}
+inline ::std::string* TranslationUnit::mutable_name() {
+  set_has_name();
+  if (name_ == &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
+    name_ = new ::std::string;
+  }
+  // @@protoc_insertion_point(field_mutable:TranslationUnit.name)
+  return name_;
+}
+inline ::std::string* TranslationUnit::release_name() {
+  clear_has_name();
+  if (name_ == &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
+    return NULL;
+  } else {
+    ::std::string* temp = name_;
+    name_ = const_cast< ::std::string*>(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+    return temp;
+  }
+}
+inline void TranslationUnit::set_allocated_name(::std::string* name) {
+  if (name_ != &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
+    delete name_;
+  }
+  if (name) {
+    set_has_name();
+    name_ = name;
+  } else {
+    clear_has_name();
+    name_ = const_cast< ::std::string*>(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+  }
+  // @@protoc_insertion_point(field_set_allocated:TranslationUnit.name)
+}
+
+// repeated .ObjCClass class = 2;
 inline int TranslationUnit::class__size() const {
   return class__.size();
 }
@@ -2280,7 +2384,7 @@ TranslationUnit::mutable_class_() {
   return &class__;
 }
 
-// repeated .ObjCProtocol protocol = 2;
+// repeated .ObjCProtocol protocol = 3;
 inline int TranslationUnit::protocol_size() const {
   return protocol_.size();
 }
@@ -2310,7 +2414,7 @@ TranslationUnit::mutable_protocol() {
   return &protocol_;
 }
 
-// repeated .ObjCCategory category = 3;
+// repeated .ObjCCategory category = 4;
 inline int TranslationUnit::category_size() const {
   return category_.size();
 }
@@ -2338,6 +2442,36 @@ inline ::google::protobuf::RepeatedPtrField< ::ObjCCategory >*
 TranslationUnit::mutable_category() {
   // @@protoc_insertion_point(field_mutable_list:TranslationUnit.category)
   return &category_;
+}
+
+// repeated .Function function = 5;
+inline int TranslationUnit::function_size() const {
+  return function_.size();
+}
+inline void TranslationUnit::clear_function() {
+  function_.Clear();
+}
+inline const ::Function& TranslationUnit::function(int index) const {
+  // @@protoc_insertion_point(field_get:TranslationUnit.function)
+  return function_.Get(index);
+}
+inline ::Function* TranslationUnit::mutable_function(int index) {
+  // @@protoc_insertion_point(field_mutable:TranslationUnit.function)
+  return function_.Mutable(index);
+}
+inline ::Function* TranslationUnit::add_function() {
+  // @@protoc_insertion_point(field_add:TranslationUnit.function)
+  return function_.Add();
+}
+inline const ::google::protobuf::RepeatedPtrField< ::Function >&
+TranslationUnit::function() const {
+  // @@protoc_insertion_point(field_list:TranslationUnit.function)
+  return function_;
+}
+inline ::google::protobuf::RepeatedPtrField< ::Function >*
+TranslationUnit::mutable_function() {
+  // @@protoc_insertion_point(field_mutable_list:TranslationUnit.function)
+  return &function_;
 }
 
 

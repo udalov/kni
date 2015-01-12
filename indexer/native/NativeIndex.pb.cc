@@ -174,10 +174,12 @@ void protobuf_AssignDesc_NativeIndex_2eproto() {
       ::google::protobuf::MessageFactory::generated_factory(),
       sizeof(ObjCCategory));
   TranslationUnit_descriptor_ = file->message_type(6);
-  static const int TranslationUnit_offsets_[3] = {
+  static const int TranslationUnit_offsets_[5] = {
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(TranslationUnit, name_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(TranslationUnit, class__),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(TranslationUnit, protocol_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(TranslationUnit, category_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(TranslationUnit, function_),
   };
   TranslationUnit_reflection_ =
     new ::google::protobuf::internal::GeneratedMessageReflection(
@@ -263,11 +265,12 @@ void protobuf_AddDesc_NativeIndex_2eproto() {
     "thod\022\037\n\010property\030\004 \003(\0132\r.ObjCProperty\"q\n"
     "\014ObjCCategory\022\014\n\004name\030\001 \002(\t\022\025\n\rbase_prot"
     "ocol\030\002 \003(\t\022\033\n\006method\030\003 \003(\0132\013.ObjCMethod\022"
-    "\037\n\010property\030\004 \003(\0132\r.ObjCProperty\"n\n\017Tran"
-    "slationUnit\022\031\n\005class\030\001 \003(\0132\n.ObjCClass\022\037"
-    "\n\010protocol\030\002 \003(\0132\r.ObjCProtocol\022\037\n\010categ"
-    "ory\030\003 \003(\0132\r.ObjCCategoryB\036\n\031org.jetbrain"
-    "s.kni.indexer\210\001\000", 776);
+    "\037\n\010property\030\004 \003(\0132\r.ObjCProperty\"\231\001\n\017Tra"
+    "nslationUnit\022\014\n\004name\030\001 \002(\t\022\031\n\005class\030\002 \003("
+    "\0132\n.ObjCClass\022\037\n\010protocol\030\003 \003(\0132\r.ObjCPr"
+    "otocol\022\037\n\010category\030\004 \003(\0132\r.ObjCCategory\022"
+    "\033\n\010function\030\005 \003(\0132\t.FunctionB\036\n\031org.jetb"
+    "rains.kni.indexer\210\001\000", 820);
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedFile(
     "NativeIndex.proto", &protobuf_RegisterTypes);
   Function::default_instance_ = new Function();
@@ -2757,9 +2760,11 @@ void ObjCCategory::Swap(ObjCCategory* other) {
 // ===================================================================
 
 #ifndef _MSC_VER
+const int TranslationUnit::kNameFieldNumber;
 const int TranslationUnit::kClassFieldNumber;
 const int TranslationUnit::kProtocolFieldNumber;
 const int TranslationUnit::kCategoryFieldNumber;
+const int TranslationUnit::kFunctionFieldNumber;
 #endif  // !_MSC_VER
 
 TranslationUnit::TranslationUnit()
@@ -2779,7 +2784,9 @@ TranslationUnit::TranslationUnit(const TranslationUnit& from)
 }
 
 void TranslationUnit::SharedCtor() {
+  ::google::protobuf::internal::GetEmptyString();
   _cached_size_ = 0;
+  name_ = const_cast< ::std::string*>(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
 }
 
@@ -2789,6 +2796,9 @@ TranslationUnit::~TranslationUnit() {
 }
 
 void TranslationUnit::SharedDtor() {
+  if (name_ != &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
+    delete name_;
+  }
   if (this != default_instance_) {
   }
 }
@@ -2815,9 +2825,15 @@ TranslationUnit* TranslationUnit::New() const {
 }
 
 void TranslationUnit::Clear() {
+  if (has_name()) {
+    if (name_ != &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
+      name_->clear();
+    }
+  }
   class__.Clear();
   protocol_.Clear();
   category_.Clear();
+  function_.Clear();
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
   mutable_unknown_fields()->Clear();
 }
@@ -2832,44 +2848,74 @@ bool TranslationUnit::MergePartialFromCodedStream(
     tag = p.first;
     if (!p.second) goto handle_unusual;
     switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
-      // repeated .ObjCClass class = 1;
+      // required string name = 1;
       case 1: {
         if (tag == 10) {
+          DO_(::google::protobuf::internal::WireFormatLite::ReadString(
+                input, this->mutable_name()));
+          ::google::protobuf::internal::WireFormat::VerifyUTF8StringNamedField(
+            this->name().data(), this->name().length(),
+            ::google::protobuf::internal::WireFormat::PARSE,
+            "name");
+        } else {
+          goto handle_unusual;
+        }
+        if (input->ExpectTag(18)) goto parse_class;
+        break;
+      }
+
+      // repeated .ObjCClass class = 2;
+      case 2: {
+        if (tag == 18) {
          parse_class:
           DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtual(
                 input, add_class_()));
         } else {
           goto handle_unusual;
         }
-        if (input->ExpectTag(10)) goto parse_class;
-        if (input->ExpectTag(18)) goto parse_protocol;
+        if (input->ExpectTag(18)) goto parse_class;
+        if (input->ExpectTag(26)) goto parse_protocol;
         break;
       }
 
-      // repeated .ObjCProtocol protocol = 2;
-      case 2: {
-        if (tag == 18) {
+      // repeated .ObjCProtocol protocol = 3;
+      case 3: {
+        if (tag == 26) {
          parse_protocol:
           DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtual(
                 input, add_protocol()));
         } else {
           goto handle_unusual;
         }
-        if (input->ExpectTag(18)) goto parse_protocol;
-        if (input->ExpectTag(26)) goto parse_category;
+        if (input->ExpectTag(26)) goto parse_protocol;
+        if (input->ExpectTag(34)) goto parse_category;
         break;
       }
 
-      // repeated .ObjCCategory category = 3;
-      case 3: {
-        if (tag == 26) {
+      // repeated .ObjCCategory category = 4;
+      case 4: {
+        if (tag == 34) {
          parse_category:
           DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtual(
                 input, add_category()));
         } else {
           goto handle_unusual;
         }
-        if (input->ExpectTag(26)) goto parse_category;
+        if (input->ExpectTag(34)) goto parse_category;
+        if (input->ExpectTag(42)) goto parse_function;
+        break;
+      }
+
+      // repeated .Function function = 5;
+      case 5: {
+        if (tag == 42) {
+         parse_function:
+          DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtual(
+                input, add_function()));
+        } else {
+          goto handle_unusual;
+        }
+        if (input->ExpectTag(42)) goto parse_function;
         if (input->ExpectAtEnd()) goto success;
         break;
       }
@@ -2899,22 +2945,38 @@ failure:
 void TranslationUnit::SerializeWithCachedSizes(
     ::google::protobuf::io::CodedOutputStream* output) const {
   // @@protoc_insertion_point(serialize_start:TranslationUnit)
-  // repeated .ObjCClass class = 1;
+  // required string name = 1;
+  if (has_name()) {
+    ::google::protobuf::internal::WireFormat::VerifyUTF8StringNamedField(
+      this->name().data(), this->name().length(),
+      ::google::protobuf::internal::WireFormat::SERIALIZE,
+      "name");
+    ::google::protobuf::internal::WireFormatLite::WriteStringMaybeAliased(
+      1, this->name(), output);
+  }
+
+  // repeated .ObjCClass class = 2;
   for (int i = 0; i < this->class__size(); i++) {
     ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
-      1, this->class_(i), output);
+      2, this->class_(i), output);
   }
 
-  // repeated .ObjCProtocol protocol = 2;
+  // repeated .ObjCProtocol protocol = 3;
   for (int i = 0; i < this->protocol_size(); i++) {
     ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
-      2, this->protocol(i), output);
+      3, this->protocol(i), output);
   }
 
-  // repeated .ObjCCategory category = 3;
+  // repeated .ObjCCategory category = 4;
   for (int i = 0; i < this->category_size(); i++) {
     ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
-      3, this->category(i), output);
+      4, this->category(i), output);
+  }
+
+  // repeated .Function function = 5;
+  for (int i = 0; i < this->function_size(); i++) {
+    ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
+      5, this->function(i), output);
   }
 
   if (!unknown_fields().empty()) {
@@ -2927,25 +2989,43 @@ void TranslationUnit::SerializeWithCachedSizes(
 ::google::protobuf::uint8* TranslationUnit::SerializeWithCachedSizesToArray(
     ::google::protobuf::uint8* target) const {
   // @@protoc_insertion_point(serialize_to_array_start:TranslationUnit)
-  // repeated .ObjCClass class = 1;
+  // required string name = 1;
+  if (has_name()) {
+    ::google::protobuf::internal::WireFormat::VerifyUTF8StringNamedField(
+      this->name().data(), this->name().length(),
+      ::google::protobuf::internal::WireFormat::SERIALIZE,
+      "name");
+    target =
+      ::google::protobuf::internal::WireFormatLite::WriteStringToArray(
+        1, this->name(), target);
+  }
+
+  // repeated .ObjCClass class = 2;
   for (int i = 0; i < this->class__size(); i++) {
     target = ::google::protobuf::internal::WireFormatLite::
       WriteMessageNoVirtualToArray(
-        1, this->class_(i), target);
+        2, this->class_(i), target);
   }
 
-  // repeated .ObjCProtocol protocol = 2;
+  // repeated .ObjCProtocol protocol = 3;
   for (int i = 0; i < this->protocol_size(); i++) {
     target = ::google::protobuf::internal::WireFormatLite::
       WriteMessageNoVirtualToArray(
-        2, this->protocol(i), target);
+        3, this->protocol(i), target);
   }
 
-  // repeated .ObjCCategory category = 3;
+  // repeated .ObjCCategory category = 4;
   for (int i = 0; i < this->category_size(); i++) {
     target = ::google::protobuf::internal::WireFormatLite::
       WriteMessageNoVirtualToArray(
-        3, this->category(i), target);
+        4, this->category(i), target);
+  }
+
+  // repeated .Function function = 5;
+  for (int i = 0; i < this->function_size(); i++) {
+    target = ::google::protobuf::internal::WireFormatLite::
+      WriteMessageNoVirtualToArray(
+        5, this->function(i), target);
   }
 
   if (!unknown_fields().empty()) {
@@ -2959,7 +3039,16 @@ void TranslationUnit::SerializeWithCachedSizes(
 int TranslationUnit::ByteSize() const {
   int total_size = 0;
 
-  // repeated .ObjCClass class = 1;
+  if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
+    // required string name = 1;
+    if (has_name()) {
+      total_size += 1 +
+        ::google::protobuf::internal::WireFormatLite::StringSize(
+          this->name());
+    }
+
+  }
+  // repeated .ObjCClass class = 2;
   total_size += 1 * this->class__size();
   for (int i = 0; i < this->class__size(); i++) {
     total_size +=
@@ -2967,7 +3056,7 @@ int TranslationUnit::ByteSize() const {
         this->class_(i));
   }
 
-  // repeated .ObjCProtocol protocol = 2;
+  // repeated .ObjCProtocol protocol = 3;
   total_size += 1 * this->protocol_size();
   for (int i = 0; i < this->protocol_size(); i++) {
     total_size +=
@@ -2975,12 +3064,20 @@ int TranslationUnit::ByteSize() const {
         this->protocol(i));
   }
 
-  // repeated .ObjCCategory category = 3;
+  // repeated .ObjCCategory category = 4;
   total_size += 1 * this->category_size();
   for (int i = 0; i < this->category_size(); i++) {
     total_size +=
       ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
         this->category(i));
+  }
+
+  // repeated .Function function = 5;
+  total_size += 1 * this->function_size();
+  for (int i = 0; i < this->function_size(); i++) {
+    total_size +=
+      ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
+        this->function(i));
   }
 
   if (!unknown_fields().empty()) {
@@ -3011,6 +3108,12 @@ void TranslationUnit::MergeFrom(const TranslationUnit& from) {
   class__.MergeFrom(from.class__);
   protocol_.MergeFrom(from.protocol_);
   category_.MergeFrom(from.category_);
+  function_.MergeFrom(from.function_);
+  if (from._has_bits_[0 / 32] & (0xffu << (0 % 32))) {
+    if (from.has_name()) {
+      set_name(from.name());
+    }
+  }
   mutable_unknown_fields()->MergeFrom(from.unknown_fields());
 }
 
@@ -3027,18 +3130,22 @@ void TranslationUnit::CopyFrom(const TranslationUnit& from) {
 }
 
 bool TranslationUnit::IsInitialized() const {
+  if ((_has_bits_[0] & 0x00000001) != 0x00000001) return false;
 
   if (!::google::protobuf::internal::AllAreInitialized(this->class_())) return false;
   if (!::google::protobuf::internal::AllAreInitialized(this->protocol())) return false;
   if (!::google::protobuf::internal::AllAreInitialized(this->category())) return false;
+  if (!::google::protobuf::internal::AllAreInitialized(this->function())) return false;
   return true;
 }
 
 void TranslationUnit::Swap(TranslationUnit* other) {
   if (other != this) {
+    std::swap(name_, other->name_);
     class__.Swap(&other->class__);
     protocol_.Swap(&other->protocol_);
     category_.Swap(&other->category_);
+    function_.Swap(&other->function_);
     std::swap(_has_bits_[0], other->_has_bits_[0]);
     _unknown_fields_.Swap(&other->_unknown_fields_);
     std::swap(_cached_size_, other->_cached_size_);

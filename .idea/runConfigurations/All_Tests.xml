@@ -1,5 +1,6 @@
 <component name="ProjectRunConfigurationManager">
   <configuration default="false" name="All Tests" type="JUnit" factoryName="JUnit">
+    <extension name="coverage" enabled="false" merge="false" sample_coverage="true" runner="idea" />
     <module name="tests" />
     <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
     <option name="ALTERNATIVE_JRE_PATH" value="" />
@@ -17,7 +18,6 @@
     </option>
     <envs />
     <dir value="$PROJECT_DIR$/indexer" />
-    <fork_mode value="method" />
     <patterns>
       <pattern testClass="**" />
     </patterns>

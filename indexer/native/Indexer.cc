@@ -2,7 +2,6 @@
 #include <map>
 #include <vector>
 #include <sstream>
-#include <string>
 
 #include "clang-c/Index.h"
 
@@ -11,6 +10,8 @@
 #include "Indexer.h"
 #include "OutputCollector.h"
 #include "NativeIndex.pb.h"
+
+void constructFunction(CXIdxDeclInfo const *info, Function *function);
 
 std::vector<std::string> extractProtocolNames(const CXIdxObjCProtocolRefListInfo *protocols) {
     std::vector<std::string> result;
@@ -236,7 +237,16 @@ void indexMethod(const CXIdxDeclInfo *info, OutputCollector *data, bool isClassM
 
     method->set_class_method(isClassMethod);
 
-    auto function = method->mutable_function();
+    constructFunction(info, method->mutable_function());
+}
+
+void indexFunction(const CXIdxDeclInfo *info, OutputCollector *data) {
+    auto container = getNotNullSemanticContainerUSR(info);
+    if (!data->anyCategoryByUSR(container))
+        constructFunction(info, data->result().add_function());
+}
+
+void constructFunction(CXIdxDeclInfo const *info, Function *function) {
     function->set_name(info->entityInfo->name);
 
     auto type = serializeType(clang_getCursorResultType(info->cursor));
@@ -253,6 +263,7 @@ void indexMethod(const CXIdxDeclInfo *info, OutputCollector *data, bool isClassM
         parameter->set_type(type);
     }
 }
+
 
 ObjCProperty *createPropertyInItsContainer(const CXIdxDeclInfo *info, OutputCollector *data) {
     // TODO: generify the code somehow (see the same method above)
@@ -298,6 +309,8 @@ void indexDeclaration(CXClientData clientData, const CXIdxDeclInfo *info) {
             indexMethod(info, data, true); break;
         case CXIdxEntity_ObjCProperty:
             indexProperty(info, data); break;
+        case CXIdxEntity_Function:
+            indexFunction(info, data); break;
         default:
             break;
     }
@@ -344,8 +357,10 @@ std::string *doIndex(const std::vector<std::string>& args) {
     OutputCollector data;
 
     std::vector<const char *> cxArgs;
-    std::transform(args.begin(), args.end(), std::back_inserter(cxArgs), std::mem_fun_ref(&std::string::c_str));
+    std::transform(args.begin(), args.end(), std::back_inserter(cxArgs), [](const std::string & s) { return s.c_str(); });
     cxArgs.push_back("-ObjC");
+
+    data.result().set_name(cxArgs[0]);
 
     clang_indexSourceFile(action, &data, &callbacks, sizeof(callbacks), 0, 0,
             &cxArgs[0], static_cast<int>(cxArgs.size()), 0, 0, 0, 0);

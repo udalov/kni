@@ -24,6 +24,8 @@ class OutputCollector {
         ObjCProtocol *loadProtocolByUSR(const std::string& usr) const;
         ObjCCategory *loadCategoryByUSR(const std::string& usr) const;
 
+        bool anyCategoryByUSR(std::string const &usr) const;
+
         // TODO: get rid of std::pair here, invent something better
         const std::set<std::pair<std::string, std::string>>& loadForwardDeclaredClasses() const;
         const std::set<std::pair<std::string, std::string>>& loadForwardDeclaredProtocols() const;

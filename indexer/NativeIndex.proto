@@ -47,7 +47,9 @@ message ObjCCategory {
 }
 
 message TranslationUnit {
-    repeated ObjCClass class = 1;
-    repeated ObjCProtocol protocol = 2;
-    repeated ObjCCategory category = 3;
+    required string name = 1;
+    repeated ObjCClass class = 2;
+    repeated ObjCProtocol protocol = 3;
+    repeated ObjCCategory category = 4;
+    repeated Function function = 5;
 }

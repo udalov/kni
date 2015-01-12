@@ -3,8 +3,10 @@ package org.jetbrains.kni.gen
 import java.io.File
 import org.jetbrains.kni.indexer.NativeIndex.*
 import java.util.HashMap
+import java.nio.file.Paths
+import org.jetbrains.kni.indexer.NativeIndexingOptions
 
-public fun generateStub(translationUnit: TranslationUnit, dylib: File, outputFile: File): File {
+public fun generateStub(translationUnit: TranslationUnit, dylib: File, outputFile: File, options: NativeIndexingOptions): File {
     val result = StringBuilder()
     val out = Printer(result)
 
@@ -12,27 +14,37 @@ public fun generateStub(translationUnit: TranslationUnit, dylib: File, outputFil
     out.println()
     out.println("[file: suppress(\"UNCHECKED_CAST\")]")
     out.println()
-    out.println("package objc")
-    out.println()
-    out.println("import kni.objc.*")
-    out.println()
 
     val namer = Namer(translationUnit)
     val generator = Generator(out, namer, dylib)
 
-    for (protocol in translationUnit.getProtocolList()) {
-        generator.genProtocol(protocol)
+    if (options.objC) {
+        out.println("package objc")
         out.println()
-    }
+        out.println("import kni.objc.*")
+        out.println()
+        for (protocol in translationUnit.getProtocolList()) {
+            generator.genProtocol(protocol)
+            out.println()
+        }
 
-    for (klass in translationUnit.getClass_List()) {
-        generator.genClass(klass)
-        out.println()
-    }
+        for (klass in translationUnit.getClass_List()) {
+            generator.genClass(klass)
+            out.println()
+        }
 
-    for (category in translationUnit.getCategoryList()) {
-        generator.genCategory(category)
+        for (category in translationUnit.getCategoryList()) {
+            generator.genCategory(category)
+            out.println()
+        }
+    }
+    else {
+        out.println("package native")
         out.println()
+        out.println("import jnr.ffi.*")
+        out.println("import jnr.ffi.types.*")
+        out.println()
+        generator.genCFunctions(translationUnit.getFunctionList().distinct())
     }
 
     outputFile.getParentFile().mkdirs()
@@ -65,7 +77,7 @@ class Generator(private val out: Printer, private val namer: Namer, private val 
         val methods = klass.getMethodList().filter { it.getFunction().getName() != "finalize" }
 
         for (method in methods.filter { !it.getClassMethod() }) {
-            genFunction(method.getFunction(), open = true)
+            genObjCFunction(method.getFunction(), open = true)
             out.println()
         }
 
@@ -92,7 +104,7 @@ class Generator(private val out: Printer, private val namer: Namer, private val 
         var first = true
         for (method in methods.filter { it.getClassMethod() }) {
             if (first) first = false else out.println()
-            genFunction(method.getFunction(), open = false)
+            genObjCFunction(method.getFunction(), open = false)
         }
 
         out.pop()
@@ -125,20 +137,24 @@ class Generator(private val out: Printer, private val namer: Namer, private val 
         // TODO: methods
     }
 
-    private fun genFunction(function: Function, open: Boolean) {
+    fun genCFunctions(functions: Iterable<Function>) {
+        out.println()
+        out.println("public trait ${namer.cFunctionsInterfaceName()} {")
+        for (function in functions) {
+            out.print("    ")
+            makeFunSignature(function)
+            out.println()
+        }
+        out.println("}")
+        out.println("public fun get_${namer.cFunctionsInterfaceName()}(libName: String) = LibraryLoader.create(javaClass<${namer.cFunctionsInterfaceName()}>()).load(\$libName)")
+        out.println()
+    }
+
+    private fun genObjCFunction(function: Function, open: Boolean) {
         if (open) {
             out.print("open ")
         }
-        out.print("fun ${namer.methodName(function.getName())}")
-
-        function.getParameterList()
-                .map { p -> namer.parameterName(p.getName()) + ": " + parseType(p.getType()).str }
-                .joinTo(out, separator = ", ", prefix = "(", postfix = ")")
-
-        val returnType = parseType(function.getReturnType())
-        if (returnType != UnitType) {
-            out.print(": ${returnType.str}")
-        }
+        val returnType = makeFunSignature(function)
         out.println(" {")
 
         out.push()
@@ -147,7 +163,7 @@ class Generator(private val out: Printer, private val namer: Namer, private val 
         }
         out.print("Native.objc_msgSend(\"${returnTypeReflectString(returnType)}\", this, \"${function.getName()}\"")
         function.getParameterList()
-                .map { p -> namer.parameterName(p.getName()) }
+                .mapIndexed { i, p -> namer.parameterName( p.getName(), i) }
                 .let {
                     if (it.isNotEmpty()) {
                         out.print(", ")
@@ -162,6 +178,20 @@ class Generator(private val out: Printer, private val namer: Namer, private val 
         out.pop()
 
         out.println("}")
+    }
+
+    private fun makeFunSignature(function: Function): Type {
+        out.print("fun ${namer.methodName(function.getName())}")
+
+        function.getParameterList()
+                .mapIndexed { i, p -> namer.parameterName(p.getName(), i) + ": " + parseType(p.getType()).str }
+                .joinTo(out, separator = ", ", prefix = "(", postfix = ")")
+
+        val returnType = parseType(function.getReturnType())
+        if (returnType != UnitType) {
+            out.print(": ${returnType.str}")
+        }
+        return returnType
     }
 
     private fun returnTypeReflectString(type: Type): String {
@@ -186,6 +216,7 @@ class Generator(private val out: Printer, private val namer: Namer, private val 
 
 class Namer(translationUnit: TranslationUnit) {
     private val protocolNames = HashMap<String, String>()
+    val name = translationUnit.getName()
 
     private fun calculateProtocolNames(translationUnit: TranslationUnit) {
         val existingNames = translationUnit.getClass_List().map { it.getName() }.toMutableSet()
@@ -209,6 +240,11 @@ class Namer(translationUnit: TranslationUnit) {
         calculateProtocolNames(translationUnit)
     }
 
+    fun cFunctionsInterfaceName(): String {
+        val p = Paths.get(name)
+        return "natiface_${p.getFileName().toString().replaceAll("\\.","_")}"
+    }
+
     fun protocolName(name: String): String {
         return protocolNames[name]
     }
@@ -226,8 +262,9 @@ class Namer(translationUnit: TranslationUnit) {
         return escape(objcSelectorName.substringBefore(':'))
     }
 
-    fun parameterName(name: String): String {
-        return escape(name)
+    fun parameterName(name: String, idx: Int): String {
+        val n = escape(name)
+        return if (n.isEmpty()) "_$idx" else n
     }
 
     private fun escape(name: String): String {
