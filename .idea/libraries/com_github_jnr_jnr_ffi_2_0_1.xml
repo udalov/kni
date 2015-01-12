@@ -1,0 +1,18 @@
+<component name="libraryTable">
+  <library name="com.github.jnr:jnr-ffi:2.0.1" type="repository">
+    <properties maven-id="com.github.jnr:jnr-ffi:2.0.1" />
+    <CLASSES>
+      <root url="jar://$MAVEN_REPOSITORY$/com/github/jnr/jnr-ffi/2.0.1/jnr-ffi-2.0.1.jar!/" />
+      <root url="jar://$MAVEN_REPOSITORY$/com/github/jnr/jffi/1.2.7/jffi-1.2.7.jar!/" />
+      <root url="jar://$MAVEN_REPOSITORY$/com/github/jnr/jffi/1.2.7/jffi-1.2.7-native.jar!/" />
+      <root url="jar://$MAVEN_REPOSITORY$/org/ow2/asm/asm/5.0.3/asm-5.0.3.jar!/" />
+      <root url="jar://$MAVEN_REPOSITORY$/org/ow2/asm/asm-commons/5.0.3/asm-commons-5.0.3.jar!/" />
+      <root url="jar://$MAVEN_REPOSITORY$/org/ow2/asm/asm-tree/5.0.3/asm-tree-5.0.3.jar!/" />
+      <root url="jar://$MAVEN_REPOSITORY$/org/ow2/asm/asm-analysis/5.0.3/asm-analysis-5.0.3.jar!/" />
+      <root url="jar://$MAVEN_REPOSITORY$/org/ow2/asm/asm-util/5.0.3/asm-util-5.0.3.jar!/" />
+      <root url="jar://$MAVEN_REPOSITORY$/com/github/jnr/jnr-x86asm/1.0.2/jnr-x86asm-1.0.2.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>
