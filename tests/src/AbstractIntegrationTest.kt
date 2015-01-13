@@ -38,7 +38,7 @@ abstract class AbstractIntegrationTest(val options: NativeIndexingOptions) {
         val tmpdir = Files.createTempDirectory("knitest").toFile()
         val dylib = File(tmpdir, "libKNITest.dylib")
 
-        compileObjectiveC(implementation, dylib)
+        compileNative(implementation, dylib)
 
         val stubSource = File(tmpdir, kotlinSource.getPath().substringAfterLast(File.separator))
         generateStub(buildNativeIndex(header, options), dylib, stubSource, options)
@@ -52,9 +52,7 @@ abstract class AbstractIntegrationTest(val options: NativeIndexingOptions) {
         Assert.assertEquals("OK", result)
     }
 
-    private fun compileObjectiveC(source: File, target: File) {
-        runProcess("/usr/bin/clang -ObjC -dynamiclib -framework Foundation $source -o $target")
-    }
+    abstract protected fun compileNative(source: File, target: File)
 
     private fun compileKotlin(file: File, destination: File, classpath: List<File>) {
         val kotlinc = File("lib/kotlinc/bin/kotlinc").getAbsoluteFile()
@@ -71,7 +69,7 @@ abstract class AbstractIntegrationTest(val options: NativeIndexingOptions) {
         return runProcess("java -cp $cp test.TestPackage")
     }
 
-    private fun runProcess(command: String): String {
+    protected fun runProcess(command: String): String {
         val process = Runtime.getRuntime().exec(command)
         process.waitFor()
 

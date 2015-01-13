@@ -3,7 +3,7 @@ package org.jetbrains.kni.tests
 import org.junit.Test as test
 import org.jetbrains.kni.indexer.NativeIndexingOptions
 
-class IntegrationTestGenerated : AbstractIntegrationTest(NativeIndexingOptions(objC = true)) {
+class IntegrationTestGenerated : ObjCTest(NativeIndexingOptions(objC = true)) {
     test fun arguments_bool() = doTest("tests/testData/integration/arguments/bool.kt")
     test fun arguments_char() = doTest("tests/testData/integration/arguments/char.kt")
     test fun arguments_double() = doTest("tests/testData/integration/arguments/double.kt")
