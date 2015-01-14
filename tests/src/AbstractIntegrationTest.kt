@@ -54,7 +54,7 @@ abstract class AbstractIntegrationTest(val options: NativeIndexingOptions) {
                 .toCollection( baseLibs)
                 .map { it.getAbsolutePath() }
                 .joinToString(File.pathSeparator)
-        return runProcess("java ${if (libpath == null) "" else "-Djava.library.path=/usr/lib${File.pathSeparator}${libpath.getAbsolutePath()}"} -cp $cp test.TestPackage")
+        return runProcess("java ${if (libpath == null) "" else "-Djava.library.path=${File.pathSeparator}${libpath.getAbsolutePath()}"} -cp $cp test.TestPackage")
     }
 
     protected fun runProcess(command: String): String {

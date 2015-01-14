@@ -14,6 +14,6 @@
     <orderEntry type="module" module-name="runtime-objc" />
     <orderEntry type="library" scope="TEST" name="KotlinJavaRuntime" level="project" />
     <orderEntry type="library" name="com.github.jnr:jnr-ffi:2.0.1" level="project" />
-    <orderEntry type="library" name="com.jcabi:jcabi-aether:0.10.1" level="project" />
+    <orderEntry type="library" name="org.jboss.shrinkwrap.resolver:shrinkwrap-resolver-depchain:2.2.0-beta-1" level="project" />
   </component>
 </module>
