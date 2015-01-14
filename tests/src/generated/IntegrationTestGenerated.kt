@@ -1,7 +1,6 @@
 package org.jetbrains.kni.tests
 
 import org.junit.Test as test
-import org.jetbrains.kni.indexer.NativeIndexingOptions
 
 class IntegrationTestGenerated : ObjCTest() {
     test fun arguments_bool() = doTest("tests/testData/integration/arguments/bool.kt")

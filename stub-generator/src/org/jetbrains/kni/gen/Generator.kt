@@ -146,7 +146,8 @@ class Generator(private val out: Printer, private val namer: Namer, private val 
             out.println()
         }
         out.println("}")
-        out.println("public fun get_${namer.cFunctionsInterfaceName()}(libName: String) = LibraryLoader.create(javaClass<${namer.cFunctionsInterfaceName()}>()).load(\$libName)")
+        out.println()
+        out.println("public fun get_${namer.cFunctionsInterfaceName()}(libName: String): ${namer.cFunctionsInterfaceName()} = LibraryLoader.create(javaClass<${namer.cFunctionsInterfaceName()}>()).load(libName)")
         out.println()
     }
 
@@ -242,7 +243,7 @@ class Namer(translationUnit: TranslationUnit) {
 
     fun cFunctionsInterfaceName(): String {
         val p = Paths.get(name)
-        return "natiface_${p.getFileName().toString().replaceAll("\\.","_")}"
+        return "iface_${p.getFileName().toString().replaceAll("\\.","_")}"
     }
 
     fun protocolName(name: String): String {

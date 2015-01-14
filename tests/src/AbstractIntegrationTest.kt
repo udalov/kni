@@ -8,6 +8,7 @@ import org.jetbrains.kni.gen.generateStub
 import org.junit.Assert
 import kotlin.properties.Delegates
 import java.nio.file.Paths
+import kni.objc.loadLibrary
 
 abstract class AbstractIntegrationTest(val options: NativeIndexingOptions) {
 
@@ -36,7 +37,7 @@ abstract class AbstractIntegrationTest(val options: NativeIndexingOptions) {
         val mainClasses = File(tmpdir, "main")
         compileKotlin(kotlinSource, mainClasses, kotlinLibs + stubClasses)
 
-        val result = runKotlin(mainClasses, stubClasses)
+        val result = runKotlin(mainClasses, stubClasses, libpath = tmpdir)
         Assert.assertEquals("OK", result)
     }
 
@@ -46,14 +47,14 @@ abstract class AbstractIntegrationTest(val options: NativeIndexingOptions) {
         runProcess("$kotlinc $file -d $destination -cp $cp")
     }
 
-    private fun runKotlin(vararg classpath: File): String {
+    private fun runKotlin(vararg classpath: File, libpath: File? = null): String {
         val baseLibs = arrayListOf(*classpath)
         baseLibs.add(File("lib/kotlinc/lib/kotlin-runtime.jar"))
         val cp = kotlinLibs
                 .toCollection( baseLibs)
                 .map { it.getAbsolutePath() }
                 .joinToString(File.pathSeparator)
-        return runProcess("java -cp $cp test.TestPackage")
+        return runProcess("java ${if (libpath == null) "" else "-Djava.library.path=/usr/lib${File.pathSeparator}${libpath.getAbsolutePath()}"} -cp $cp test.TestPackage")
     }
 
     protected fun runProcess(command: String): String {

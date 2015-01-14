@@ -5,7 +5,7 @@ import org.jetbrains.kni.gen.Printer
 import java.io.File
 
 object GenerateTests {
-    fun generate(rootDir: String, testName: String) {
+    fun generate(rootDir: String, testName: String, baseClass: String) {
         val sb = StringBuilder()
         val out = Printer(sb)
 
@@ -13,7 +13,7 @@ object GenerateTests {
         out.println()
         out.println("import org.junit.Test as test")
         out.println()
-        out.println("class ${testName}Generated : Abstract$testName() {")
+        out.println("class ${testName}Generated : $baseClass() {")
         out.push()
 
         val root = File(rootDir)
@@ -33,6 +33,7 @@ object GenerateTests {
     }
 
     platformStatic fun main(args: Array<String>) {
-        generate("tests/testData/integration", "IntegrationTest")
+        generate("tests/testData/integration", "IntegrationTest", "ObjCTest")
+        generate("tests/testData/integration_cpp", "CPPIntegrationTest", "CPlusPlusTest")
     }
 }
