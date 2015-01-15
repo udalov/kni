@@ -5,6 +5,7 @@ import org.jetbrains.kni.indexer.NativeIndex.*
 import java.util.HashMap
 import java.nio.file.Paths
 import org.jetbrains.kni.indexer.NativeIndexingOptions
+import org.jetbrains.kni.indexer.Language.*
 
 public fun generateStub(translationUnit: TranslationUnit, dylib: File, outputFile: File, options: NativeIndexingOptions): File {
     val result = StringBuilder()
@@ -18,33 +19,36 @@ public fun generateStub(translationUnit: TranslationUnit, dylib: File, outputFil
     val namer = Namer(translationUnit)
     val generator = Generator(out, namer, dylib)
 
-    if (options.objC) {
-        out.println("package objc")
-        out.println()
-        out.println("import kni.objc.*")
-        out.println()
-        for (protocol in translationUnit.getProtocolList()) {
-            generator.genProtocol(protocol)
+    when (options.language) {
+        OBJC -> {
+            out.println("package objc")
             out.println()
-        }
+            out.println("import kni.objc.*")
+            out.println()
+            for (protocol in translationUnit.getProtocolList()) {
+                generator.genProtocol(protocol)
+                out.println()
+            }
 
-        for (klass in translationUnit.getClass_List()) {
-            generator.genClass(klass)
-            out.println()
-        }
+            for (klass in translationUnit.getClass_List()) {
+                generator.genClass(klass)
+                out.println()
+            }
 
-        for (category in translationUnit.getCategoryList()) {
-            generator.genCategory(category)
-            out.println()
+            for (category in translationUnit.getCategoryList()) {
+                generator.genCategory(category)
+                out.println()
+            }
         }
-    }
-    else {
-        out.println("package native")
-        out.println()
-        out.println("import jnr.ffi.*")
-        out.println("import jnr.ffi.types.*")
-        out.println()
-        generator.genCFunctions(translationUnit.getFunctionList().distinct())
+        CPP -> {
+            out.println("package native")
+            out.println()
+            out.println("import jnr.ffi.*")
+            out.println("import jnr.ffi.types.*")
+            out.println()
+            generator.genCFunctions(translationUnit.getFunctionList().distinct())
+        }
+        else -> error("Unknown language: ${options.language}")
     }
 
     outputFile.getParentFile().mkdirs()

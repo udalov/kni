@@ -5,6 +5,7 @@ import java.io.File
 import org.junit.Assert
 import org.jetbrains.kni.indexer.buildNativeIndex
 import org.jetbrains.kni.indexer.NativeIndexingOptions
+import org.jetbrains.kni.indexer.Language
 
 class IndexerTest {
     private fun doTest(content: String, expected: String) {
@@ -12,7 +13,7 @@ class IndexerTest {
         file.deleteOnExit()
         file.writeText(content)
 
-        val tu = buildNativeIndex(file, NativeIndexingOptions(objC = true))
+        val tu = buildNativeIndex(file, NativeIndexingOptions(Language.OBJC))
         Assert.assertEquals(expected, "$tu")
     }
 
