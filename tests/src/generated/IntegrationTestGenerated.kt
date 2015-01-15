@@ -1,3 +1,5 @@
+// This file is auto-generated. DO NOT EDIT!
+
 package org.jetbrains.kni.tests
 
 import org.junit.Test as test

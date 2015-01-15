@@ -9,6 +9,8 @@ object GenerateTests {
         val sb = StringBuilder()
         val out = Printer(sb)
 
+        out.println("// This file is auto-generated. DO NOT EDIT!")
+        out.println()
         out.println("package org.jetbrains.kni.tests")
         out.println()
         out.println("import org.junit.Test as test")
