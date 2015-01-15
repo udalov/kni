@@ -18,6 +18,7 @@
     </option>
     <envs />
     <dir value="$PROJECT_DIR$/indexer" />
+    <fork_mode value="method" />
     <patterns>
       <pattern testClass="**" />
     </patterns>
