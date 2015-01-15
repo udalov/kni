@@ -15,6 +15,25 @@
         <mkdir dir="${download}"/>
     </target>
 
+    <!-- TODO: use something like Ivy instead -->
+    <macrodef name="download-maven-library">
+        <attribute name="group"/>
+        <attribute name="artifact"/>
+        <attribute name="version"/>
+
+        <sequential>
+            <get src="http://repository.jetbrains.com/remote-repos/@{group}/@{artifact}/@{version}/@{artifact}-@{version}.jar"
+                 dest="${download}/@{artifact}-@{version}.jar"
+                 usetimestamp="true"/>
+            <copy file="${download}/@{artifact}-@{version}.jar" todir="${lib}" overwrite="true"/>
+
+            <get src="http://repository.jetbrains.com/remote-repos/@{group}/@{artifact}/@{version}/@{artifact}-@{version}-sources.jar"
+                 dest="${download}/@{artifact}-@{version}-sources.jar"
+                 usetimestamp="true"/>
+            <copy file="${download}/@{artifact}-@{version}-sources.jar" todir="${lib}" overwrite="true"/>
+        </sequential>
+    </macrodef>
+
     <target name="libffi">
         <get src="https://codeload.github.com/atgreen/libffi/zip/v${libffi.version}"
              dest="${download}/libffi-${libffi.version}.zip"
@@ -84,12 +103,7 @@
     </target>
 
     <target name="junit">
-        <property name="junit" value="junit-${junit.version}"/>
-
-        <get src="http://repository.jetbrains.com/remote-repos/junit/junit/${junit.version}/${junit}.jar"
-             dest="${download}/${junit}.jar"
-             usetimestamp="true"/>
-        <copy file="${download}/${junit}.jar" todir="${lib}" overwrite="true"/>
+        <download-maven-library group="junit" artifact="junit" version="${junit.version}"/>
     </target>
 
     <target name="protobuf">
@@ -124,17 +138,7 @@
     </target>
 
     <target name="protobuf-java">
-        <property name="protobuf" value="protobuf-${protobuf.version}"/>
-
-        <get src="http://repository.jetbrains.com/remote-repos/com/google/protobuf/protobuf-java/${protobuf.version}/protobuf-java-${protobuf.version}.jar"
-             dest="${download}/${protobuf}.jar"
-             usetimestamp="true"/>
-        <copy file="${download}/${protobuf}.jar" todir="${lib}" overwrite="true"/>
-
-        <get src="http://repository.jetbrains.com/remote-repos/com/google/protobuf/protobuf-java/${protobuf.version}/protobuf-java-${protobuf.version}-sources.jar"
-             dest="${download}/${protobuf}-sources.jar"
-             usetimestamp="true"/>
-        <copy file="${download}/${protobuf}-sources.jar" todir="${lib}" overwrite="true"/>
+        <download-maven-library group="com/google/protobuf" artifact="protobuf-java" version="${protobuf.version}"/>
     </target>
 
     <target name="clang">
