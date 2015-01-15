@@ -63,7 +63,7 @@
             <arg value="libffi.a"/>
         </exec>
 
-        <copy todir="${lib}/libffi">
+        <copy todir="${lib}/libffi" overwrite="true">
             <fileset dir="${ffi.target}/include" includes="**/*.h"/>
         </copy>
     </target>
@@ -89,7 +89,7 @@
         <get src="http://repository.jetbrains.com/remote-repos/junit/junit/${junit.version}/${junit}.jar"
              dest="${download}/${junit}.jar"
              usetimestamp="true"/>
-        <copy file="${download}/${junit}.jar" todir="${lib}"/>
+        <copy file="${download}/${junit}.jar" todir="${lib}" overwrite="true"/>
     </target>
 
     <target name="protobuf">
@@ -129,12 +129,12 @@
         <get src="http://repository.jetbrains.com/remote-repos/com/google/protobuf/protobuf-java/${protobuf.version}/protobuf-java-${protobuf.version}.jar"
              dest="${download}/${protobuf}.jar"
              usetimestamp="true"/>
-        <copy file="${download}/${protobuf}.jar" todir="${lib}"/>
+        <copy file="${download}/${protobuf}.jar" todir="${lib}" overwrite="true"/>
 
-        <get src="http://repository.jetbrains.com/remote-repos/com/google/protobuf/protobuf-java/${protobuf.version}/protobuf-java-${protobuf.version}.jar"
+        <get src="http://repository.jetbrains.com/remote-repos/com/google/protobuf/protobuf-java/${protobuf.version}/protobuf-java-${protobuf.version}-sources.jar"
              dest="${download}/${protobuf}-sources.jar"
              usetimestamp="true"/>
-        <copy file="${download}/${protobuf}-sources.jar" todir="${lib}"/>
+        <copy file="${download}/${protobuf}-sources.jar" todir="${lib}" overwrite="true"/>
     </target>
 
     <target name="clang">
