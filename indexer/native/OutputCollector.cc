@@ -29,48 +29,48 @@ namespace {
     }
 }
 
-void OutputCollector::saveClassByUSR(const std::string& usr, ObjCClass *clazz) {
+void OutputCollector::ObjCData::saveClassByUSR(const std::__1::string &usr, ObjCClass *clazz) {
     saveByUSR(m_classes, usr, clazz);
 }
 
-void OutputCollector::saveProtocolByUSR(const std::string& usr, ObjCProtocol *protocol) {
+void OutputCollector::ObjCData::saveProtocolByUSR(const std::__1::string& usr, ObjCProtocol *protocol) {
     saveByUSR(m_protocols, usr, protocol);
 }
 
-void OutputCollector::saveCategoryByUSR(const std::string& usr, ObjCCategory *category) {
+void OutputCollector::ObjCData::saveCategoryByUSR(const std::__1::string &usr, ObjCCategory *category) {
     saveByUSR(m_categories, usr, category);
 }
 
-ObjCClass *OutputCollector::loadClassByUSR(const std::string& usr) const {
+ObjCClass *OutputCollector::ObjCData::loadClassByUSR(const std::__1::string& usr) const {
     return loadByUSR(m_classes, usr);
 }
 
-ObjCProtocol *OutputCollector::loadProtocolByUSR(const std::string& usr) const {
+ObjCProtocol *OutputCollector::ObjCData::loadProtocolByUSR(const std::__1::string& usr) const {
     return loadByUSR(m_protocols, usr);
 }
 
-ObjCCategory *OutputCollector::loadCategoryByUSR(const std::string& usr) const {
+ObjCCategory *OutputCollector::ObjCData::loadCategoryByUSR(const std::__1::string& usr) const {
     return loadByUSR(m_categories, usr);
 }
 
-bool OutputCollector::anyCategoryByUSR(const std::string& usr) const {
+bool OutputCollector::ObjCData::anyCategoryByUSR(const std::__1::string& usr) const {
     return  checkByUSR(m_classes, usr) ||
             checkByUSR(m_protocols, usr) ||
             checkByUSR(m_categories, usr);
 }
 
-void OutputCollector::saveForwardDeclaredClass(const std::string& usr, const std::string& name) {
+void OutputCollector::ObjCData::saveForwardDeclaredClass(const std::__1::string& usr, const std::__1::string& name) {
     m_forwardClasses.insert(make_pair(usr, name));
 }
 
-void OutputCollector::saveForwardDeclaredProtocol(const std::string& usr, const std::string& name) {
+void OutputCollector::ObjCData::saveForwardDeclaredProtocol(const std::__1::string& usr, const std::__1::string& name) {
     m_forwardProtocols.insert(make_pair(usr, name));
 }
 
-const std::set<std::pair<std::string, std::string>>& OutputCollector::loadForwardDeclaredClasses() const {
+const std::__1::set<std::__1::pair<std::__1::string, std::__1::string>>&OutputCollector::ObjCData::loadForwardDeclaredClasses() const {
     return m_forwardClasses;
 }
 
-const std::set<std::pair<std::string, std::string>>& OutputCollector::loadForwardDeclaredProtocols() const {
+const std::__1::set<std::__1::pair<std::__1::string, std::__1::string>>&OutputCollector::ObjCData::loadForwardDeclaredProtocols() const {
     return m_forwardProtocols;
 }

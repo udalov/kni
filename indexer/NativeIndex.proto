@@ -46,10 +46,21 @@ message ObjCCategory {
     repeated ObjCProperty property = 4;
 }
 
+message CField {
+    required string name = 1;
+    required string type = 2;
+}
+
+message CStruct {
+    required string name = 1;
+    repeated CField field = 2;
+}
+
 message TranslationUnit {
     required string name = 1;
     repeated ObjCClass class = 2;
     repeated ObjCProtocol protocol = 3;
     repeated ObjCCategory category = 4;
     repeated Function function = 5;
+    repeated CStruct struct = 6;
 }

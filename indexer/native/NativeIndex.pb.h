@@ -38,6 +38,8 @@ class ObjCProperty;
 class ObjCClass;
 class ObjCProtocol;
 class ObjCCategory;
+class CField;
+class CStruct;
 class TranslationUnit;
 
 // ===================================================================
@@ -858,6 +860,202 @@ class ObjCCategory : public ::google::protobuf::Message {
 };
 // -------------------------------------------------------------------
 
+class CField : public ::google::protobuf::Message {
+ public:
+  CField();
+  virtual ~CField();
+
+  CField(const CField& from);
+
+  inline CField& operator=(const CField& from) {
+    CopyFrom(from);
+    return *this;
+  }
+
+  inline const ::google::protobuf::UnknownFieldSet& unknown_fields() const {
+    return _unknown_fields_;
+  }
+
+  inline ::google::protobuf::UnknownFieldSet* mutable_unknown_fields() {
+    return &_unknown_fields_;
+  }
+
+  static const ::google::protobuf::Descriptor* descriptor();
+  static const CField& default_instance();
+
+  void Swap(CField* other);
+
+  // implements Message ----------------------------------------------
+
+  CField* New() const;
+  void CopyFrom(const ::google::protobuf::Message& from);
+  void MergeFrom(const ::google::protobuf::Message& from);
+  void CopyFrom(const CField& from);
+  void MergeFrom(const CField& from);
+  void Clear();
+  bool IsInitialized() const;
+
+  int ByteSize() const;
+  bool MergePartialFromCodedStream(
+      ::google::protobuf::io::CodedInputStream* input);
+  void SerializeWithCachedSizes(
+      ::google::protobuf::io::CodedOutputStream* output) const;
+  ::google::protobuf::uint8* SerializeWithCachedSizesToArray(::google::protobuf::uint8* output) const;
+  int GetCachedSize() const { return _cached_size_; }
+  private:
+  void SharedCtor();
+  void SharedDtor();
+  void SetCachedSize(int size) const;
+  public:
+  ::google::protobuf::Metadata GetMetadata() const;
+
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+
+  // required string name = 1;
+  inline bool has_name() const;
+  inline void clear_name();
+  static const int kNameFieldNumber = 1;
+  inline const ::std::string& name() const;
+  inline void set_name(const ::std::string& value);
+  inline void set_name(const char* value);
+  inline void set_name(const char* value, size_t size);
+  inline ::std::string* mutable_name();
+  inline ::std::string* release_name();
+  inline void set_allocated_name(::std::string* name);
+
+  // required string type = 2;
+  inline bool has_type() const;
+  inline void clear_type();
+  static const int kTypeFieldNumber = 2;
+  inline const ::std::string& type() const;
+  inline void set_type(const ::std::string& value);
+  inline void set_type(const char* value);
+  inline void set_type(const char* value, size_t size);
+  inline ::std::string* mutable_type();
+  inline ::std::string* release_type();
+  inline void set_allocated_type(::std::string* type);
+
+  // @@protoc_insertion_point(class_scope:CField)
+ private:
+  inline void set_has_name();
+  inline void clear_has_name();
+  inline void set_has_type();
+  inline void clear_has_type();
+
+  ::google::protobuf::UnknownFieldSet _unknown_fields_;
+
+  ::google::protobuf::uint32 _has_bits_[1];
+  mutable int _cached_size_;
+  ::std::string* name_;
+  ::std::string* type_;
+  friend void  protobuf_AddDesc_NativeIndex_2eproto();
+  friend void protobuf_AssignDesc_NativeIndex_2eproto();
+  friend void protobuf_ShutdownFile_NativeIndex_2eproto();
+
+  void InitAsDefaultInstance();
+  static CField* default_instance_;
+};
+// -------------------------------------------------------------------
+
+class CStruct : public ::google::protobuf::Message {
+ public:
+  CStruct();
+  virtual ~CStruct();
+
+  CStruct(const CStruct& from);
+
+  inline CStruct& operator=(const CStruct& from) {
+    CopyFrom(from);
+    return *this;
+  }
+
+  inline const ::google::protobuf::UnknownFieldSet& unknown_fields() const {
+    return _unknown_fields_;
+  }
+
+  inline ::google::protobuf::UnknownFieldSet* mutable_unknown_fields() {
+    return &_unknown_fields_;
+  }
+
+  static const ::google::protobuf::Descriptor* descriptor();
+  static const CStruct& default_instance();
+
+  void Swap(CStruct* other);
+
+  // implements Message ----------------------------------------------
+
+  CStruct* New() const;
+  void CopyFrom(const ::google::protobuf::Message& from);
+  void MergeFrom(const ::google::protobuf::Message& from);
+  void CopyFrom(const CStruct& from);
+  void MergeFrom(const CStruct& from);
+  void Clear();
+  bool IsInitialized() const;
+
+  int ByteSize() const;
+  bool MergePartialFromCodedStream(
+      ::google::protobuf::io::CodedInputStream* input);
+  void SerializeWithCachedSizes(
+      ::google::protobuf::io::CodedOutputStream* output) const;
+  ::google::protobuf::uint8* SerializeWithCachedSizesToArray(::google::protobuf::uint8* output) const;
+  int GetCachedSize() const { return _cached_size_; }
+  private:
+  void SharedCtor();
+  void SharedDtor();
+  void SetCachedSize(int size) const;
+  public:
+  ::google::protobuf::Metadata GetMetadata() const;
+
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+
+  // required string name = 1;
+  inline bool has_name() const;
+  inline void clear_name();
+  static const int kNameFieldNumber = 1;
+  inline const ::std::string& name() const;
+  inline void set_name(const ::std::string& value);
+  inline void set_name(const char* value);
+  inline void set_name(const char* value, size_t size);
+  inline ::std::string* mutable_name();
+  inline ::std::string* release_name();
+  inline void set_allocated_name(::std::string* name);
+
+  // repeated .CField field = 2;
+  inline int field_size() const;
+  inline void clear_field();
+  static const int kFieldFieldNumber = 2;
+  inline const ::CField& field(int index) const;
+  inline ::CField* mutable_field(int index);
+  inline ::CField* add_field();
+  inline const ::google::protobuf::RepeatedPtrField< ::CField >&
+      field() const;
+  inline ::google::protobuf::RepeatedPtrField< ::CField >*
+      mutable_field();
+
+  // @@protoc_insertion_point(class_scope:CStruct)
+ private:
+  inline void set_has_name();
+  inline void clear_has_name();
+
+  ::google::protobuf::UnknownFieldSet _unknown_fields_;
+
+  ::google::protobuf::uint32 _has_bits_[1];
+  mutable int _cached_size_;
+  ::std::string* name_;
+  ::google::protobuf::RepeatedPtrField< ::CField > field_;
+  friend void  protobuf_AddDesc_NativeIndex_2eproto();
+  friend void protobuf_AssignDesc_NativeIndex_2eproto();
+  friend void protobuf_ShutdownFile_NativeIndex_2eproto();
+
+  void InitAsDefaultInstance();
+  static CStruct* default_instance_;
+};
+// -------------------------------------------------------------------
+
 class TranslationUnit : public ::google::protobuf::Message {
  public:
   TranslationUnit();
@@ -971,6 +1169,18 @@ class TranslationUnit : public ::google::protobuf::Message {
   inline ::google::protobuf::RepeatedPtrField< ::Function >*
       mutable_function();
 
+  // repeated .CStruct struct = 6;
+  inline int struct__size() const;
+  inline void clear_struct_();
+  static const int kStructFieldNumber = 6;
+  inline const ::CStruct& struct_(int index) const;
+  inline ::CStruct* mutable_struct_(int index);
+  inline ::CStruct* add_struct_();
+  inline const ::google::protobuf::RepeatedPtrField< ::CStruct >&
+      struct_() const;
+  inline ::google::protobuf::RepeatedPtrField< ::CStruct >*
+      mutable_struct_();
+
   // @@protoc_insertion_point(class_scope:TranslationUnit)
  private:
   inline void set_has_name();
@@ -985,6 +1195,7 @@ class TranslationUnit : public ::google::protobuf::Message {
   ::google::protobuf::RepeatedPtrField< ::ObjCProtocol > protocol_;
   ::google::protobuf::RepeatedPtrField< ::ObjCCategory > category_;
   ::google::protobuf::RepeatedPtrField< ::Function > function_;
+  ::google::protobuf::RepeatedPtrField< ::CStruct > struct__;
   friend void  protobuf_AddDesc_NativeIndex_2eproto();
   friend void protobuf_AssignDesc_NativeIndex_2eproto();
   friend void protobuf_ShutdownFile_NativeIndex_2eproto();
@@ -2276,6 +2487,272 @@ ObjCCategory::mutable_property() {
 
 // -------------------------------------------------------------------
 
+// CField
+
+// required string name = 1;
+inline bool CField::has_name() const {
+  return (_has_bits_[0] & 0x00000001u) != 0;
+}
+inline void CField::set_has_name() {
+  _has_bits_[0] |= 0x00000001u;
+}
+inline void CField::clear_has_name() {
+  _has_bits_[0] &= ~0x00000001u;
+}
+inline void CField::clear_name() {
+  if (name_ != &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
+    name_->clear();
+  }
+  clear_has_name();
+}
+inline const ::std::string& CField::name() const {
+  // @@protoc_insertion_point(field_get:CField.name)
+  return *name_;
+}
+inline void CField::set_name(const ::std::string& value) {
+  set_has_name();
+  if (name_ == &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
+    name_ = new ::std::string;
+  }
+  name_->assign(value);
+  // @@protoc_insertion_point(field_set:CField.name)
+}
+inline void CField::set_name(const char* value) {
+  set_has_name();
+  if (name_ == &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
+    name_ = new ::std::string;
+  }
+  name_->assign(value);
+  // @@protoc_insertion_point(field_set_char:CField.name)
+}
+inline void CField::set_name(const char* value, size_t size) {
+  set_has_name();
+  if (name_ == &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
+    name_ = new ::std::string;
+  }
+  name_->assign(reinterpret_cast<const char*>(value), size);
+  // @@protoc_insertion_point(field_set_pointer:CField.name)
+}
+inline ::std::string* CField::mutable_name() {
+  set_has_name();
+  if (name_ == &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
+    name_ = new ::std::string;
+  }
+  // @@protoc_insertion_point(field_mutable:CField.name)
+  return name_;
+}
+inline ::std::string* CField::release_name() {
+  clear_has_name();
+  if (name_ == &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
+    return NULL;
+  } else {
+    ::std::string* temp = name_;
+    name_ = const_cast< ::std::string*>(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+    return temp;
+  }
+}
+inline void CField::set_allocated_name(::std::string* name) {
+  if (name_ != &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
+    delete name_;
+  }
+  if (name) {
+    set_has_name();
+    name_ = name;
+  } else {
+    clear_has_name();
+    name_ = const_cast< ::std::string*>(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+  }
+  // @@protoc_insertion_point(field_set_allocated:CField.name)
+}
+
+// required string type = 2;
+inline bool CField::has_type() const {
+  return (_has_bits_[0] & 0x00000002u) != 0;
+}
+inline void CField::set_has_type() {
+  _has_bits_[0] |= 0x00000002u;
+}
+inline void CField::clear_has_type() {
+  _has_bits_[0] &= ~0x00000002u;
+}
+inline void CField::clear_type() {
+  if (type_ != &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
+    type_->clear();
+  }
+  clear_has_type();
+}
+inline const ::std::string& CField::type() const {
+  // @@protoc_insertion_point(field_get:CField.type)
+  return *type_;
+}
+inline void CField::set_type(const ::std::string& value) {
+  set_has_type();
+  if (type_ == &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
+    type_ = new ::std::string;
+  }
+  type_->assign(value);
+  // @@protoc_insertion_point(field_set:CField.type)
+}
+inline void CField::set_type(const char* value) {
+  set_has_type();
+  if (type_ == &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
+    type_ = new ::std::string;
+  }
+  type_->assign(value);
+  // @@protoc_insertion_point(field_set_char:CField.type)
+}
+inline void CField::set_type(const char* value, size_t size) {
+  set_has_type();
+  if (type_ == &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
+    type_ = new ::std::string;
+  }
+  type_->assign(reinterpret_cast<const char*>(value), size);
+  // @@protoc_insertion_point(field_set_pointer:CField.type)
+}
+inline ::std::string* CField::mutable_type() {
+  set_has_type();
+  if (type_ == &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
+    type_ = new ::std::string;
+  }
+  // @@protoc_insertion_point(field_mutable:CField.type)
+  return type_;
+}
+inline ::std::string* CField::release_type() {
+  clear_has_type();
+  if (type_ == &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
+    return NULL;
+  } else {
+    ::std::string* temp = type_;
+    type_ = const_cast< ::std::string*>(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+    return temp;
+  }
+}
+inline void CField::set_allocated_type(::std::string* type) {
+  if (type_ != &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
+    delete type_;
+  }
+  if (type) {
+    set_has_type();
+    type_ = type;
+  } else {
+    clear_has_type();
+    type_ = const_cast< ::std::string*>(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+  }
+  // @@protoc_insertion_point(field_set_allocated:CField.type)
+}
+
+// -------------------------------------------------------------------
+
+// CStruct
+
+// required string name = 1;
+inline bool CStruct::has_name() const {
+  return (_has_bits_[0] & 0x00000001u) != 0;
+}
+inline void CStruct::set_has_name() {
+  _has_bits_[0] |= 0x00000001u;
+}
+inline void CStruct::clear_has_name() {
+  _has_bits_[0] &= ~0x00000001u;
+}
+inline void CStruct::clear_name() {
+  if (name_ != &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
+    name_->clear();
+  }
+  clear_has_name();
+}
+inline const ::std::string& CStruct::name() const {
+  // @@protoc_insertion_point(field_get:CStruct.name)
+  return *name_;
+}
+inline void CStruct::set_name(const ::std::string& value) {
+  set_has_name();
+  if (name_ == &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
+    name_ = new ::std::string;
+  }
+  name_->assign(value);
+  // @@protoc_insertion_point(field_set:CStruct.name)
+}
+inline void CStruct::set_name(const char* value) {
+  set_has_name();
+  if (name_ == &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
+    name_ = new ::std::string;
+  }
+  name_->assign(value);
+  // @@protoc_insertion_point(field_set_char:CStruct.name)
+}
+inline void CStruct::set_name(const char* value, size_t size) {
+  set_has_name();
+  if (name_ == &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
+    name_ = new ::std::string;
+  }
+  name_->assign(reinterpret_cast<const char*>(value), size);
+  // @@protoc_insertion_point(field_set_pointer:CStruct.name)
+}
+inline ::std::string* CStruct::mutable_name() {
+  set_has_name();
+  if (name_ == &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
+    name_ = new ::std::string;
+  }
+  // @@protoc_insertion_point(field_mutable:CStruct.name)
+  return name_;
+}
+inline ::std::string* CStruct::release_name() {
+  clear_has_name();
+  if (name_ == &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
+    return NULL;
+  } else {
+    ::std::string* temp = name_;
+    name_ = const_cast< ::std::string*>(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+    return temp;
+  }
+}
+inline void CStruct::set_allocated_name(::std::string* name) {
+  if (name_ != &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
+    delete name_;
+  }
+  if (name) {
+    set_has_name();
+    name_ = name;
+  } else {
+    clear_has_name();
+    name_ = const_cast< ::std::string*>(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+  }
+  // @@protoc_insertion_point(field_set_allocated:CStruct.name)
+}
+
+// repeated .CField field = 2;
+inline int CStruct::field_size() const {
+  return field_.size();
+}
+inline void CStruct::clear_field() {
+  field_.Clear();
+}
+inline const ::CField& CStruct::field(int index) const {
+  // @@protoc_insertion_point(field_get:CStruct.field)
+  return field_.Get(index);
+}
+inline ::CField* CStruct::mutable_field(int index) {
+  // @@protoc_insertion_point(field_mutable:CStruct.field)
+  return field_.Mutable(index);
+}
+inline ::CField* CStruct::add_field() {
+  // @@protoc_insertion_point(field_add:CStruct.field)
+  return field_.Add();
+}
+inline const ::google::protobuf::RepeatedPtrField< ::CField >&
+CStruct::field() const {
+  // @@protoc_insertion_point(field_list:CStruct.field)
+  return field_;
+}
+inline ::google::protobuf::RepeatedPtrField< ::CField >*
+CStruct::mutable_field() {
+  // @@protoc_insertion_point(field_mutable_list:CStruct.field)
+  return &field_;
+}
+
+// -------------------------------------------------------------------
+
 // TranslationUnit
 
 // required string name = 1;
@@ -2472,6 +2949,36 @@ inline ::google::protobuf::RepeatedPtrField< ::Function >*
 TranslationUnit::mutable_function() {
   // @@protoc_insertion_point(field_mutable_list:TranslationUnit.function)
   return &function_;
+}
+
+// repeated .CStruct struct = 6;
+inline int TranslationUnit::struct__size() const {
+  return struct__.size();
+}
+inline void TranslationUnit::clear_struct_() {
+  struct__.Clear();
+}
+inline const ::CStruct& TranslationUnit::struct_(int index) const {
+  // @@protoc_insertion_point(field_get:TranslationUnit.struct)
+  return struct__.Get(index);
+}
+inline ::CStruct* TranslationUnit::mutable_struct_(int index) {
+  // @@protoc_insertion_point(field_mutable:TranslationUnit.struct)
+  return struct__.Mutable(index);
+}
+inline ::CStruct* TranslationUnit::add_struct_() {
+  // @@protoc_insertion_point(field_add:TranslationUnit.struct)
+  return struct__.Add();
+}
+inline const ::google::protobuf::RepeatedPtrField< ::CStruct >&
+TranslationUnit::struct_() const {
+  // @@protoc_insertion_point(field_list:TranslationUnit.struct)
+  return struct__;
+}
+inline ::google::protobuf::RepeatedPtrField< ::CStruct >*
+TranslationUnit::mutable_struct_() {
+  // @@protoc_insertion_point(field_mutable_list:TranslationUnit.struct)
+  return &struct__;
 }
 
 

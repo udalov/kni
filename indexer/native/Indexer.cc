@@ -2,6 +2,7 @@
 #include <map>
 #include <vector>
 #include <sstream>
+#include <clang-c/Index.h>
 
 #include "clang-c/Index.h"
 
@@ -11,7 +12,6 @@
 #include "OutputCollector.h"
 #include "NativeIndex.pb.h"
 
-void constructFunction(CXIdxDeclInfo const *info, Function *function);
 
 std::vector<std::string> extractProtocolNames(const CXIdxObjCProtocolRefListInfo *protocols) {
     std::vector<std::string> result;
@@ -132,14 +132,14 @@ std::string serializeType(const CXType& type) {
 }
 
 
-void indexClass(const CXIdxDeclInfo *info, OutputCollector *data) {
+void indexObjCClass(const CXIdxDeclInfo *info, OutputCollector *data) {
     auto containerDeclInfo = clang_index_getObjCContainerDeclInfo(info);
     assertNotNull(containerDeclInfo);
     if (containerDeclInfo->kind == CXIdxObjCContainer_Implementation) {
         // TODO: report a warning
         return;
     } else if (containerDeclInfo->kind == CXIdxObjCContainer_ForwardRef) {
-        data->saveForwardDeclaredClass(info->entityInfo->USR, info->entityInfo->name);
+        data->objc.saveForwardDeclaredClass(info->entityInfo->USR, info->entityInfo->name);
         return;
     }
     assertEquals(containerDeclInfo->kind, CXIdxObjCContainer_Interface);
@@ -164,10 +164,10 @@ void indexClass(const CXIdxDeclInfo *info, OutputCollector *data) {
         clazz->add_protocol(protocolName);
     }
 
-    data->saveClassByUSR(info->entityInfo->USR, clazz);
+    data->objc.saveClassByUSR(info->entityInfo->USR, clazz);
 }
 
-void indexCategory(const CXIdxDeclInfo *info, OutputCollector *data) {
+void indexObjCCategory(const CXIdxDeclInfo *info, OutputCollector *data) {
     assertTrue(info->isDefinition);
     auto categoryDeclInfo = clang_index_getObjCCategoryDeclInfo(info);
     assertNotNull(categoryDeclInfo);
@@ -177,7 +177,7 @@ void indexCategory(const CXIdxDeclInfo *info, OutputCollector *data) {
     auto name = std::string(categoryDeclInfo->objcClass->name) + "+" + info->entityInfo->name;
     category->set_name(name);
 
-    auto clazz = data->loadClassByUSR(categoryDeclInfo->objcClass->USR);
+    auto clazz = data->objc.loadClassByUSR(categoryDeclInfo->objcClass->USR);
     assertNotNull(clazz);
     clazz->add_category(name);
     
@@ -187,14 +187,14 @@ void indexCategory(const CXIdxDeclInfo *info, OutputCollector *data) {
         category->add_base_protocol(protocolName);
     }
 
-    data->saveCategoryByUSR(info->entityInfo->USR, category);
+    data->objc.saveCategoryByUSR(info->entityInfo->USR, category);
 }
 
-void indexProtocol(const CXIdxDeclInfo *info, OutputCollector *data) {
+void indexObjCProtocol(const CXIdxDeclInfo *info, OutputCollector *data) {
     auto containerDeclInfo = clang_index_getObjCContainerDeclInfo(info);
     assertNotNull(containerDeclInfo);
     if (containerDeclInfo->kind == CXIdxObjCContainer_ForwardRef) {
-        data->saveForwardDeclaredProtocol(info->entityInfo->USR, info->entityInfo->name);
+        data->objc.saveForwardDeclaredProtocol(info->entityInfo->USR, info->entityInfo->name);
         return;
     }
     assertEquals(containerDeclInfo->kind, CXIdxObjCContainer_Interface);
@@ -209,7 +209,7 @@ void indexProtocol(const CXIdxDeclInfo *info, OutputCollector *data) {
         protocol->add_base_protocol(protocolName);
     }
 
-    data->saveProtocolByUSR(info->entityInfo->USR, protocol);
+    data->objc.saveProtocolByUSR(info->entityInfo->USR, protocol);
 }
 
 std::string getNotNullSemanticContainerUSR(const CXIdxDeclInfo *info) {
@@ -221,29 +221,14 @@ std::string getNotNullSemanticContainerUSR(const CXIdxDeclInfo *info) {
 ObjCMethod *createMethodInItsContainer(const CXIdxDeclInfo *info, OutputCollector *data) {
     auto container = getNotNullSemanticContainerUSR(info);
 
-    auto clazz = data->loadClassByUSR(container);
+    auto clazz = data->objc.loadClassByUSR(container);
     if (clazz) return clazz->add_method();
-    auto protocol = data->loadProtocolByUSR(container);
+    auto protocol = data->objc.loadProtocolByUSR(container);
     if (protocol) return protocol->add_method();
-    auto category = data->loadCategoryByUSR(container);
+    auto category = data->objc.loadCategoryByUSR(container);
     if (category) return category->add_method();
 
     return nullptr;
-}
-
-void indexMethod(const CXIdxDeclInfo *info, OutputCollector *data, bool isClassMethod) {
-    ObjCMethod *method = createMethodInItsContainer(info, data);
-    assertNotNull(method);
-
-    method->set_class_method(isClassMethod);
-
-    constructFunction(info, method->mutable_function());
-}
-
-void indexFunction(const CXIdxDeclInfo *info, OutputCollector *data) {
-    auto container = getNotNullSemanticContainerUSR(info);
-    if (!data->anyCategoryByUSR(container))
-        constructFunction(info, data->result().add_function());
 }
 
 void constructFunction(CXIdxDeclInfo const *info, Function *function) {
@@ -265,15 +250,52 @@ void constructFunction(CXIdxDeclInfo const *info, Function *function) {
 }
 
 
+void indexMethod(const CXIdxDeclInfo *info, OutputCollector *data, bool isClassMethod) {
+    ObjCMethod *method = createMethodInItsContainer(info, data);
+    assertNotNull(method);
+
+    method->set_class_method(isClassMethod);
+
+    constructFunction(info, method->mutable_function());
+}
+
+void indexFunction(const CXIdxDeclInfo *info, OutputCollector *data) {
+    auto container = getNotNullSemanticContainerUSR(info);
+    if (!data->objc.anyCategoryByUSR(container))
+        constructFunction(info, data->result().add_function());
+}
+
+void indexStruct(const CXIdxDeclInfo *info, OutputCollector *data) {
+
+    if (info->isDefinition) {
+        auto struct_ = data->result().add_struct_();
+        struct_->set_name(info->entityInfo->name);
+        data->c.structs[info->entityInfo->USR] = struct_;
+    }
+    else
+        data->c.forwardStructs.insert(std::make_pair(info->entityInfo->USR, info->entityInfo->name));
+}
+
+void indexField(const CXIdxDeclInfo *info, OutputCollector *data) {
+    auto container = getNotNullSemanticContainerUSR(info);
+    auto structIt = data->c.structs.find(container);
+    if (structIt != data->c.structs.end()) {
+        auto field = structIt->second->add_field();
+        field->set_name(info->entityInfo->name);
+        auto type = serializeType(clang_getCursorResultType(info->cursor));
+        field->set_type(type);
+    }
+}
+
 ObjCProperty *createPropertyInItsContainer(const CXIdxDeclInfo *info, OutputCollector *data) {
     // TODO: generify the code somehow (see the same method above)
     auto container = getNotNullSemanticContainerUSR(info);
 
-    auto clazz = data->loadClassByUSR(container);
+    auto clazz = data->objc.loadClassByUSR(container);
     if (clazz) return clazz->add_property();
-    auto protocol = data->loadProtocolByUSR(container);
+    auto protocol = data->objc.loadProtocolByUSR(container);
     if (protocol) return protocol->add_property();
-    auto category = data->loadCategoryByUSR(container);
+    auto category = data->objc.loadCategoryByUSR(container);
     if (category) return category->add_property();
 
     return nullptr;
@@ -298,11 +320,11 @@ void indexDeclaration(CXClientData clientData, const CXIdxDeclInfo *info) {
 
     switch (info->entityInfo->kind) {
         case CXIdxEntity_ObjCClass:
-            indexClass(info, data); break;
+            indexObjCClass(info, data); break;
         case CXIdxEntity_ObjCProtocol:
-            indexProtocol(info, data); break;
+            indexObjCProtocol(info, data); break;
         case CXIdxEntity_ObjCCategory:
-            indexCategory(info, data); break;
+            indexObjCCategory(info, data); break;
         case CXIdxEntity_ObjCInstanceMethod:
             indexMethod(info, data, false); break;
         case CXIdxEntity_ObjCClassMethod:
@@ -311,6 +333,10 @@ void indexDeclaration(CXClientData clientData, const CXIdxDeclInfo *info) {
             indexProperty(info, data); break;
         case CXIdxEntity_Function:
             indexFunction(info, data); break;
+        case CXIdxEntity_Struct:
+            indexStruct(info, data); break;
+        case CXIdxEntity_Field:
+            indexField(info, data); break;
         default:
             break;
     }
@@ -323,20 +349,20 @@ void runPostIndexTasks(OutputCollector *data) {
     // arguments or return type of a method, regardless of whether or not
     // it was defined
 
-    auto classes = data->loadForwardDeclaredClasses();
+    auto classes = data->objc.loadForwardDeclaredClasses();
     for (auto clazz : classes) {
         auto usr = clazz.first;
-        if (data->loadClassByUSR(usr)) continue;
+        if (data->objc.loadClassByUSR(usr)) continue;
 
         auto name = clazz.second;
         auto newClass = data->result().add_class_();
         newClass->set_name(name);
     }
 
-    auto protocols = data->loadForwardDeclaredProtocols();
+    auto protocols = data->objc.loadForwardDeclaredProtocols();
     for (auto protocol : protocols) {
         auto usr = protocol.first;
-        if (data->loadProtocolByUSR(usr)) continue;
+        if (data->objc.loadProtocolByUSR(usr)) continue;
 
         auto name = protocol.second;
         auto newProtocol = data->result().add_protocol();

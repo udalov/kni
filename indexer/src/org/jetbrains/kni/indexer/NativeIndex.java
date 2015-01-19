@@ -7558,6 +7558,1511 @@ public final class NativeIndex {
     // @@protoc_insertion_point(class_scope:ObjCCategory)
   }
 
+  public interface CFieldOrBuilder extends
+      // @@protoc_insertion_point(interface_extends:CField)
+      com.google.protobuf.MessageOrBuilder {
+
+    /**
+     * <code>required string name = 1;</code>
+     */
+    boolean hasName();
+    /**
+     * <code>required string name = 1;</code>
+     */
+    java.lang.String getName();
+    /**
+     * <code>required string name = 1;</code>
+     */
+    com.google.protobuf.ByteString
+        getNameBytes();
+
+    /**
+     * <code>required string type = 2;</code>
+     */
+    boolean hasType();
+    /**
+     * <code>required string type = 2;</code>
+     */
+    java.lang.String getType();
+    /**
+     * <code>required string type = 2;</code>
+     */
+    com.google.protobuf.ByteString
+        getTypeBytes();
+  }
+  /**
+   * Protobuf type {@code CField}
+   */
+  public static final class CField extends
+      com.google.protobuf.GeneratedMessage implements
+      // @@protoc_insertion_point(message_implements:CField)
+      CFieldOrBuilder {
+    // Use CField.newBuilder() to construct.
+    private CField(com.google.protobuf.GeneratedMessage.Builder<?> builder) {
+      super(builder);
+      this.unknownFields = builder.getUnknownFields();
+    }
+    private CField(boolean noInit) { this.unknownFields = com.google.protobuf.UnknownFieldSet.getDefaultInstance(); }
+
+    private static final CField defaultInstance;
+    public static CField getDefaultInstance() {
+      return defaultInstance;
+    }
+
+    public CField getDefaultInstanceForType() {
+      return defaultInstance;
+    }
+
+    private final com.google.protobuf.UnknownFieldSet unknownFields;
+    @java.lang.Override
+    public final com.google.protobuf.UnknownFieldSet
+        getUnknownFields() {
+      return this.unknownFields;
+    }
+    private CField(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      initFields();
+      int mutable_bitField0_ = 0;
+      com.google.protobuf.UnknownFieldSet.Builder unknownFields =
+          com.google.protobuf.UnknownFieldSet.newBuilder();
+      try {
+        boolean done = false;
+        while (!done) {
+          int tag = input.readTag();
+          switch (tag) {
+            case 0:
+              done = true;
+              break;
+            default: {
+              if (!parseUnknownField(input, unknownFields,
+                                     extensionRegistry, tag)) {
+                done = true;
+              }
+              break;
+            }
+            case 10: {
+              com.google.protobuf.ByteString bs = input.readBytes();
+              bitField0_ |= 0x00000001;
+              name_ = bs;
+              break;
+            }
+            case 18: {
+              com.google.protobuf.ByteString bs = input.readBytes();
+              bitField0_ |= 0x00000002;
+              type_ = bs;
+              break;
+            }
+          }
+        }
+      } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+        throw e.setUnfinishedMessage(this);
+      } catch (java.io.IOException e) {
+        throw new com.google.protobuf.InvalidProtocolBufferException(
+            e.getMessage()).setUnfinishedMessage(this);
+      } finally {
+        this.unknownFields = unknownFields.build();
+        makeExtensionsImmutable();
+      }
+    }
+    public static final com.google.protobuf.Descriptors.Descriptor
+        getDescriptor() {
+      return org.jetbrains.kni.indexer.NativeIndex.internal_static_CField_descriptor;
+    }
+
+    protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
+        internalGetFieldAccessorTable() {
+      return org.jetbrains.kni.indexer.NativeIndex.internal_static_CField_fieldAccessorTable
+          .ensureFieldAccessorsInitialized(
+              org.jetbrains.kni.indexer.NativeIndex.CField.class, org.jetbrains.kni.indexer.NativeIndex.CField.Builder.class);
+    }
+
+    public static com.google.protobuf.Parser<CField> PARSER =
+        new com.google.protobuf.AbstractParser<CField>() {
+      public CField parsePartialFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        return new CField(input, extensionRegistry);
+      }
+    };
+
+    @java.lang.Override
+    public com.google.protobuf.Parser<CField> getParserForType() {
+      return PARSER;
+    }
+
+    private int bitField0_;
+    public static final int NAME_FIELD_NUMBER = 1;
+    private java.lang.Object name_;
+    /**
+     * <code>required string name = 1;</code>
+     */
+    public boolean hasName() {
+      return ((bitField0_ & 0x00000001) == 0x00000001);
+    }
+    /**
+     * <code>required string name = 1;</code>
+     */
+    public java.lang.String getName() {
+      java.lang.Object ref = name_;
+      if (ref instanceof java.lang.String) {
+        return (java.lang.String) ref;
+      } else {
+        com.google.protobuf.ByteString bs = 
+            (com.google.protobuf.ByteString) ref;
+        java.lang.String s = bs.toStringUtf8();
+        if (bs.isValidUtf8()) {
+          name_ = s;
+        }
+        return s;
+      }
+    }
+    /**
+     * <code>required string name = 1;</code>
+     */
+    public com.google.protobuf.ByteString
+        getNameBytes() {
+      java.lang.Object ref = name_;
+      if (ref instanceof java.lang.String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
+        name_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
+    }
+
+    public static final int TYPE_FIELD_NUMBER = 2;
+    private java.lang.Object type_;
+    /**
+     * <code>required string type = 2;</code>
+     */
+    public boolean hasType() {
+      return ((bitField0_ & 0x00000002) == 0x00000002);
+    }
+    /**
+     * <code>required string type = 2;</code>
+     */
+    public java.lang.String getType() {
+      java.lang.Object ref = type_;
+      if (ref instanceof java.lang.String) {
+        return (java.lang.String) ref;
+      } else {
+        com.google.protobuf.ByteString bs = 
+            (com.google.protobuf.ByteString) ref;
+        java.lang.String s = bs.toStringUtf8();
+        if (bs.isValidUtf8()) {
+          type_ = s;
+        }
+        return s;
+      }
+    }
+    /**
+     * <code>required string type = 2;</code>
+     */
+    public com.google.protobuf.ByteString
+        getTypeBytes() {
+      java.lang.Object ref = type_;
+      if (ref instanceof java.lang.String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
+        type_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
+    }
+
+    private void initFields() {
+      name_ = "";
+      type_ = "";
+    }
+    private byte memoizedIsInitialized = -1;
+    public final boolean isInitialized() {
+      byte isInitialized = memoizedIsInitialized;
+      if (isInitialized == 1) return true;
+      if (isInitialized == 0) return false;
+
+      if (!hasName()) {
+        memoizedIsInitialized = 0;
+        return false;
+      }
+      if (!hasType()) {
+        memoizedIsInitialized = 0;
+        return false;
+      }
+      memoizedIsInitialized = 1;
+      return true;
+    }
+
+    public void writeTo(com.google.protobuf.CodedOutputStream output)
+                        throws java.io.IOException {
+      getSerializedSize();
+      if (((bitField0_ & 0x00000001) == 0x00000001)) {
+        output.writeBytes(1, getNameBytes());
+      }
+      if (((bitField0_ & 0x00000002) == 0x00000002)) {
+        output.writeBytes(2, getTypeBytes());
+      }
+      getUnknownFields().writeTo(output);
+    }
+
+    private int memoizedSerializedSize = -1;
+    public int getSerializedSize() {
+      int size = memoizedSerializedSize;
+      if (size != -1) return size;
+
+      size = 0;
+      if (((bitField0_ & 0x00000001) == 0x00000001)) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeBytesSize(1, getNameBytes());
+      }
+      if (((bitField0_ & 0x00000002) == 0x00000002)) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeBytesSize(2, getTypeBytes());
+      }
+      size += getUnknownFields().getSerializedSize();
+      memoizedSerializedSize = size;
+      return size;
+    }
+
+    private static final long serialVersionUID = 0L;
+    @java.lang.Override
+    protected java.lang.Object writeReplace()
+        throws java.io.ObjectStreamException {
+      return super.writeReplace();
+    }
+
+    public static org.jetbrains.kni.indexer.NativeIndex.CField parseFrom(
+        com.google.protobuf.ByteString data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static org.jetbrains.kni.indexer.NativeIndex.CField parseFrom(
+        com.google.protobuf.ByteString data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static org.jetbrains.kni.indexer.NativeIndex.CField parseFrom(byte[] data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static org.jetbrains.kni.indexer.NativeIndex.CField parseFrom(
+        byte[] data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static org.jetbrains.kni.indexer.NativeIndex.CField parseFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      return PARSER.parseFrom(input);
+    }
+    public static org.jetbrains.kni.indexer.NativeIndex.CField parseFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return PARSER.parseFrom(input, extensionRegistry);
+    }
+    public static org.jetbrains.kni.indexer.NativeIndex.CField parseDelimitedFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      return PARSER.parseDelimitedFrom(input);
+    }
+    public static org.jetbrains.kni.indexer.NativeIndex.CField parseDelimitedFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return PARSER.parseDelimitedFrom(input, extensionRegistry);
+    }
+    public static org.jetbrains.kni.indexer.NativeIndex.CField parseFrom(
+        com.google.protobuf.CodedInputStream input)
+        throws java.io.IOException {
+      return PARSER.parseFrom(input);
+    }
+    public static org.jetbrains.kni.indexer.NativeIndex.CField parseFrom(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return PARSER.parseFrom(input, extensionRegistry);
+    }
+
+    public static Builder newBuilder() { return Builder.create(); }
+    public Builder newBuilderForType() { return newBuilder(); }
+    public static Builder newBuilder(org.jetbrains.kni.indexer.NativeIndex.CField prototype) {
+      return newBuilder().mergeFrom(prototype);
+    }
+    public Builder toBuilder() { return newBuilder(this); }
+
+    @java.lang.Override
+    protected Builder newBuilderForType(
+        com.google.protobuf.GeneratedMessage.BuilderParent parent) {
+      Builder builder = new Builder(parent);
+      return builder;
+    }
+    /**
+     * Protobuf type {@code CField}
+     */
+    public static final class Builder extends
+        com.google.protobuf.GeneratedMessage.Builder<Builder> implements
+        // @@protoc_insertion_point(builder_implements:CField)
+        org.jetbrains.kni.indexer.NativeIndex.CFieldOrBuilder {
+      public static final com.google.protobuf.Descriptors.Descriptor
+          getDescriptor() {
+        return org.jetbrains.kni.indexer.NativeIndex.internal_static_CField_descriptor;
+      }
+
+      protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
+          internalGetFieldAccessorTable() {
+        return org.jetbrains.kni.indexer.NativeIndex.internal_static_CField_fieldAccessorTable
+            .ensureFieldAccessorsInitialized(
+                org.jetbrains.kni.indexer.NativeIndex.CField.class, org.jetbrains.kni.indexer.NativeIndex.CField.Builder.class);
+      }
+
+      // Construct using org.jetbrains.kni.indexer.NativeIndex.CField.newBuilder()
+      private Builder() {
+        maybeForceBuilderInitialization();
+      }
+
+      private Builder(
+          com.google.protobuf.GeneratedMessage.BuilderParent parent) {
+        super(parent);
+        maybeForceBuilderInitialization();
+      }
+      private void maybeForceBuilderInitialization() {
+        if (com.google.protobuf.GeneratedMessage.alwaysUseFieldBuilders) {
+        }
+      }
+      private static Builder create() {
+        return new Builder();
+      }
+
+      public Builder clear() {
+        super.clear();
+        name_ = "";
+        bitField0_ = (bitField0_ & ~0x00000001);
+        type_ = "";
+        bitField0_ = (bitField0_ & ~0x00000002);
+        return this;
+      }
+
+      public Builder clone() {
+        return create().mergeFrom(buildPartial());
+      }
+
+      public com.google.protobuf.Descriptors.Descriptor
+          getDescriptorForType() {
+        return org.jetbrains.kni.indexer.NativeIndex.internal_static_CField_descriptor;
+      }
+
+      public org.jetbrains.kni.indexer.NativeIndex.CField getDefaultInstanceForType() {
+        return org.jetbrains.kni.indexer.NativeIndex.CField.getDefaultInstance();
+      }
+
+      public org.jetbrains.kni.indexer.NativeIndex.CField build() {
+        org.jetbrains.kni.indexer.NativeIndex.CField result = buildPartial();
+        if (!result.isInitialized()) {
+          throw newUninitializedMessageException(result);
+        }
+        return result;
+      }
+
+      public org.jetbrains.kni.indexer.NativeIndex.CField buildPartial() {
+        org.jetbrains.kni.indexer.NativeIndex.CField result = new org.jetbrains.kni.indexer.NativeIndex.CField(this);
+        int from_bitField0_ = bitField0_;
+        int to_bitField0_ = 0;
+        if (((from_bitField0_ & 0x00000001) == 0x00000001)) {
+          to_bitField0_ |= 0x00000001;
+        }
+        result.name_ = name_;
+        if (((from_bitField0_ & 0x00000002) == 0x00000002)) {
+          to_bitField0_ |= 0x00000002;
+        }
+        result.type_ = type_;
+        result.bitField0_ = to_bitField0_;
+        onBuilt();
+        return result;
+      }
+
+      public Builder mergeFrom(com.google.protobuf.Message other) {
+        if (other instanceof org.jetbrains.kni.indexer.NativeIndex.CField) {
+          return mergeFrom((org.jetbrains.kni.indexer.NativeIndex.CField)other);
+        } else {
+          super.mergeFrom(other);
+          return this;
+        }
+      }
+
+      public Builder mergeFrom(org.jetbrains.kni.indexer.NativeIndex.CField other) {
+        if (other == org.jetbrains.kni.indexer.NativeIndex.CField.getDefaultInstance()) return this;
+        if (other.hasName()) {
+          bitField0_ |= 0x00000001;
+          name_ = other.name_;
+          onChanged();
+        }
+        if (other.hasType()) {
+          bitField0_ |= 0x00000002;
+          type_ = other.type_;
+          onChanged();
+        }
+        this.mergeUnknownFields(other.getUnknownFields());
+        return this;
+      }
+
+      public final boolean isInitialized() {
+        if (!hasName()) {
+          
+          return false;
+        }
+        if (!hasType()) {
+          
+          return false;
+        }
+        return true;
+      }
+
+      public Builder mergeFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws java.io.IOException {
+        org.jetbrains.kni.indexer.NativeIndex.CField parsedMessage = null;
+        try {
+          parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
+        } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+          parsedMessage = (org.jetbrains.kni.indexer.NativeIndex.CField) e.getUnfinishedMessage();
+          throw e;
+        } finally {
+          if (parsedMessage != null) {
+            mergeFrom(parsedMessage);
+          }
+        }
+        return this;
+      }
+      private int bitField0_;
+
+      private java.lang.Object name_ = "";
+      /**
+       * <code>required string name = 1;</code>
+       */
+      public boolean hasName() {
+        return ((bitField0_ & 0x00000001) == 0x00000001);
+      }
+      /**
+       * <code>required string name = 1;</code>
+       */
+      public java.lang.String getName() {
+        java.lang.Object ref = name_;
+        if (!(ref instanceof java.lang.String)) {
+          com.google.protobuf.ByteString bs =
+              (com.google.protobuf.ByteString) ref;
+          java.lang.String s = bs.toStringUtf8();
+          if (bs.isValidUtf8()) {
+            name_ = s;
+          }
+          return s;
+        } else {
+          return (java.lang.String) ref;
+        }
+      }
+      /**
+       * <code>required string name = 1;</code>
+       */
+      public com.google.protobuf.ByteString
+          getNameBytes() {
+        java.lang.Object ref = name_;
+        if (ref instanceof String) {
+          com.google.protobuf.ByteString b = 
+              com.google.protobuf.ByteString.copyFromUtf8(
+                  (java.lang.String) ref);
+          name_ = b;
+          return b;
+        } else {
+          return (com.google.protobuf.ByteString) ref;
+        }
+      }
+      /**
+       * <code>required string name = 1;</code>
+       */
+      public Builder setName(
+          java.lang.String value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000001;
+        name_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>required string name = 1;</code>
+       */
+      public Builder clearName() {
+        bitField0_ = (bitField0_ & ~0x00000001);
+        name_ = getDefaultInstance().getName();
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>required string name = 1;</code>
+       */
+      public Builder setNameBytes(
+          com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000001;
+        name_ = value;
+        onChanged();
+        return this;
+      }
+
+      private java.lang.Object type_ = "";
+      /**
+       * <code>required string type = 2;</code>
+       */
+      public boolean hasType() {
+        return ((bitField0_ & 0x00000002) == 0x00000002);
+      }
+      /**
+       * <code>required string type = 2;</code>
+       */
+      public java.lang.String getType() {
+        java.lang.Object ref = type_;
+        if (!(ref instanceof java.lang.String)) {
+          com.google.protobuf.ByteString bs =
+              (com.google.protobuf.ByteString) ref;
+          java.lang.String s = bs.toStringUtf8();
+          if (bs.isValidUtf8()) {
+            type_ = s;
+          }
+          return s;
+        } else {
+          return (java.lang.String) ref;
+        }
+      }
+      /**
+       * <code>required string type = 2;</code>
+       */
+      public com.google.protobuf.ByteString
+          getTypeBytes() {
+        java.lang.Object ref = type_;
+        if (ref instanceof String) {
+          com.google.protobuf.ByteString b = 
+              com.google.protobuf.ByteString.copyFromUtf8(
+                  (java.lang.String) ref);
+          type_ = b;
+          return b;
+        } else {
+          return (com.google.protobuf.ByteString) ref;
+        }
+      }
+      /**
+       * <code>required string type = 2;</code>
+       */
+      public Builder setType(
+          java.lang.String value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000002;
+        type_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>required string type = 2;</code>
+       */
+      public Builder clearType() {
+        bitField0_ = (bitField0_ & ~0x00000002);
+        type_ = getDefaultInstance().getType();
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>required string type = 2;</code>
+       */
+      public Builder setTypeBytes(
+          com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000002;
+        type_ = value;
+        onChanged();
+        return this;
+      }
+
+      // @@protoc_insertion_point(builder_scope:CField)
+    }
+
+    static {
+      defaultInstance = new CField(true);
+      defaultInstance.initFields();
+    }
+
+    // @@protoc_insertion_point(class_scope:CField)
+  }
+
+  public interface CStructOrBuilder extends
+      // @@protoc_insertion_point(interface_extends:CStruct)
+      com.google.protobuf.MessageOrBuilder {
+
+    /**
+     * <code>required string name = 1;</code>
+     */
+    boolean hasName();
+    /**
+     * <code>required string name = 1;</code>
+     */
+    java.lang.String getName();
+    /**
+     * <code>required string name = 1;</code>
+     */
+    com.google.protobuf.ByteString
+        getNameBytes();
+
+    /**
+     * <code>repeated .CField field = 2;</code>
+     */
+    java.util.List<org.jetbrains.kni.indexer.NativeIndex.CField> 
+        getFieldList();
+    /**
+     * <code>repeated .CField field = 2;</code>
+     */
+    org.jetbrains.kni.indexer.NativeIndex.CField getField(int index);
+    /**
+     * <code>repeated .CField field = 2;</code>
+     */
+    int getFieldCount();
+    /**
+     * <code>repeated .CField field = 2;</code>
+     */
+    java.util.List<? extends org.jetbrains.kni.indexer.NativeIndex.CFieldOrBuilder> 
+        getFieldOrBuilderList();
+    /**
+     * <code>repeated .CField field = 2;</code>
+     */
+    org.jetbrains.kni.indexer.NativeIndex.CFieldOrBuilder getFieldOrBuilder(
+        int index);
+  }
+  /**
+   * Protobuf type {@code CStruct}
+   */
+  public static final class CStruct extends
+      com.google.protobuf.GeneratedMessage implements
+      // @@protoc_insertion_point(message_implements:CStruct)
+      CStructOrBuilder {
+    // Use CStruct.newBuilder() to construct.
+    private CStruct(com.google.protobuf.GeneratedMessage.Builder<?> builder) {
+      super(builder);
+      this.unknownFields = builder.getUnknownFields();
+    }
+    private CStruct(boolean noInit) { this.unknownFields = com.google.protobuf.UnknownFieldSet.getDefaultInstance(); }
+
+    private static final CStruct defaultInstance;
+    public static CStruct getDefaultInstance() {
+      return defaultInstance;
+    }
+
+    public CStruct getDefaultInstanceForType() {
+      return defaultInstance;
+    }
+
+    private final com.google.protobuf.UnknownFieldSet unknownFields;
+    @java.lang.Override
+    public final com.google.protobuf.UnknownFieldSet
+        getUnknownFields() {
+      return this.unknownFields;
+    }
+    private CStruct(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      initFields();
+      int mutable_bitField0_ = 0;
+      com.google.protobuf.UnknownFieldSet.Builder unknownFields =
+          com.google.protobuf.UnknownFieldSet.newBuilder();
+      try {
+        boolean done = false;
+        while (!done) {
+          int tag = input.readTag();
+          switch (tag) {
+            case 0:
+              done = true;
+              break;
+            default: {
+              if (!parseUnknownField(input, unknownFields,
+                                     extensionRegistry, tag)) {
+                done = true;
+              }
+              break;
+            }
+            case 10: {
+              com.google.protobuf.ByteString bs = input.readBytes();
+              bitField0_ |= 0x00000001;
+              name_ = bs;
+              break;
+            }
+            case 18: {
+              if (!((mutable_bitField0_ & 0x00000002) == 0x00000002)) {
+                field_ = new java.util.ArrayList<org.jetbrains.kni.indexer.NativeIndex.CField>();
+                mutable_bitField0_ |= 0x00000002;
+              }
+              field_.add(input.readMessage(org.jetbrains.kni.indexer.NativeIndex.CField.PARSER, extensionRegistry));
+              break;
+            }
+          }
+        }
+      } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+        throw e.setUnfinishedMessage(this);
+      } catch (java.io.IOException e) {
+        throw new com.google.protobuf.InvalidProtocolBufferException(
+            e.getMessage()).setUnfinishedMessage(this);
+      } finally {
+        if (((mutable_bitField0_ & 0x00000002) == 0x00000002)) {
+          field_ = java.util.Collections.unmodifiableList(field_);
+        }
+        this.unknownFields = unknownFields.build();
+        makeExtensionsImmutable();
+      }
+    }
+    public static final com.google.protobuf.Descriptors.Descriptor
+        getDescriptor() {
+      return org.jetbrains.kni.indexer.NativeIndex.internal_static_CStruct_descriptor;
+    }
+
+    protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
+        internalGetFieldAccessorTable() {
+      return org.jetbrains.kni.indexer.NativeIndex.internal_static_CStruct_fieldAccessorTable
+          .ensureFieldAccessorsInitialized(
+              org.jetbrains.kni.indexer.NativeIndex.CStruct.class, org.jetbrains.kni.indexer.NativeIndex.CStruct.Builder.class);
+    }
+
+    public static com.google.protobuf.Parser<CStruct> PARSER =
+        new com.google.protobuf.AbstractParser<CStruct>() {
+      public CStruct parsePartialFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        return new CStruct(input, extensionRegistry);
+      }
+    };
+
+    @java.lang.Override
+    public com.google.protobuf.Parser<CStruct> getParserForType() {
+      return PARSER;
+    }
+
+    private int bitField0_;
+    public static final int NAME_FIELD_NUMBER = 1;
+    private java.lang.Object name_;
+    /**
+     * <code>required string name = 1;</code>
+     */
+    public boolean hasName() {
+      return ((bitField0_ & 0x00000001) == 0x00000001);
+    }
+    /**
+     * <code>required string name = 1;</code>
+     */
+    public java.lang.String getName() {
+      java.lang.Object ref = name_;
+      if (ref instanceof java.lang.String) {
+        return (java.lang.String) ref;
+      } else {
+        com.google.protobuf.ByteString bs = 
+            (com.google.protobuf.ByteString) ref;
+        java.lang.String s = bs.toStringUtf8();
+        if (bs.isValidUtf8()) {
+          name_ = s;
+        }
+        return s;
+      }
+    }
+    /**
+     * <code>required string name = 1;</code>
+     */
+    public com.google.protobuf.ByteString
+        getNameBytes() {
+      java.lang.Object ref = name_;
+      if (ref instanceof java.lang.String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
+        name_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
+    }
+
+    public static final int FIELD_FIELD_NUMBER = 2;
+    private java.util.List<org.jetbrains.kni.indexer.NativeIndex.CField> field_;
+    /**
+     * <code>repeated .CField field = 2;</code>
+     */
+    public java.util.List<org.jetbrains.kni.indexer.NativeIndex.CField> getFieldList() {
+      return field_;
+    }
+    /**
+     * <code>repeated .CField field = 2;</code>
+     */
+    public java.util.List<? extends org.jetbrains.kni.indexer.NativeIndex.CFieldOrBuilder> 
+        getFieldOrBuilderList() {
+      return field_;
+    }
+    /**
+     * <code>repeated .CField field = 2;</code>
+     */
+    public int getFieldCount() {
+      return field_.size();
+    }
+    /**
+     * <code>repeated .CField field = 2;</code>
+     */
+    public org.jetbrains.kni.indexer.NativeIndex.CField getField(int index) {
+      return field_.get(index);
+    }
+    /**
+     * <code>repeated .CField field = 2;</code>
+     */
+    public org.jetbrains.kni.indexer.NativeIndex.CFieldOrBuilder getFieldOrBuilder(
+        int index) {
+      return field_.get(index);
+    }
+
+    private void initFields() {
+      name_ = "";
+      field_ = java.util.Collections.emptyList();
+    }
+    private byte memoizedIsInitialized = -1;
+    public final boolean isInitialized() {
+      byte isInitialized = memoizedIsInitialized;
+      if (isInitialized == 1) return true;
+      if (isInitialized == 0) return false;
+
+      if (!hasName()) {
+        memoizedIsInitialized = 0;
+        return false;
+      }
+      for (int i = 0; i < getFieldCount(); i++) {
+        if (!getField(i).isInitialized()) {
+          memoizedIsInitialized = 0;
+          return false;
+        }
+      }
+      memoizedIsInitialized = 1;
+      return true;
+    }
+
+    public void writeTo(com.google.protobuf.CodedOutputStream output)
+                        throws java.io.IOException {
+      getSerializedSize();
+      if (((bitField0_ & 0x00000001) == 0x00000001)) {
+        output.writeBytes(1, getNameBytes());
+      }
+      for (int i = 0; i < field_.size(); i++) {
+        output.writeMessage(2, field_.get(i));
+      }
+      getUnknownFields().writeTo(output);
+    }
+
+    private int memoizedSerializedSize = -1;
+    public int getSerializedSize() {
+      int size = memoizedSerializedSize;
+      if (size != -1) return size;
+
+      size = 0;
+      if (((bitField0_ & 0x00000001) == 0x00000001)) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeBytesSize(1, getNameBytes());
+      }
+      for (int i = 0; i < field_.size(); i++) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeMessageSize(2, field_.get(i));
+      }
+      size += getUnknownFields().getSerializedSize();
+      memoizedSerializedSize = size;
+      return size;
+    }
+
+    private static final long serialVersionUID = 0L;
+    @java.lang.Override
+    protected java.lang.Object writeReplace()
+        throws java.io.ObjectStreamException {
+      return super.writeReplace();
+    }
+
+    public static org.jetbrains.kni.indexer.NativeIndex.CStruct parseFrom(
+        com.google.protobuf.ByteString data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static org.jetbrains.kni.indexer.NativeIndex.CStruct parseFrom(
+        com.google.protobuf.ByteString data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static org.jetbrains.kni.indexer.NativeIndex.CStruct parseFrom(byte[] data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static org.jetbrains.kni.indexer.NativeIndex.CStruct parseFrom(
+        byte[] data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static org.jetbrains.kni.indexer.NativeIndex.CStruct parseFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      return PARSER.parseFrom(input);
+    }
+    public static org.jetbrains.kni.indexer.NativeIndex.CStruct parseFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return PARSER.parseFrom(input, extensionRegistry);
+    }
+    public static org.jetbrains.kni.indexer.NativeIndex.CStruct parseDelimitedFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      return PARSER.parseDelimitedFrom(input);
+    }
+    public static org.jetbrains.kni.indexer.NativeIndex.CStruct parseDelimitedFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return PARSER.parseDelimitedFrom(input, extensionRegistry);
+    }
+    public static org.jetbrains.kni.indexer.NativeIndex.CStruct parseFrom(
+        com.google.protobuf.CodedInputStream input)
+        throws java.io.IOException {
+      return PARSER.parseFrom(input);
+    }
+    public static org.jetbrains.kni.indexer.NativeIndex.CStruct parseFrom(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return PARSER.parseFrom(input, extensionRegistry);
+    }
+
+    public static Builder newBuilder() { return Builder.create(); }
+    public Builder newBuilderForType() { return newBuilder(); }
+    public static Builder newBuilder(org.jetbrains.kni.indexer.NativeIndex.CStruct prototype) {
+      return newBuilder().mergeFrom(prototype);
+    }
+    public Builder toBuilder() { return newBuilder(this); }
+
+    @java.lang.Override
+    protected Builder newBuilderForType(
+        com.google.protobuf.GeneratedMessage.BuilderParent parent) {
+      Builder builder = new Builder(parent);
+      return builder;
+    }
+    /**
+     * Protobuf type {@code CStruct}
+     */
+    public static final class Builder extends
+        com.google.protobuf.GeneratedMessage.Builder<Builder> implements
+        // @@protoc_insertion_point(builder_implements:CStruct)
+        org.jetbrains.kni.indexer.NativeIndex.CStructOrBuilder {
+      public static final com.google.protobuf.Descriptors.Descriptor
+          getDescriptor() {
+        return org.jetbrains.kni.indexer.NativeIndex.internal_static_CStruct_descriptor;
+      }
+
+      protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
+          internalGetFieldAccessorTable() {
+        return org.jetbrains.kni.indexer.NativeIndex.internal_static_CStruct_fieldAccessorTable
+            .ensureFieldAccessorsInitialized(
+                org.jetbrains.kni.indexer.NativeIndex.CStruct.class, org.jetbrains.kni.indexer.NativeIndex.CStruct.Builder.class);
+      }
+
+      // Construct using org.jetbrains.kni.indexer.NativeIndex.CStruct.newBuilder()
+      private Builder() {
+        maybeForceBuilderInitialization();
+      }
+
+      private Builder(
+          com.google.protobuf.GeneratedMessage.BuilderParent parent) {
+        super(parent);
+        maybeForceBuilderInitialization();
+      }
+      private void maybeForceBuilderInitialization() {
+        if (com.google.protobuf.GeneratedMessage.alwaysUseFieldBuilders) {
+          getFieldFieldBuilder();
+        }
+      }
+      private static Builder create() {
+        return new Builder();
+      }
+
+      public Builder clear() {
+        super.clear();
+        name_ = "";
+        bitField0_ = (bitField0_ & ~0x00000001);
+        if (fieldBuilder_ == null) {
+          field_ = java.util.Collections.emptyList();
+          bitField0_ = (bitField0_ & ~0x00000002);
+        } else {
+          fieldBuilder_.clear();
+        }
+        return this;
+      }
+
+      public Builder clone() {
+        return create().mergeFrom(buildPartial());
+      }
+
+      public com.google.protobuf.Descriptors.Descriptor
+          getDescriptorForType() {
+        return org.jetbrains.kni.indexer.NativeIndex.internal_static_CStruct_descriptor;
+      }
+
+      public org.jetbrains.kni.indexer.NativeIndex.CStruct getDefaultInstanceForType() {
+        return org.jetbrains.kni.indexer.NativeIndex.CStruct.getDefaultInstance();
+      }
+
+      public org.jetbrains.kni.indexer.NativeIndex.CStruct build() {
+        org.jetbrains.kni.indexer.NativeIndex.CStruct result = buildPartial();
+        if (!result.isInitialized()) {
+          throw newUninitializedMessageException(result);
+        }
+        return result;
+      }
+
+      public org.jetbrains.kni.indexer.NativeIndex.CStruct buildPartial() {
+        org.jetbrains.kni.indexer.NativeIndex.CStruct result = new org.jetbrains.kni.indexer.NativeIndex.CStruct(this);
+        int from_bitField0_ = bitField0_;
+        int to_bitField0_ = 0;
+        if (((from_bitField0_ & 0x00000001) == 0x00000001)) {
+          to_bitField0_ |= 0x00000001;
+        }
+        result.name_ = name_;
+        if (fieldBuilder_ == null) {
+          if (((bitField0_ & 0x00000002) == 0x00000002)) {
+            field_ = java.util.Collections.unmodifiableList(field_);
+            bitField0_ = (bitField0_ & ~0x00000002);
+          }
+          result.field_ = field_;
+        } else {
+          result.field_ = fieldBuilder_.build();
+        }
+        result.bitField0_ = to_bitField0_;
+        onBuilt();
+        return result;
+      }
+
+      public Builder mergeFrom(com.google.protobuf.Message other) {
+        if (other instanceof org.jetbrains.kni.indexer.NativeIndex.CStruct) {
+          return mergeFrom((org.jetbrains.kni.indexer.NativeIndex.CStruct)other);
+        } else {
+          super.mergeFrom(other);
+          return this;
+        }
+      }
+
+      public Builder mergeFrom(org.jetbrains.kni.indexer.NativeIndex.CStruct other) {
+        if (other == org.jetbrains.kni.indexer.NativeIndex.CStruct.getDefaultInstance()) return this;
+        if (other.hasName()) {
+          bitField0_ |= 0x00000001;
+          name_ = other.name_;
+          onChanged();
+        }
+        if (fieldBuilder_ == null) {
+          if (!other.field_.isEmpty()) {
+            if (field_.isEmpty()) {
+              field_ = other.field_;
+              bitField0_ = (bitField0_ & ~0x00000002);
+            } else {
+              ensureFieldIsMutable();
+              field_.addAll(other.field_);
+            }
+            onChanged();
+          }
+        } else {
+          if (!other.field_.isEmpty()) {
+            if (fieldBuilder_.isEmpty()) {
+              fieldBuilder_.dispose();
+              fieldBuilder_ = null;
+              field_ = other.field_;
+              bitField0_ = (bitField0_ & ~0x00000002);
+              fieldBuilder_ = 
+                com.google.protobuf.GeneratedMessage.alwaysUseFieldBuilders ?
+                   getFieldFieldBuilder() : null;
+            } else {
+              fieldBuilder_.addAllMessages(other.field_);
+            }
+          }
+        }
+        this.mergeUnknownFields(other.getUnknownFields());
+        return this;
+      }
+
+      public final boolean isInitialized() {
+        if (!hasName()) {
+          
+          return false;
+        }
+        for (int i = 0; i < getFieldCount(); i++) {
+          if (!getField(i).isInitialized()) {
+            
+            return false;
+          }
+        }
+        return true;
+      }
+
+      public Builder mergeFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws java.io.IOException {
+        org.jetbrains.kni.indexer.NativeIndex.CStruct parsedMessage = null;
+        try {
+          parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
+        } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+          parsedMessage = (org.jetbrains.kni.indexer.NativeIndex.CStruct) e.getUnfinishedMessage();
+          throw e;
+        } finally {
+          if (parsedMessage != null) {
+            mergeFrom(parsedMessage);
+          }
+        }
+        return this;
+      }
+      private int bitField0_;
+
+      private java.lang.Object name_ = "";
+      /**
+       * <code>required string name = 1;</code>
+       */
+      public boolean hasName() {
+        return ((bitField0_ & 0x00000001) == 0x00000001);
+      }
+      /**
+       * <code>required string name = 1;</code>
+       */
+      public java.lang.String getName() {
+        java.lang.Object ref = name_;
+        if (!(ref instanceof java.lang.String)) {
+          com.google.protobuf.ByteString bs =
+              (com.google.protobuf.ByteString) ref;
+          java.lang.String s = bs.toStringUtf8();
+          if (bs.isValidUtf8()) {
+            name_ = s;
+          }
+          return s;
+        } else {
+          return (java.lang.String) ref;
+        }
+      }
+      /**
+       * <code>required string name = 1;</code>
+       */
+      public com.google.protobuf.ByteString
+          getNameBytes() {
+        java.lang.Object ref = name_;
+        if (ref instanceof String) {
+          com.google.protobuf.ByteString b = 
+              com.google.protobuf.ByteString.copyFromUtf8(
+                  (java.lang.String) ref);
+          name_ = b;
+          return b;
+        } else {
+          return (com.google.protobuf.ByteString) ref;
+        }
+      }
+      /**
+       * <code>required string name = 1;</code>
+       */
+      public Builder setName(
+          java.lang.String value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000001;
+        name_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>required string name = 1;</code>
+       */
+      public Builder clearName() {
+        bitField0_ = (bitField0_ & ~0x00000001);
+        name_ = getDefaultInstance().getName();
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>required string name = 1;</code>
+       */
+      public Builder setNameBytes(
+          com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000001;
+        name_ = value;
+        onChanged();
+        return this;
+      }
+
+      private java.util.List<org.jetbrains.kni.indexer.NativeIndex.CField> field_ =
+        java.util.Collections.emptyList();
+      private void ensureFieldIsMutable() {
+        if (!((bitField0_ & 0x00000002) == 0x00000002)) {
+          field_ = new java.util.ArrayList<org.jetbrains.kni.indexer.NativeIndex.CField>(field_);
+          bitField0_ |= 0x00000002;
+         }
+      }
+
+      private com.google.protobuf.RepeatedFieldBuilder<
+          org.jetbrains.kni.indexer.NativeIndex.CField, org.jetbrains.kni.indexer.NativeIndex.CField.Builder, org.jetbrains.kni.indexer.NativeIndex.CFieldOrBuilder> fieldBuilder_;
+
+      /**
+       * <code>repeated .CField field = 2;</code>
+       */
+      public java.util.List<org.jetbrains.kni.indexer.NativeIndex.CField> getFieldList() {
+        if (fieldBuilder_ == null) {
+          return java.util.Collections.unmodifiableList(field_);
+        } else {
+          return fieldBuilder_.getMessageList();
+        }
+      }
+      /**
+       * <code>repeated .CField field = 2;</code>
+       */
+      public int getFieldCount() {
+        if (fieldBuilder_ == null) {
+          return field_.size();
+        } else {
+          return fieldBuilder_.getCount();
+        }
+      }
+      /**
+       * <code>repeated .CField field = 2;</code>
+       */
+      public org.jetbrains.kni.indexer.NativeIndex.CField getField(int index) {
+        if (fieldBuilder_ == null) {
+          return field_.get(index);
+        } else {
+          return fieldBuilder_.getMessage(index);
+        }
+      }
+      /**
+       * <code>repeated .CField field = 2;</code>
+       */
+      public Builder setField(
+          int index, org.jetbrains.kni.indexer.NativeIndex.CField value) {
+        if (fieldBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          ensureFieldIsMutable();
+          field_.set(index, value);
+          onChanged();
+        } else {
+          fieldBuilder_.setMessage(index, value);
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .CField field = 2;</code>
+       */
+      public Builder setField(
+          int index, org.jetbrains.kni.indexer.NativeIndex.CField.Builder builderForValue) {
+        if (fieldBuilder_ == null) {
+          ensureFieldIsMutable();
+          field_.set(index, builderForValue.build());
+          onChanged();
+        } else {
+          fieldBuilder_.setMessage(index, builderForValue.build());
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .CField field = 2;</code>
+       */
+      public Builder addField(org.jetbrains.kni.indexer.NativeIndex.CField value) {
+        if (fieldBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          ensureFieldIsMutable();
+          field_.add(value);
+          onChanged();
+        } else {
+          fieldBuilder_.addMessage(value);
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .CField field = 2;</code>
+       */
+      public Builder addField(
+          int index, org.jetbrains.kni.indexer.NativeIndex.CField value) {
+        if (fieldBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          ensureFieldIsMutable();
+          field_.add(index, value);
+          onChanged();
+        } else {
+          fieldBuilder_.addMessage(index, value);
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .CField field = 2;</code>
+       */
+      public Builder addField(
+          org.jetbrains.kni.indexer.NativeIndex.CField.Builder builderForValue) {
+        if (fieldBuilder_ == null) {
+          ensureFieldIsMutable();
+          field_.add(builderForValue.build());
+          onChanged();
+        } else {
+          fieldBuilder_.addMessage(builderForValue.build());
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .CField field = 2;</code>
+       */
+      public Builder addField(
+          int index, org.jetbrains.kni.indexer.NativeIndex.CField.Builder builderForValue) {
+        if (fieldBuilder_ == null) {
+          ensureFieldIsMutable();
+          field_.add(index, builderForValue.build());
+          onChanged();
+        } else {
+          fieldBuilder_.addMessage(index, builderForValue.build());
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .CField field = 2;</code>
+       */
+      public Builder addAllField(
+          java.lang.Iterable<? extends org.jetbrains.kni.indexer.NativeIndex.CField> values) {
+        if (fieldBuilder_ == null) {
+          ensureFieldIsMutable();
+          com.google.protobuf.AbstractMessageLite.Builder.addAll(
+              values, field_);
+          onChanged();
+        } else {
+          fieldBuilder_.addAllMessages(values);
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .CField field = 2;</code>
+       */
+      public Builder clearField() {
+        if (fieldBuilder_ == null) {
+          field_ = java.util.Collections.emptyList();
+          bitField0_ = (bitField0_ & ~0x00000002);
+          onChanged();
+        } else {
+          fieldBuilder_.clear();
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .CField field = 2;</code>
+       */
+      public Builder removeField(int index) {
+        if (fieldBuilder_ == null) {
+          ensureFieldIsMutable();
+          field_.remove(index);
+          onChanged();
+        } else {
+          fieldBuilder_.remove(index);
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .CField field = 2;</code>
+       */
+      public org.jetbrains.kni.indexer.NativeIndex.CField.Builder getFieldBuilder(
+          int index) {
+        return getFieldFieldBuilder().getBuilder(index);
+      }
+      /**
+       * <code>repeated .CField field = 2;</code>
+       */
+      public org.jetbrains.kni.indexer.NativeIndex.CFieldOrBuilder getFieldOrBuilder(
+          int index) {
+        if (fieldBuilder_ == null) {
+          return field_.get(index);  } else {
+          return fieldBuilder_.getMessageOrBuilder(index);
+        }
+      }
+      /**
+       * <code>repeated .CField field = 2;</code>
+       */
+      public java.util.List<? extends org.jetbrains.kni.indexer.NativeIndex.CFieldOrBuilder> 
+           getFieldOrBuilderList() {
+        if (fieldBuilder_ != null) {
+          return fieldBuilder_.getMessageOrBuilderList();
+        } else {
+          return java.util.Collections.unmodifiableList(field_);
+        }
+      }
+      /**
+       * <code>repeated .CField field = 2;</code>
+       */
+      public org.jetbrains.kni.indexer.NativeIndex.CField.Builder addFieldBuilder() {
+        return getFieldFieldBuilder().addBuilder(
+            org.jetbrains.kni.indexer.NativeIndex.CField.getDefaultInstance());
+      }
+      /**
+       * <code>repeated .CField field = 2;</code>
+       */
+      public org.jetbrains.kni.indexer.NativeIndex.CField.Builder addFieldBuilder(
+          int index) {
+        return getFieldFieldBuilder().addBuilder(
+            index, org.jetbrains.kni.indexer.NativeIndex.CField.getDefaultInstance());
+      }
+      /**
+       * <code>repeated .CField field = 2;</code>
+       */
+      public java.util.List<org.jetbrains.kni.indexer.NativeIndex.CField.Builder> 
+           getFieldBuilderList() {
+        return getFieldFieldBuilder().getBuilderList();
+      }
+      private com.google.protobuf.RepeatedFieldBuilder<
+          org.jetbrains.kni.indexer.NativeIndex.CField, org.jetbrains.kni.indexer.NativeIndex.CField.Builder, org.jetbrains.kni.indexer.NativeIndex.CFieldOrBuilder> 
+          getFieldFieldBuilder() {
+        if (fieldBuilder_ == null) {
+          fieldBuilder_ = new com.google.protobuf.RepeatedFieldBuilder<
+              org.jetbrains.kni.indexer.NativeIndex.CField, org.jetbrains.kni.indexer.NativeIndex.CField.Builder, org.jetbrains.kni.indexer.NativeIndex.CFieldOrBuilder>(
+                  field_,
+                  ((bitField0_ & 0x00000002) == 0x00000002),
+                  getParentForChildren(),
+                  isClean());
+          field_ = null;
+        }
+        return fieldBuilder_;
+      }
+
+      // @@protoc_insertion_point(builder_scope:CStruct)
+    }
+
+    static {
+      defaultInstance = new CStruct(true);
+      defaultInstance.initFields();
+    }
+
+    // @@protoc_insertion_point(class_scope:CStruct)
+  }
+
   public interface TranslationUnitOrBuilder extends
       // @@protoc_insertion_point(interface_extends:TranslationUnit)
       com.google.protobuf.MessageOrBuilder {
@@ -7671,6 +9176,30 @@ public final class NativeIndex {
      */
     org.jetbrains.kni.indexer.NativeIndex.FunctionOrBuilder getFunctionOrBuilder(
         int index);
+
+    /**
+     * <code>repeated .CStruct struct = 6;</code>
+     */
+    java.util.List<org.jetbrains.kni.indexer.NativeIndex.CStruct> 
+        getStructList();
+    /**
+     * <code>repeated .CStruct struct = 6;</code>
+     */
+    org.jetbrains.kni.indexer.NativeIndex.CStruct getStruct(int index);
+    /**
+     * <code>repeated .CStruct struct = 6;</code>
+     */
+    int getStructCount();
+    /**
+     * <code>repeated .CStruct struct = 6;</code>
+     */
+    java.util.List<? extends org.jetbrains.kni.indexer.NativeIndex.CStructOrBuilder> 
+        getStructOrBuilderList();
+    /**
+     * <code>repeated .CStruct struct = 6;</code>
+     */
+    org.jetbrains.kni.indexer.NativeIndex.CStructOrBuilder getStructOrBuilder(
+        int index);
   }
   /**
    * Protobuf type {@code TranslationUnit}
@@ -7762,6 +9291,14 @@ public final class NativeIndex {
               function_.add(input.readMessage(org.jetbrains.kni.indexer.NativeIndex.Function.PARSER, extensionRegistry));
               break;
             }
+            case 50: {
+              if (!((mutable_bitField0_ & 0x00000020) == 0x00000020)) {
+                struct_ = new java.util.ArrayList<org.jetbrains.kni.indexer.NativeIndex.CStruct>();
+                mutable_bitField0_ |= 0x00000020;
+              }
+              struct_.add(input.readMessage(org.jetbrains.kni.indexer.NativeIndex.CStruct.PARSER, extensionRegistry));
+              break;
+            }
           }
         }
       } catch (com.google.protobuf.InvalidProtocolBufferException e) {
@@ -7781,6 +9318,9 @@ public final class NativeIndex {
         }
         if (((mutable_bitField0_ & 0x00000010) == 0x00000010)) {
           function_ = java.util.Collections.unmodifiableList(function_);
+        }
+        if (((mutable_bitField0_ & 0x00000020) == 0x00000020)) {
+          struct_ = java.util.Collections.unmodifiableList(struct_);
         }
         this.unknownFields = unknownFields.build();
         makeExtensionsImmutable();
@@ -7996,12 +9536,48 @@ public final class NativeIndex {
       return function_.get(index);
     }
 
+    public static final int STRUCT_FIELD_NUMBER = 6;
+    private java.util.List<org.jetbrains.kni.indexer.NativeIndex.CStruct> struct_;
+    /**
+     * <code>repeated .CStruct struct = 6;</code>
+     */
+    public java.util.List<org.jetbrains.kni.indexer.NativeIndex.CStruct> getStructList() {
+      return struct_;
+    }
+    /**
+     * <code>repeated .CStruct struct = 6;</code>
+     */
+    public java.util.List<? extends org.jetbrains.kni.indexer.NativeIndex.CStructOrBuilder> 
+        getStructOrBuilderList() {
+      return struct_;
+    }
+    /**
+     * <code>repeated .CStruct struct = 6;</code>
+     */
+    public int getStructCount() {
+      return struct_.size();
+    }
+    /**
+     * <code>repeated .CStruct struct = 6;</code>
+     */
+    public org.jetbrains.kni.indexer.NativeIndex.CStruct getStruct(int index) {
+      return struct_.get(index);
+    }
+    /**
+     * <code>repeated .CStruct struct = 6;</code>
+     */
+    public org.jetbrains.kni.indexer.NativeIndex.CStructOrBuilder getStructOrBuilder(
+        int index) {
+      return struct_.get(index);
+    }
+
     private void initFields() {
       name_ = "";
       class__ = java.util.Collections.emptyList();
       protocol_ = java.util.Collections.emptyList();
       category_ = java.util.Collections.emptyList();
       function_ = java.util.Collections.emptyList();
+      struct_ = java.util.Collections.emptyList();
     }
     private byte memoizedIsInitialized = -1;
     public final boolean isInitialized() {
@@ -8037,6 +9613,12 @@ public final class NativeIndex {
           return false;
         }
       }
+      for (int i = 0; i < getStructCount(); i++) {
+        if (!getStruct(i).isInitialized()) {
+          memoizedIsInitialized = 0;
+          return false;
+        }
+      }
       memoizedIsInitialized = 1;
       return true;
     }
@@ -8058,6 +9640,9 @@ public final class NativeIndex {
       }
       for (int i = 0; i < function_.size(); i++) {
         output.writeMessage(5, function_.get(i));
+      }
+      for (int i = 0; i < struct_.size(); i++) {
+        output.writeMessage(6, struct_.get(i));
       }
       getUnknownFields().writeTo(output);
     }
@@ -8087,6 +9672,10 @@ public final class NativeIndex {
       for (int i = 0; i < function_.size(); i++) {
         size += com.google.protobuf.CodedOutputStream
           .computeMessageSize(5, function_.get(i));
+      }
+      for (int i = 0; i < struct_.size(); i++) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeMessageSize(6, struct_.get(i));
       }
       size += getUnknownFields().getSerializedSize();
       memoizedSerializedSize = size;
@@ -8201,6 +9790,7 @@ public final class NativeIndex {
           getProtocolFieldBuilder();
           getCategoryFieldBuilder();
           getFunctionFieldBuilder();
+          getStructFieldBuilder();
         }
       }
       private static Builder create() {
@@ -8234,6 +9824,12 @@ public final class NativeIndex {
           bitField0_ = (bitField0_ & ~0x00000010);
         } else {
           functionBuilder_.clear();
+        }
+        if (structBuilder_ == null) {
+          struct_ = java.util.Collections.emptyList();
+          bitField0_ = (bitField0_ & ~0x00000020);
+        } else {
+          structBuilder_.clear();
         }
         return this;
       }
@@ -8302,6 +9898,15 @@ public final class NativeIndex {
           result.function_ = function_;
         } else {
           result.function_ = functionBuilder_.build();
+        }
+        if (structBuilder_ == null) {
+          if (((bitField0_ & 0x00000020) == 0x00000020)) {
+            struct_ = java.util.Collections.unmodifiableList(struct_);
+            bitField0_ = (bitField0_ & ~0x00000020);
+          }
+          result.struct_ = struct_;
+        } else {
+          result.struct_ = structBuilder_.build();
         }
         result.bitField0_ = to_bitField0_;
         onBuilt();
@@ -8428,6 +10033,32 @@ public final class NativeIndex {
             }
           }
         }
+        if (structBuilder_ == null) {
+          if (!other.struct_.isEmpty()) {
+            if (struct_.isEmpty()) {
+              struct_ = other.struct_;
+              bitField0_ = (bitField0_ & ~0x00000020);
+            } else {
+              ensureStructIsMutable();
+              struct_.addAll(other.struct_);
+            }
+            onChanged();
+          }
+        } else {
+          if (!other.struct_.isEmpty()) {
+            if (structBuilder_.isEmpty()) {
+              structBuilder_.dispose();
+              structBuilder_ = null;
+              struct_ = other.struct_;
+              bitField0_ = (bitField0_ & ~0x00000020);
+              structBuilder_ = 
+                com.google.protobuf.GeneratedMessage.alwaysUseFieldBuilders ?
+                   getStructFieldBuilder() : null;
+            } else {
+              structBuilder_.addAllMessages(other.struct_);
+            }
+          }
+        }
         this.mergeUnknownFields(other.getUnknownFields());
         return this;
       }
@@ -8457,6 +10088,12 @@ public final class NativeIndex {
         }
         for (int i = 0; i < getFunctionCount(); i++) {
           if (!getFunction(i).isInitialized()) {
+            
+            return false;
+          }
+        }
+        for (int i = 0; i < getStructCount(); i++) {
+          if (!getStruct(i).isInitialized()) {
             
             return false;
           }
@@ -9519,6 +11156,246 @@ public final class NativeIndex {
         return functionBuilder_;
       }
 
+      private java.util.List<org.jetbrains.kni.indexer.NativeIndex.CStruct> struct_ =
+        java.util.Collections.emptyList();
+      private void ensureStructIsMutable() {
+        if (!((bitField0_ & 0x00000020) == 0x00000020)) {
+          struct_ = new java.util.ArrayList<org.jetbrains.kni.indexer.NativeIndex.CStruct>(struct_);
+          bitField0_ |= 0x00000020;
+         }
+      }
+
+      private com.google.protobuf.RepeatedFieldBuilder<
+          org.jetbrains.kni.indexer.NativeIndex.CStruct, org.jetbrains.kni.indexer.NativeIndex.CStruct.Builder, org.jetbrains.kni.indexer.NativeIndex.CStructOrBuilder> structBuilder_;
+
+      /**
+       * <code>repeated .CStruct struct = 6;</code>
+       */
+      public java.util.List<org.jetbrains.kni.indexer.NativeIndex.CStruct> getStructList() {
+        if (structBuilder_ == null) {
+          return java.util.Collections.unmodifiableList(struct_);
+        } else {
+          return structBuilder_.getMessageList();
+        }
+      }
+      /**
+       * <code>repeated .CStruct struct = 6;</code>
+       */
+      public int getStructCount() {
+        if (structBuilder_ == null) {
+          return struct_.size();
+        } else {
+          return structBuilder_.getCount();
+        }
+      }
+      /**
+       * <code>repeated .CStruct struct = 6;</code>
+       */
+      public org.jetbrains.kni.indexer.NativeIndex.CStruct getStruct(int index) {
+        if (structBuilder_ == null) {
+          return struct_.get(index);
+        } else {
+          return structBuilder_.getMessage(index);
+        }
+      }
+      /**
+       * <code>repeated .CStruct struct = 6;</code>
+       */
+      public Builder setStruct(
+          int index, org.jetbrains.kni.indexer.NativeIndex.CStruct value) {
+        if (structBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          ensureStructIsMutable();
+          struct_.set(index, value);
+          onChanged();
+        } else {
+          structBuilder_.setMessage(index, value);
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .CStruct struct = 6;</code>
+       */
+      public Builder setStruct(
+          int index, org.jetbrains.kni.indexer.NativeIndex.CStruct.Builder builderForValue) {
+        if (structBuilder_ == null) {
+          ensureStructIsMutable();
+          struct_.set(index, builderForValue.build());
+          onChanged();
+        } else {
+          structBuilder_.setMessage(index, builderForValue.build());
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .CStruct struct = 6;</code>
+       */
+      public Builder addStruct(org.jetbrains.kni.indexer.NativeIndex.CStruct value) {
+        if (structBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          ensureStructIsMutable();
+          struct_.add(value);
+          onChanged();
+        } else {
+          structBuilder_.addMessage(value);
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .CStruct struct = 6;</code>
+       */
+      public Builder addStruct(
+          int index, org.jetbrains.kni.indexer.NativeIndex.CStruct value) {
+        if (structBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          ensureStructIsMutable();
+          struct_.add(index, value);
+          onChanged();
+        } else {
+          structBuilder_.addMessage(index, value);
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .CStruct struct = 6;</code>
+       */
+      public Builder addStruct(
+          org.jetbrains.kni.indexer.NativeIndex.CStruct.Builder builderForValue) {
+        if (structBuilder_ == null) {
+          ensureStructIsMutable();
+          struct_.add(builderForValue.build());
+          onChanged();
+        } else {
+          structBuilder_.addMessage(builderForValue.build());
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .CStruct struct = 6;</code>
+       */
+      public Builder addStruct(
+          int index, org.jetbrains.kni.indexer.NativeIndex.CStruct.Builder builderForValue) {
+        if (structBuilder_ == null) {
+          ensureStructIsMutable();
+          struct_.add(index, builderForValue.build());
+          onChanged();
+        } else {
+          structBuilder_.addMessage(index, builderForValue.build());
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .CStruct struct = 6;</code>
+       */
+      public Builder addAllStruct(
+          java.lang.Iterable<? extends org.jetbrains.kni.indexer.NativeIndex.CStruct> values) {
+        if (structBuilder_ == null) {
+          ensureStructIsMutable();
+          com.google.protobuf.AbstractMessageLite.Builder.addAll(
+              values, struct_);
+          onChanged();
+        } else {
+          structBuilder_.addAllMessages(values);
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .CStruct struct = 6;</code>
+       */
+      public Builder clearStruct() {
+        if (structBuilder_ == null) {
+          struct_ = java.util.Collections.emptyList();
+          bitField0_ = (bitField0_ & ~0x00000020);
+          onChanged();
+        } else {
+          structBuilder_.clear();
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .CStruct struct = 6;</code>
+       */
+      public Builder removeStruct(int index) {
+        if (structBuilder_ == null) {
+          ensureStructIsMutable();
+          struct_.remove(index);
+          onChanged();
+        } else {
+          structBuilder_.remove(index);
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .CStruct struct = 6;</code>
+       */
+      public org.jetbrains.kni.indexer.NativeIndex.CStruct.Builder getStructBuilder(
+          int index) {
+        return getStructFieldBuilder().getBuilder(index);
+      }
+      /**
+       * <code>repeated .CStruct struct = 6;</code>
+       */
+      public org.jetbrains.kni.indexer.NativeIndex.CStructOrBuilder getStructOrBuilder(
+          int index) {
+        if (structBuilder_ == null) {
+          return struct_.get(index);  } else {
+          return structBuilder_.getMessageOrBuilder(index);
+        }
+      }
+      /**
+       * <code>repeated .CStruct struct = 6;</code>
+       */
+      public java.util.List<? extends org.jetbrains.kni.indexer.NativeIndex.CStructOrBuilder> 
+           getStructOrBuilderList() {
+        if (structBuilder_ != null) {
+          return structBuilder_.getMessageOrBuilderList();
+        } else {
+          return java.util.Collections.unmodifiableList(struct_);
+        }
+      }
+      /**
+       * <code>repeated .CStruct struct = 6;</code>
+       */
+      public org.jetbrains.kni.indexer.NativeIndex.CStruct.Builder addStructBuilder() {
+        return getStructFieldBuilder().addBuilder(
+            org.jetbrains.kni.indexer.NativeIndex.CStruct.getDefaultInstance());
+      }
+      /**
+       * <code>repeated .CStruct struct = 6;</code>
+       */
+      public org.jetbrains.kni.indexer.NativeIndex.CStruct.Builder addStructBuilder(
+          int index) {
+        return getStructFieldBuilder().addBuilder(
+            index, org.jetbrains.kni.indexer.NativeIndex.CStruct.getDefaultInstance());
+      }
+      /**
+       * <code>repeated .CStruct struct = 6;</code>
+       */
+      public java.util.List<org.jetbrains.kni.indexer.NativeIndex.CStruct.Builder> 
+           getStructBuilderList() {
+        return getStructFieldBuilder().getBuilderList();
+      }
+      private com.google.protobuf.RepeatedFieldBuilder<
+          org.jetbrains.kni.indexer.NativeIndex.CStruct, org.jetbrains.kni.indexer.NativeIndex.CStruct.Builder, org.jetbrains.kni.indexer.NativeIndex.CStructOrBuilder> 
+          getStructFieldBuilder() {
+        if (structBuilder_ == null) {
+          structBuilder_ = new com.google.protobuf.RepeatedFieldBuilder<
+              org.jetbrains.kni.indexer.NativeIndex.CStruct, org.jetbrains.kni.indexer.NativeIndex.CStruct.Builder, org.jetbrains.kni.indexer.NativeIndex.CStructOrBuilder>(
+                  struct_,
+                  ((bitField0_ & 0x00000020) == 0x00000020),
+                  getParentForChildren(),
+                  isClean());
+          struct_ = null;
+        }
+        return structBuilder_;
+      }
+
       // @@protoc_insertion_point(builder_scope:TranslationUnit)
     }
 
@@ -9566,6 +11443,16 @@ public final class NativeIndex {
     com.google.protobuf.GeneratedMessage.FieldAccessorTable
       internal_static_ObjCCategory_fieldAccessorTable;
   private static final com.google.protobuf.Descriptors.Descriptor
+    internal_static_CField_descriptor;
+  private static
+    com.google.protobuf.GeneratedMessage.FieldAccessorTable
+      internal_static_CField_fieldAccessorTable;
+  private static final com.google.protobuf.Descriptors.Descriptor
+    internal_static_CStruct_descriptor;
+  private static
+    com.google.protobuf.GeneratedMessage.FieldAccessorTable
+      internal_static_CStruct_fieldAccessorTable;
+  private static final com.google.protobuf.Descriptors.Descriptor
     internal_static_TranslationUnit_descriptor;
   private static
     com.google.protobuf.GeneratedMessage.FieldAccessorTable
@@ -9594,12 +11481,15 @@ public final class NativeIndex {
       "thod\022\037\n\010property\030\004 \003(\0132\r.ObjCProperty\"q\n" +
       "\014ObjCCategory\022\014\n\004name\030\001 \002(\t\022\025\n\rbase_prot" +
       "ocol\030\002 \003(\t\022\033\n\006method\030\003 \003(\0132\013.ObjCMethod\022" +
-      "\037\n\010property\030\004 \003(\0132\r.ObjCProperty\"\231\001\n\017Tra" +
-      "nslationUnit\022\014\n\004name\030\001 \002(\t\022\031\n\005class\030\002 \003(" +
-      "\0132\n.ObjCClass\022\037\n\010protocol\030\003 \003(\0132\r.ObjCPr" +
-      "otocol\022\037\n\010category\030\004 \003(\0132\r.ObjCCategory\022" +
-      "\033\n\010function\030\005 \003(\0132\t.FunctionB\036\n\031org.jetb",
-      "rains.kni.indexer\210\001\000"
+      "\037\n\010property\030\004 \003(\0132\r.ObjCProperty\"$\n\006CFie" +
+      "ld\022\014\n\004name\030\001 \002(\t\022\014\n\004type\030\002 \002(\t\"/\n\007CStruc" +
+      "t\022\014\n\004name\030\001 \002(\t\022\026\n\005field\030\002 \003(\0132\007.CField\"" +
+      "\263\001\n\017TranslationUnit\022\014\n\004name\030\001 \002(\t\022\031\n\005cla" +
+      "ss\030\002 \003(\0132\n.ObjCClass\022\037\n\010protocol\030\003 \003(\0132\r",
+      ".ObjCProtocol\022\037\n\010category\030\004 \003(\0132\r.ObjCCa" +
+      "tegory\022\033\n\010function\030\005 \003(\0132\t.Function\022\030\n\006s" +
+      "truct\030\006 \003(\0132\010.CStructB\036\n\031org.jetbrains.k" +
+      "ni.indexer\210\001\000"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
         new com.google.protobuf.Descriptors.FileDescriptor.    InternalDescriptorAssigner() {
@@ -9655,12 +11545,24 @@ public final class NativeIndex {
       com.google.protobuf.GeneratedMessage.FieldAccessorTable(
         internal_static_ObjCCategory_descriptor,
         new java.lang.String[] { "Name", "BaseProtocol", "Method", "Property", });
-    internal_static_TranslationUnit_descriptor =
+    internal_static_CField_descriptor =
       getDescriptor().getMessageTypes().get(6);
+    internal_static_CField_fieldAccessorTable = new
+      com.google.protobuf.GeneratedMessage.FieldAccessorTable(
+        internal_static_CField_descriptor,
+        new java.lang.String[] { "Name", "Type", });
+    internal_static_CStruct_descriptor =
+      getDescriptor().getMessageTypes().get(7);
+    internal_static_CStruct_fieldAccessorTable = new
+      com.google.protobuf.GeneratedMessage.FieldAccessorTable(
+        internal_static_CStruct_descriptor,
+        new java.lang.String[] { "Name", "Field", });
+    internal_static_TranslationUnit_descriptor =
+      getDescriptor().getMessageTypes().get(8);
     internal_static_TranslationUnit_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessage.FieldAccessorTable(
         internal_static_TranslationUnit_descriptor,
-        new java.lang.String[] { "Name", "Class_", "Protocol", "Category", "Function", });
+        new java.lang.String[] { "Name", "Class_", "Protocol", "Category", "Function", "Struct", });
   }
 
   // @@protoc_insertion_point(outer_class_scope)
