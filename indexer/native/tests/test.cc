@@ -5,6 +5,7 @@
 #include <sstream>
 #include <string>
 #include <vector>
+#include <iostream>
 
 #include "asserts.h"
 #include "Indexer.h"
@@ -53,6 +54,7 @@ void renderResult(const std::string& filename, const TestResult& result) {
 extern std::string *doIndex(const std::vector<std::string>& headers);
 
 void doTest(const std::string& filename) {
+    std::cout << " --- " << filename << " ---\n";
     if (!endsWith(filename, ".h")) return;
     auto expectedFile = filename.substr(0, filename.length() - 1) + "out";
 

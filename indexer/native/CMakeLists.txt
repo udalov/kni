@@ -3,6 +3,7 @@ project(native)
 
 find_package(Java REQUIRED COMPONENTS Runtime Development)
 find_package(JNI REQUIRED)
+find_package(Boost 1.55.0 COMPONENTS system filesystem unit_test_framework)
 include(UseJava)
 
 message (STATUS "JNI_INCLUDE_DIRS=${JNI_INCLUDE_DIRS}")
@@ -20,7 +21,7 @@ link_directories("../../lib/protobuf/lib")
 
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -stdlib=libc++")
 
-set(SOURCE_FILES
+set(TESTDATA_SOURCE_FILES
     testData/objc/types/functionTypes.h
     testData/objc/types/objcPointers.h
     testData/objc/types/pointers.h
@@ -31,9 +32,15 @@ set(SOURCE_FILES
     testData/objc/classes.h
     testData/objc/forwardClass.h
     testData/objc/forwardProtocol.h
-    testData/objc/protocols.h
-    testData/c.h
-    tests/test.cc
+    testData/objc/protocols.h)
+
+set(TESTS_SOURCE_FILES
+    tests/test.cc)
+
+set(BOOST_TESTS_SOURCE_FILES
+    boostTests/basicTests.cc)
+
+set(INDEXER_SOURCE_FILES
     asserts.h
     AutoCXString.h
     Indexer.cc
@@ -41,7 +48,17 @@ set(SOURCE_FILES
     NativeIndex.pb.cc
     NativeIndex.pb.h
     OutputCollector.cc
-    OutputCollector.h)
+    OutputCollector.h
+    testData/c.h)
 
-add_executable(native ${SOURCE_FILES})
-target_link_libraries(native clang protobuf)
+add_library(libKNIIndexer SHARED ${INDEXER_SOURCE_FILES})
+target_link_libraries(libKNIIndexer clang protobuf)
+
+add_executable(tests ${INDEXER_SOURCE_FILES} ${TESTS_SOURCE_FILES})
+target_link_libraries(tests clang protobuf)
+
+add_executable(boost_tests ${INDEXER_SOURCE_FILES} ${BOOST_TESTS_SOURCE_FILES})
+target_link_libraries(boost_tests ${Boost_FILESYSTEM_LIBRARY}
+                                  ${Boost_SYSTEM_LIBRARY}
+                                  clang
+                                  protobuf)
