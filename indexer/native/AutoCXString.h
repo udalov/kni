@@ -6,14 +6,27 @@
 
 class AutoCXString {
     public:
-        /* implicit */ AutoCXString(const CXString& source):
-            m_string(clang_getCString(source))
-        {
-            clang_disposeString(source);
-        }
+        /* implicit */ AutoCXString(const CXString& source): m_cxString(source) {}
 
-        const std::string& str() const { return m_string; }
+        ~AutoCXString() { clang_disposeString(m_cxString); }
+
+        const char* str() const { return clang_getCString(m_cxString); }
 
     private:
-        const std::string m_string;
+        CXString m_cxString;
 };
+
+
+//class AutoCXString {
+//public:
+//    /* implicit */ AutoCXString(const CXString& source):
+//            m_string(clang_getCString(source))
+//    {
+//        clang_disposeString(source);
+//    }
+//
+//    const std::string& str() const { return m_string; }
+//
+//private:
+//    const std::string m_string;
+//};

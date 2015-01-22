@@ -45,6 +45,9 @@ const ::google::protobuf::internal::GeneratedMessageReflection*
 const ::google::protobuf::Descriptor* CStruct_descriptor_ = NULL;
 const ::google::protobuf::internal::GeneratedMessageReflection*
   CStruct_reflection_ = NULL;
+const ::google::protobuf::Descriptor* Diagnostic_descriptor_ = NULL;
+const ::google::protobuf::internal::GeneratedMessageReflection*
+  Diagnostic_reflection_ = NULL;
 const ::google::protobuf::Descriptor* TranslationUnit_descriptor_ = NULL;
 const ::google::protobuf::internal::GeneratedMessageReflection*
   TranslationUnit_reflection_ = NULL;
@@ -211,14 +214,34 @@ void protobuf_AssignDesc_NativeIndex_2eproto() {
       ::google::protobuf::DescriptorPool::generated_pool(),
       ::google::protobuf::MessageFactory::generated_factory(),
       sizeof(CStruct));
-  TranslationUnit_descriptor_ = file->message_type(8);
-  static const int TranslationUnit_offsets_[6] = {
+  Diagnostic_descriptor_ = file->message_type(8);
+  static const int Diagnostic_offsets_[5] = {
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Diagnostic, severity_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Diagnostic, line_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Diagnostic, column_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Diagnostic, message_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Diagnostic, category_),
+  };
+  Diagnostic_reflection_ =
+    new ::google::protobuf::internal::GeneratedMessageReflection(
+      Diagnostic_descriptor_,
+      Diagnostic::default_instance_,
+      Diagnostic_offsets_,
+      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Diagnostic, _has_bits_[0]),
+      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Diagnostic, _unknown_fields_),
+      -1,
+      ::google::protobuf::DescriptorPool::generated_pool(),
+      ::google::protobuf::MessageFactory::generated_factory(),
+      sizeof(Diagnostic));
+  TranslationUnit_descriptor_ = file->message_type(9);
+  static const int TranslationUnit_offsets_[7] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(TranslationUnit, name_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(TranslationUnit, class__),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(TranslationUnit, protocol_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(TranslationUnit, category_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(TranslationUnit, function_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(TranslationUnit, struct__),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(TranslationUnit, diagnostic_),
   };
   TranslationUnit_reflection_ =
     new ::google::protobuf::internal::GeneratedMessageReflection(
@@ -262,6 +285,8 @@ void protobuf_RegisterTypes(const ::std::string&) {
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedMessage(
     CStruct_descriptor_, &CStruct::default_instance());
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedMessage(
+    Diagnostic_descriptor_, &Diagnostic::default_instance());
+  ::google::protobuf::MessageFactory::InternalRegisterGeneratedMessage(
     TranslationUnit_descriptor_, &TranslationUnit::default_instance());
 }
 
@@ -286,6 +311,8 @@ void protobuf_ShutdownFile_NativeIndex_2eproto() {
   delete CField_reflection_;
   delete CStruct::default_instance_;
   delete CStruct_reflection_;
+  delete Diagnostic::default_instance_;
+  delete Diagnostic_reflection_;
   delete TranslationUnit::default_instance_;
   delete TranslationUnit_reflection_;
 }
@@ -315,12 +342,15 @@ void protobuf_AddDesc_NativeIndex_2eproto() {
     "\037\n\010property\030\004 \003(\0132\r.ObjCProperty\"$\n\006CFie"
     "ld\022\014\n\004name\030\001 \002(\t\022\014\n\004type\030\002 \002(\t\"/\n\007CStruc"
     "t\022\014\n\004name\030\001 \002(\t\022\026\n\005field\030\002 \003(\0132\007.CField\""
-    "\263\001\n\017TranslationUnit\022\014\n\004name\030\001 \002(\t\022\031\n\005cla"
-    "ss\030\002 \003(\0132\n.ObjCClass\022\037\n\010protocol\030\003 \003(\0132\r"
-    ".ObjCProtocol\022\037\n\010category\030\004 \003(\0132\r.ObjCCa"
-    "tegory\022\033\n\010function\030\005 \003(\0132\t.Function\022\030\n\006s"
-    "truct\030\006 \003(\0132\010.CStructB\036\n\031org.jetbrains.k"
-    "ni.indexer\210\001\000", 933);
+    "_\n\nDiagnostic\022\020\n\010severity\030\001 \002(\r\022\014\n\004line\030"
+    "\002 \002(\r\022\016\n\006column\030\003 \002(\r\022\017\n\007message\030\004 \002(\t\022\020"
+    "\n\010category\030\005 \001(\t\"\324\001\n\017TranslationUnit\022\014\n\004"
+    "name\030\001 \002(\t\022\031\n\005class\030\002 \003(\0132\n.ObjCClass\022\037\n"
+    "\010protocol\030\003 \003(\0132\r.ObjCProtocol\022\037\n\010catego"
+    "ry\030\004 \003(\0132\r.ObjCCategory\022\033\n\010function\030\005 \003("
+    "\0132\t.Function\022\030\n\006struct\030\006 \003(\0132\010.CStruct\022\037"
+    "\n\ndiagnostic\030d \003(\0132\013.DiagnosticB\036\n\031org.j"
+    "etbrains.kni.indexer\210\001\000", 1063);
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedFile(
     "NativeIndex.proto", &protobuf_RegisterTypes);
   Function::default_instance_ = new Function();
@@ -332,6 +362,7 @@ void protobuf_AddDesc_NativeIndex_2eproto() {
   ObjCCategory::default_instance_ = new ObjCCategory();
   CField::default_instance_ = new CField();
   CStruct::default_instance_ = new CStruct();
+  Diagnostic::default_instance_ = new Diagnostic();
   TranslationUnit::default_instance_ = new TranslationUnit();
   Function::default_instance_->InitAsDefaultInstance();
   Function_Parameter::default_instance_->InitAsDefaultInstance();
@@ -342,6 +373,7 @@ void protobuf_AddDesc_NativeIndex_2eproto() {
   ObjCCategory::default_instance_->InitAsDefaultInstance();
   CField::default_instance_->InitAsDefaultInstance();
   CStruct::default_instance_->InitAsDefaultInstance();
+  Diagnostic::default_instance_->InitAsDefaultInstance();
   TranslationUnit::default_instance_->InitAsDefaultInstance();
   ::google::protobuf::internal::OnShutdown(&protobuf_ShutdownFile_NativeIndex_2eproto);
 }
@@ -3403,12 +3435,448 @@ void CStruct::Swap(CStruct* other) {
 // ===================================================================
 
 #ifndef _MSC_VER
+const int Diagnostic::kSeverityFieldNumber;
+const int Diagnostic::kLineFieldNumber;
+const int Diagnostic::kColumnFieldNumber;
+const int Diagnostic::kMessageFieldNumber;
+const int Diagnostic::kCategoryFieldNumber;
+#endif  // !_MSC_VER
+
+Diagnostic::Diagnostic()
+  : ::google::protobuf::Message() {
+  SharedCtor();
+  // @@protoc_insertion_point(constructor:Diagnostic)
+}
+
+void Diagnostic::InitAsDefaultInstance() {
+}
+
+Diagnostic::Diagnostic(const Diagnostic& from)
+  : ::google::protobuf::Message() {
+  SharedCtor();
+  MergeFrom(from);
+  // @@protoc_insertion_point(copy_constructor:Diagnostic)
+}
+
+void Diagnostic::SharedCtor() {
+  ::google::protobuf::internal::GetEmptyString();
+  _cached_size_ = 0;
+  severity_ = 0u;
+  line_ = 0u;
+  column_ = 0u;
+  message_ = const_cast< ::std::string*>(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+  category_ = const_cast< ::std::string*>(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+  ::memset(_has_bits_, 0, sizeof(_has_bits_));
+}
+
+Diagnostic::~Diagnostic() {
+  // @@protoc_insertion_point(destructor:Diagnostic)
+  SharedDtor();
+}
+
+void Diagnostic::SharedDtor() {
+  if (message_ != &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
+    delete message_;
+  }
+  if (category_ != &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
+    delete category_;
+  }
+  if (this != default_instance_) {
+  }
+}
+
+void Diagnostic::SetCachedSize(int size) const {
+  GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
+  _cached_size_ = size;
+  GOOGLE_SAFE_CONCURRENT_WRITES_END();
+}
+const ::google::protobuf::Descriptor* Diagnostic::descriptor() {
+  protobuf_AssignDescriptorsOnce();
+  return Diagnostic_descriptor_;
+}
+
+const Diagnostic& Diagnostic::default_instance() {
+  if (default_instance_ == NULL) protobuf_AddDesc_NativeIndex_2eproto();
+  return *default_instance_;
+}
+
+Diagnostic* Diagnostic::default_instance_ = NULL;
+
+Diagnostic* Diagnostic::New() const {
+  return new Diagnostic;
+}
+
+void Diagnostic::Clear() {
+#define OFFSET_OF_FIELD_(f) (reinterpret_cast<char*>(      \
+  &reinterpret_cast<Diagnostic*>(16)->f) - \
+   reinterpret_cast<char*>(16))
+
+#define ZR_(first, last) do {                              \
+    size_t f = OFFSET_OF_FIELD_(first);                    \
+    size_t n = OFFSET_OF_FIELD_(last) - f + sizeof(last);  \
+    ::memset(&first, 0, n);                                \
+  } while (0)
+
+  if (_has_bits_[0 / 32] & 31) {
+    ZR_(severity_, line_);
+    column_ = 0u;
+    if (has_message()) {
+      if (message_ != &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
+        message_->clear();
+      }
+    }
+    if (has_category()) {
+      if (category_ != &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
+        category_->clear();
+      }
+    }
+  }
+
+#undef OFFSET_OF_FIELD_
+#undef ZR_
+
+  ::memset(_has_bits_, 0, sizeof(_has_bits_));
+  mutable_unknown_fields()->Clear();
+}
+
+bool Diagnostic::MergePartialFromCodedStream(
+    ::google::protobuf::io::CodedInputStream* input) {
+#define DO_(EXPRESSION) if (!(EXPRESSION)) goto failure
+  ::google::protobuf::uint32 tag;
+  // @@protoc_insertion_point(parse_start:Diagnostic)
+  for (;;) {
+    ::std::pair< ::google::protobuf::uint32, bool> p = input->ReadTagWithCutoff(127);
+    tag = p.first;
+    if (!p.second) goto handle_unusual;
+    switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
+      // required uint32 severity = 1;
+      case 1: {
+        if (tag == 8) {
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   ::google::protobuf::uint32, ::google::protobuf::internal::WireFormatLite::TYPE_UINT32>(
+                 input, &severity_)));
+          set_has_severity();
+        } else {
+          goto handle_unusual;
+        }
+        if (input->ExpectTag(16)) goto parse_line;
+        break;
+      }
+
+      // required uint32 line = 2;
+      case 2: {
+        if (tag == 16) {
+         parse_line:
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   ::google::protobuf::uint32, ::google::protobuf::internal::WireFormatLite::TYPE_UINT32>(
+                 input, &line_)));
+          set_has_line();
+        } else {
+          goto handle_unusual;
+        }
+        if (input->ExpectTag(24)) goto parse_column;
+        break;
+      }
+
+      // required uint32 column = 3;
+      case 3: {
+        if (tag == 24) {
+         parse_column:
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   ::google::protobuf::uint32, ::google::protobuf::internal::WireFormatLite::TYPE_UINT32>(
+                 input, &column_)));
+          set_has_column();
+        } else {
+          goto handle_unusual;
+        }
+        if (input->ExpectTag(34)) goto parse_message;
+        break;
+      }
+
+      // required string message = 4;
+      case 4: {
+        if (tag == 34) {
+         parse_message:
+          DO_(::google::protobuf::internal::WireFormatLite::ReadString(
+                input, this->mutable_message()));
+          ::google::protobuf::internal::WireFormat::VerifyUTF8StringNamedField(
+            this->message().data(), this->message().length(),
+            ::google::protobuf::internal::WireFormat::PARSE,
+            "message");
+        } else {
+          goto handle_unusual;
+        }
+        if (input->ExpectTag(42)) goto parse_category;
+        break;
+      }
+
+      // optional string category = 5;
+      case 5: {
+        if (tag == 42) {
+         parse_category:
+          DO_(::google::protobuf::internal::WireFormatLite::ReadString(
+                input, this->mutable_category()));
+          ::google::protobuf::internal::WireFormat::VerifyUTF8StringNamedField(
+            this->category().data(), this->category().length(),
+            ::google::protobuf::internal::WireFormat::PARSE,
+            "category");
+        } else {
+          goto handle_unusual;
+        }
+        if (input->ExpectAtEnd()) goto success;
+        break;
+      }
+
+      default: {
+      handle_unusual:
+        if (tag == 0 ||
+            ::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_END_GROUP) {
+          goto success;
+        }
+        DO_(::google::protobuf::internal::WireFormat::SkipField(
+              input, tag, mutable_unknown_fields()));
+        break;
+      }
+    }
+  }
+success:
+  // @@protoc_insertion_point(parse_success:Diagnostic)
+  return true;
+failure:
+  // @@protoc_insertion_point(parse_failure:Diagnostic)
+  return false;
+#undef DO_
+}
+
+void Diagnostic::SerializeWithCachedSizes(
+    ::google::protobuf::io::CodedOutputStream* output) const {
+  // @@protoc_insertion_point(serialize_start:Diagnostic)
+  // required uint32 severity = 1;
+  if (has_severity()) {
+    ::google::protobuf::internal::WireFormatLite::WriteUInt32(1, this->severity(), output);
+  }
+
+  // required uint32 line = 2;
+  if (has_line()) {
+    ::google::protobuf::internal::WireFormatLite::WriteUInt32(2, this->line(), output);
+  }
+
+  // required uint32 column = 3;
+  if (has_column()) {
+    ::google::protobuf::internal::WireFormatLite::WriteUInt32(3, this->column(), output);
+  }
+
+  // required string message = 4;
+  if (has_message()) {
+    ::google::protobuf::internal::WireFormat::VerifyUTF8StringNamedField(
+      this->message().data(), this->message().length(),
+      ::google::protobuf::internal::WireFormat::SERIALIZE,
+      "message");
+    ::google::protobuf::internal::WireFormatLite::WriteStringMaybeAliased(
+      4, this->message(), output);
+  }
+
+  // optional string category = 5;
+  if (has_category()) {
+    ::google::protobuf::internal::WireFormat::VerifyUTF8StringNamedField(
+      this->category().data(), this->category().length(),
+      ::google::protobuf::internal::WireFormat::SERIALIZE,
+      "category");
+    ::google::protobuf::internal::WireFormatLite::WriteStringMaybeAliased(
+      5, this->category(), output);
+  }
+
+  if (!unknown_fields().empty()) {
+    ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
+        unknown_fields(), output);
+  }
+  // @@protoc_insertion_point(serialize_end:Diagnostic)
+}
+
+::google::protobuf::uint8* Diagnostic::SerializeWithCachedSizesToArray(
+    ::google::protobuf::uint8* target) const {
+  // @@protoc_insertion_point(serialize_to_array_start:Diagnostic)
+  // required uint32 severity = 1;
+  if (has_severity()) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteUInt32ToArray(1, this->severity(), target);
+  }
+
+  // required uint32 line = 2;
+  if (has_line()) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteUInt32ToArray(2, this->line(), target);
+  }
+
+  // required uint32 column = 3;
+  if (has_column()) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteUInt32ToArray(3, this->column(), target);
+  }
+
+  // required string message = 4;
+  if (has_message()) {
+    ::google::protobuf::internal::WireFormat::VerifyUTF8StringNamedField(
+      this->message().data(), this->message().length(),
+      ::google::protobuf::internal::WireFormat::SERIALIZE,
+      "message");
+    target =
+      ::google::protobuf::internal::WireFormatLite::WriteStringToArray(
+        4, this->message(), target);
+  }
+
+  // optional string category = 5;
+  if (has_category()) {
+    ::google::protobuf::internal::WireFormat::VerifyUTF8StringNamedField(
+      this->category().data(), this->category().length(),
+      ::google::protobuf::internal::WireFormat::SERIALIZE,
+      "category");
+    target =
+      ::google::protobuf::internal::WireFormatLite::WriteStringToArray(
+        5, this->category(), target);
+  }
+
+  if (!unknown_fields().empty()) {
+    target = ::google::protobuf::internal::WireFormat::SerializeUnknownFieldsToArray(
+        unknown_fields(), target);
+  }
+  // @@protoc_insertion_point(serialize_to_array_end:Diagnostic)
+  return target;
+}
+
+int Diagnostic::ByteSize() const {
+  int total_size = 0;
+
+  if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
+    // required uint32 severity = 1;
+    if (has_severity()) {
+      total_size += 1 +
+        ::google::protobuf::internal::WireFormatLite::UInt32Size(
+          this->severity());
+    }
+
+    // required uint32 line = 2;
+    if (has_line()) {
+      total_size += 1 +
+        ::google::protobuf::internal::WireFormatLite::UInt32Size(
+          this->line());
+    }
+
+    // required uint32 column = 3;
+    if (has_column()) {
+      total_size += 1 +
+        ::google::protobuf::internal::WireFormatLite::UInt32Size(
+          this->column());
+    }
+
+    // required string message = 4;
+    if (has_message()) {
+      total_size += 1 +
+        ::google::protobuf::internal::WireFormatLite::StringSize(
+          this->message());
+    }
+
+    // optional string category = 5;
+    if (has_category()) {
+      total_size += 1 +
+        ::google::protobuf::internal::WireFormatLite::StringSize(
+          this->category());
+    }
+
+  }
+  if (!unknown_fields().empty()) {
+    total_size +=
+      ::google::protobuf::internal::WireFormat::ComputeUnknownFieldsSize(
+        unknown_fields());
+  }
+  GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
+  _cached_size_ = total_size;
+  GOOGLE_SAFE_CONCURRENT_WRITES_END();
+  return total_size;
+}
+
+void Diagnostic::MergeFrom(const ::google::protobuf::Message& from) {
+  GOOGLE_CHECK_NE(&from, this);
+  const Diagnostic* source =
+    ::google::protobuf::internal::dynamic_cast_if_available<const Diagnostic*>(
+      &from);
+  if (source == NULL) {
+    ::google::protobuf::internal::ReflectionOps::Merge(from, this);
+  } else {
+    MergeFrom(*source);
+  }
+}
+
+void Diagnostic::MergeFrom(const Diagnostic& from) {
+  GOOGLE_CHECK_NE(&from, this);
+  if (from._has_bits_[0 / 32] & (0xffu << (0 % 32))) {
+    if (from.has_severity()) {
+      set_severity(from.severity());
+    }
+    if (from.has_line()) {
+      set_line(from.line());
+    }
+    if (from.has_column()) {
+      set_column(from.column());
+    }
+    if (from.has_message()) {
+      set_message(from.message());
+    }
+    if (from.has_category()) {
+      set_category(from.category());
+    }
+  }
+  mutable_unknown_fields()->MergeFrom(from.unknown_fields());
+}
+
+void Diagnostic::CopyFrom(const ::google::protobuf::Message& from) {
+  if (&from == this) return;
+  Clear();
+  MergeFrom(from);
+}
+
+void Diagnostic::CopyFrom(const Diagnostic& from) {
+  if (&from == this) return;
+  Clear();
+  MergeFrom(from);
+}
+
+bool Diagnostic::IsInitialized() const {
+  if ((_has_bits_[0] & 0x0000000f) != 0x0000000f) return false;
+
+  return true;
+}
+
+void Diagnostic::Swap(Diagnostic* other) {
+  if (other != this) {
+    std::swap(severity_, other->severity_);
+    std::swap(line_, other->line_);
+    std::swap(column_, other->column_);
+    std::swap(message_, other->message_);
+    std::swap(category_, other->category_);
+    std::swap(_has_bits_[0], other->_has_bits_[0]);
+    _unknown_fields_.Swap(&other->_unknown_fields_);
+    std::swap(_cached_size_, other->_cached_size_);
+  }
+}
+
+::google::protobuf::Metadata Diagnostic::GetMetadata() const {
+  protobuf_AssignDescriptorsOnce();
+  ::google::protobuf::Metadata metadata;
+  metadata.descriptor = Diagnostic_descriptor_;
+  metadata.reflection = Diagnostic_reflection_;
+  return metadata;
+}
+
+
+// ===================================================================
+
+#ifndef _MSC_VER
 const int TranslationUnit::kNameFieldNumber;
 const int TranslationUnit::kClassFieldNumber;
 const int TranslationUnit::kProtocolFieldNumber;
 const int TranslationUnit::kCategoryFieldNumber;
 const int TranslationUnit::kFunctionFieldNumber;
 const int TranslationUnit::kStructFieldNumber;
+const int TranslationUnit::kDiagnosticFieldNumber;
 #endif  // !_MSC_VER
 
 TranslationUnit::TranslationUnit()
@@ -3479,6 +3947,7 @@ void TranslationUnit::Clear() {
   category_.Clear();
   function_.Clear();
   struct__.Clear();
+  diagnostic_.Clear();
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
   mutable_unknown_fields()->Clear();
 }
@@ -3489,7 +3958,7 @@ bool TranslationUnit::MergePartialFromCodedStream(
   ::google::protobuf::uint32 tag;
   // @@protoc_insertion_point(parse_start:TranslationUnit)
   for (;;) {
-    ::std::pair< ::google::protobuf::uint32, bool> p = input->ReadTagWithCutoff(127);
+    ::std::pair< ::google::protobuf::uint32, bool> p = input->ReadTagWithCutoff(16383);
     tag = p.first;
     if (!p.second) goto handle_unusual;
     switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
@@ -3575,6 +4044,20 @@ bool TranslationUnit::MergePartialFromCodedStream(
           goto handle_unusual;
         }
         if (input->ExpectTag(50)) goto parse_struct;
+        if (input->ExpectTag(802)) goto parse_diagnostic;
+        break;
+      }
+
+      // repeated .Diagnostic diagnostic = 100;
+      case 100: {
+        if (tag == 802) {
+         parse_diagnostic:
+          DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtual(
+                input, add_diagnostic()));
+        } else {
+          goto handle_unusual;
+        }
+        if (input->ExpectTag(802)) goto parse_diagnostic;
         if (input->ExpectAtEnd()) goto success;
         break;
       }
@@ -3644,6 +4127,12 @@ void TranslationUnit::SerializeWithCachedSizes(
       6, this->struct_(i), output);
   }
 
+  // repeated .Diagnostic diagnostic = 100;
+  for (int i = 0; i < this->diagnostic_size(); i++) {
+    ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
+      100, this->diagnostic(i), output);
+  }
+
   if (!unknown_fields().empty()) {
     ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
         unknown_fields(), output);
@@ -3698,6 +4187,13 @@ void TranslationUnit::SerializeWithCachedSizes(
     target = ::google::protobuf::internal::WireFormatLite::
       WriteMessageNoVirtualToArray(
         6, this->struct_(i), target);
+  }
+
+  // repeated .Diagnostic diagnostic = 100;
+  for (int i = 0; i < this->diagnostic_size(); i++) {
+    target = ::google::protobuf::internal::WireFormatLite::
+      WriteMessageNoVirtualToArray(
+        100, this->diagnostic(i), target);
   }
 
   if (!unknown_fields().empty()) {
@@ -3760,6 +4256,14 @@ int TranslationUnit::ByteSize() const {
         this->struct_(i));
   }
 
+  // repeated .Diagnostic diagnostic = 100;
+  total_size += 2 * this->diagnostic_size();
+  for (int i = 0; i < this->diagnostic_size(); i++) {
+    total_size +=
+      ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
+        this->diagnostic(i));
+  }
+
   if (!unknown_fields().empty()) {
     total_size +=
       ::google::protobuf::internal::WireFormat::ComputeUnknownFieldsSize(
@@ -3790,6 +4294,7 @@ void TranslationUnit::MergeFrom(const TranslationUnit& from) {
   category_.MergeFrom(from.category_);
   function_.MergeFrom(from.function_);
   struct__.MergeFrom(from.struct__);
+  diagnostic_.MergeFrom(from.diagnostic_);
   if (from._has_bits_[0 / 32] & (0xffu << (0 % 32))) {
     if (from.has_name()) {
       set_name(from.name());
@@ -3818,6 +4323,7 @@ bool TranslationUnit::IsInitialized() const {
   if (!::google::protobuf::internal::AllAreInitialized(this->category())) return false;
   if (!::google::protobuf::internal::AllAreInitialized(this->function())) return false;
   if (!::google::protobuf::internal::AllAreInitialized(this->struct_())) return false;
+  if (!::google::protobuf::internal::AllAreInitialized(this->diagnostic())) return false;
   return true;
 }
 
@@ -3829,6 +4335,7 @@ void TranslationUnit::Swap(TranslationUnit* other) {
     category_.Swap(&other->category_);
     function_.Swap(&other->function_);
     struct__.Swap(&other->struct__);
+    diagnostic_.Swap(&other->diagnostic_);
     std::swap(_has_bits_[0], other->_has_bits_[0]);
     _unknown_fields_.Swap(&other->_unknown_fields_);
     std::swap(_cached_size_, other->_cached_size_);

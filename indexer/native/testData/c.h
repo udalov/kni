@@ -5,7 +5,7 @@ void* ptr;
 
 typedef struct UndefinedStructImpl UndefinedStruct;
 
-typedef struct {
+typedef struct AA {
     int j;
     char** p_str;
 } Struct;

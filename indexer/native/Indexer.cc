@@ -3,6 +3,7 @@
 #include <vector>
 #include <sstream>
 #include <clang-c/Index.h>
+#include <iostream>
 
 #include "clang-c/Index.h"
 
@@ -113,8 +114,7 @@ void serializeType(const CXType& type, std::string& result) {
             result += ";";
         } else {
             AutoCXString spelling = clang_getTypeKindSpelling(pointeeType.kind);
-            auto str = spelling.str();
-            failWithMsg("Unknown Objective-C pointee type: %s\n", str.c_str());
+            failWithMsg("Unknown Objective-C pointee type: %s\n", spelling.str());
         }
     } else {
         // Unsupported kind / unexposed type
@@ -342,6 +342,28 @@ void indexDeclaration(CXClientData clientData, const CXIdxDeclInfo *info) {
     }
 }
 
+void diagnostic(CXClientData clientData, CXDiagnosticSet diagSet, void *reserved) {
+    OutputCollector *data = static_cast<OutputCollector *>(clientData);
+    unsigned count = clang_getNumDiagnosticsInSet(diagSet);
+    if (count > 0) {
+        auto diag = data->result().add_diagnostic();
+        for (unsigned i = 0; i < count; i++) {
+            std::shared_ptr<void> cxDiag(clang_getDiagnosticInSet(diagSet, i), clang_disposeDiagnostic);
+
+            diag->set_severity( clang_getDiagnosticSeverity(cxDiag.get()));
+
+            CXSourceLocation location = clang_getDiagnosticLocation(cxDiag.get());
+            unsigned line, column;
+            clang_getExpansionLocation(location, 0, &line, &column, 0);
+            diag->set_line(line);
+            diag->set_column(column);
+
+            diag->set_message( AutoCXString( clang_formatDiagnostic(cxDiag.get(), clang_defaultDiagnosticDisplayOptions())).str());
+            diag->set_category( AutoCXString( clang_getDiagnosticCategoryText(cxDiag.get())).str());
+        }
+    }
+}
+
 void runPostIndexTasks(OutputCollector *data) {
     // For every forward-declared @class or @protocol which was never defined,
     // we create an empty class or protocol here. This is needed because a
@@ -379,14 +401,14 @@ std::string *doIndex(const std::vector<std::string>& args) {
 
     IndexerCallbacks callbacks = {};
     callbacks.indexDeclaration = indexDeclaration;
+    callbacks.diagnostic = diagnostic;
 
     OutputCollector data;
 
     std::vector<const char *> cxArgs;
     std::transform(args.begin(), args.end(), std::back_inserter(cxArgs), [](const std::string & s) { return s.c_str(); });
-    cxArgs.push_back("-ObjC");
 
-    data.result().set_name(cxArgs[0]);
+    data.result().set_name(args[0]);
 
     clang_indexSourceFile(action, &data, &callbacks, sizeof(callbacks), 0, 0,
             &cxArgs[0], static_cast<int>(cxArgs.size()), 0, 0, 0, 0);

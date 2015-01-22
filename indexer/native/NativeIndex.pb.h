@@ -40,6 +40,7 @@ class ObjCProtocol;
 class ObjCCategory;
 class CField;
 class CStruct;
+class Diagnostic;
 class TranslationUnit;
 
 // ===================================================================
@@ -1056,6 +1057,135 @@ class CStruct : public ::google::protobuf::Message {
 };
 // -------------------------------------------------------------------
 
+class Diagnostic : public ::google::protobuf::Message {
+ public:
+  Diagnostic();
+  virtual ~Diagnostic();
+
+  Diagnostic(const Diagnostic& from);
+
+  inline Diagnostic& operator=(const Diagnostic& from) {
+    CopyFrom(from);
+    return *this;
+  }
+
+  inline const ::google::protobuf::UnknownFieldSet& unknown_fields() const {
+    return _unknown_fields_;
+  }
+
+  inline ::google::protobuf::UnknownFieldSet* mutable_unknown_fields() {
+    return &_unknown_fields_;
+  }
+
+  static const ::google::protobuf::Descriptor* descriptor();
+  static const Diagnostic& default_instance();
+
+  void Swap(Diagnostic* other);
+
+  // implements Message ----------------------------------------------
+
+  Diagnostic* New() const;
+  void CopyFrom(const ::google::protobuf::Message& from);
+  void MergeFrom(const ::google::protobuf::Message& from);
+  void CopyFrom(const Diagnostic& from);
+  void MergeFrom(const Diagnostic& from);
+  void Clear();
+  bool IsInitialized() const;
+
+  int ByteSize() const;
+  bool MergePartialFromCodedStream(
+      ::google::protobuf::io::CodedInputStream* input);
+  void SerializeWithCachedSizes(
+      ::google::protobuf::io::CodedOutputStream* output) const;
+  ::google::protobuf::uint8* SerializeWithCachedSizesToArray(::google::protobuf::uint8* output) const;
+  int GetCachedSize() const { return _cached_size_; }
+  private:
+  void SharedCtor();
+  void SharedDtor();
+  void SetCachedSize(int size) const;
+  public:
+  ::google::protobuf::Metadata GetMetadata() const;
+
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+
+  // required uint32 severity = 1;
+  inline bool has_severity() const;
+  inline void clear_severity();
+  static const int kSeverityFieldNumber = 1;
+  inline ::google::protobuf::uint32 severity() const;
+  inline void set_severity(::google::protobuf::uint32 value);
+
+  // required uint32 line = 2;
+  inline bool has_line() const;
+  inline void clear_line();
+  static const int kLineFieldNumber = 2;
+  inline ::google::protobuf::uint32 line() const;
+  inline void set_line(::google::protobuf::uint32 value);
+
+  // required uint32 column = 3;
+  inline bool has_column() const;
+  inline void clear_column();
+  static const int kColumnFieldNumber = 3;
+  inline ::google::protobuf::uint32 column() const;
+  inline void set_column(::google::protobuf::uint32 value);
+
+  // required string message = 4;
+  inline bool has_message() const;
+  inline void clear_message();
+  static const int kMessageFieldNumber = 4;
+  inline const ::std::string& message() const;
+  inline void set_message(const ::std::string& value);
+  inline void set_message(const char* value);
+  inline void set_message(const char* value, size_t size);
+  inline ::std::string* mutable_message();
+  inline ::std::string* release_message();
+  inline void set_allocated_message(::std::string* message);
+
+  // optional string category = 5;
+  inline bool has_category() const;
+  inline void clear_category();
+  static const int kCategoryFieldNumber = 5;
+  inline const ::std::string& category() const;
+  inline void set_category(const ::std::string& value);
+  inline void set_category(const char* value);
+  inline void set_category(const char* value, size_t size);
+  inline ::std::string* mutable_category();
+  inline ::std::string* release_category();
+  inline void set_allocated_category(::std::string* category);
+
+  // @@protoc_insertion_point(class_scope:Diagnostic)
+ private:
+  inline void set_has_severity();
+  inline void clear_has_severity();
+  inline void set_has_line();
+  inline void clear_has_line();
+  inline void set_has_column();
+  inline void clear_has_column();
+  inline void set_has_message();
+  inline void clear_has_message();
+  inline void set_has_category();
+  inline void clear_has_category();
+
+  ::google::protobuf::UnknownFieldSet _unknown_fields_;
+
+  ::google::protobuf::uint32 _has_bits_[1];
+  mutable int _cached_size_;
+  ::google::protobuf::uint32 severity_;
+  ::google::protobuf::uint32 line_;
+  ::std::string* message_;
+  ::std::string* category_;
+  ::google::protobuf::uint32 column_;
+  friend void  protobuf_AddDesc_NativeIndex_2eproto();
+  friend void protobuf_AssignDesc_NativeIndex_2eproto();
+  friend void protobuf_ShutdownFile_NativeIndex_2eproto();
+
+  void InitAsDefaultInstance();
+  static Diagnostic* default_instance_;
+};
+// -------------------------------------------------------------------
+
 class TranslationUnit : public ::google::protobuf::Message {
  public:
   TranslationUnit();
@@ -1181,6 +1311,18 @@ class TranslationUnit : public ::google::protobuf::Message {
   inline ::google::protobuf::RepeatedPtrField< ::CStruct >*
       mutable_struct_();
 
+  // repeated .Diagnostic diagnostic = 100;
+  inline int diagnostic_size() const;
+  inline void clear_diagnostic();
+  static const int kDiagnosticFieldNumber = 100;
+  inline const ::Diagnostic& diagnostic(int index) const;
+  inline ::Diagnostic* mutable_diagnostic(int index);
+  inline ::Diagnostic* add_diagnostic();
+  inline const ::google::protobuf::RepeatedPtrField< ::Diagnostic >&
+      diagnostic() const;
+  inline ::google::protobuf::RepeatedPtrField< ::Diagnostic >*
+      mutable_diagnostic();
+
   // @@protoc_insertion_point(class_scope:TranslationUnit)
  private:
   inline void set_has_name();
@@ -1196,6 +1338,7 @@ class TranslationUnit : public ::google::protobuf::Message {
   ::google::protobuf::RepeatedPtrField< ::ObjCCategory > category_;
   ::google::protobuf::RepeatedPtrField< ::Function > function_;
   ::google::protobuf::RepeatedPtrField< ::CStruct > struct__;
+  ::google::protobuf::RepeatedPtrField< ::Diagnostic > diagnostic_;
   friend void  protobuf_AddDesc_NativeIndex_2eproto();
   friend void protobuf_AssignDesc_NativeIndex_2eproto();
   friend void protobuf_ShutdownFile_NativeIndex_2eproto();
@@ -2753,6 +2896,234 @@ CStruct::mutable_field() {
 
 // -------------------------------------------------------------------
 
+// Diagnostic
+
+// required uint32 severity = 1;
+inline bool Diagnostic::has_severity() const {
+  return (_has_bits_[0] & 0x00000001u) != 0;
+}
+inline void Diagnostic::set_has_severity() {
+  _has_bits_[0] |= 0x00000001u;
+}
+inline void Diagnostic::clear_has_severity() {
+  _has_bits_[0] &= ~0x00000001u;
+}
+inline void Diagnostic::clear_severity() {
+  severity_ = 0u;
+  clear_has_severity();
+}
+inline ::google::protobuf::uint32 Diagnostic::severity() const {
+  // @@protoc_insertion_point(field_get:Diagnostic.severity)
+  return severity_;
+}
+inline void Diagnostic::set_severity(::google::protobuf::uint32 value) {
+  set_has_severity();
+  severity_ = value;
+  // @@protoc_insertion_point(field_set:Diagnostic.severity)
+}
+
+// required uint32 line = 2;
+inline bool Diagnostic::has_line() const {
+  return (_has_bits_[0] & 0x00000002u) != 0;
+}
+inline void Diagnostic::set_has_line() {
+  _has_bits_[0] |= 0x00000002u;
+}
+inline void Diagnostic::clear_has_line() {
+  _has_bits_[0] &= ~0x00000002u;
+}
+inline void Diagnostic::clear_line() {
+  line_ = 0u;
+  clear_has_line();
+}
+inline ::google::protobuf::uint32 Diagnostic::line() const {
+  // @@protoc_insertion_point(field_get:Diagnostic.line)
+  return line_;
+}
+inline void Diagnostic::set_line(::google::protobuf::uint32 value) {
+  set_has_line();
+  line_ = value;
+  // @@protoc_insertion_point(field_set:Diagnostic.line)
+}
+
+// required uint32 column = 3;
+inline bool Diagnostic::has_column() const {
+  return (_has_bits_[0] & 0x00000004u) != 0;
+}
+inline void Diagnostic::set_has_column() {
+  _has_bits_[0] |= 0x00000004u;
+}
+inline void Diagnostic::clear_has_column() {
+  _has_bits_[0] &= ~0x00000004u;
+}
+inline void Diagnostic::clear_column() {
+  column_ = 0u;
+  clear_has_column();
+}
+inline ::google::protobuf::uint32 Diagnostic::column() const {
+  // @@protoc_insertion_point(field_get:Diagnostic.column)
+  return column_;
+}
+inline void Diagnostic::set_column(::google::protobuf::uint32 value) {
+  set_has_column();
+  column_ = value;
+  // @@protoc_insertion_point(field_set:Diagnostic.column)
+}
+
+// required string message = 4;
+inline bool Diagnostic::has_message() const {
+  return (_has_bits_[0] & 0x00000008u) != 0;
+}
+inline void Diagnostic::set_has_message() {
+  _has_bits_[0] |= 0x00000008u;
+}
+inline void Diagnostic::clear_has_message() {
+  _has_bits_[0] &= ~0x00000008u;
+}
+inline void Diagnostic::clear_message() {
+  if (message_ != &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
+    message_->clear();
+  }
+  clear_has_message();
+}
+inline const ::std::string& Diagnostic::message() const {
+  // @@protoc_insertion_point(field_get:Diagnostic.message)
+  return *message_;
+}
+inline void Diagnostic::set_message(const ::std::string& value) {
+  set_has_message();
+  if (message_ == &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
+    message_ = new ::std::string;
+  }
+  message_->assign(value);
+  // @@protoc_insertion_point(field_set:Diagnostic.message)
+}
+inline void Diagnostic::set_message(const char* value) {
+  set_has_message();
+  if (message_ == &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
+    message_ = new ::std::string;
+  }
+  message_->assign(value);
+  // @@protoc_insertion_point(field_set_char:Diagnostic.message)
+}
+inline void Diagnostic::set_message(const char* value, size_t size) {
+  set_has_message();
+  if (message_ == &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
+    message_ = new ::std::string;
+  }
+  message_->assign(reinterpret_cast<const char*>(value), size);
+  // @@protoc_insertion_point(field_set_pointer:Diagnostic.message)
+}
+inline ::std::string* Diagnostic::mutable_message() {
+  set_has_message();
+  if (message_ == &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
+    message_ = new ::std::string;
+  }
+  // @@protoc_insertion_point(field_mutable:Diagnostic.message)
+  return message_;
+}
+inline ::std::string* Diagnostic::release_message() {
+  clear_has_message();
+  if (message_ == &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
+    return NULL;
+  } else {
+    ::std::string* temp = message_;
+    message_ = const_cast< ::std::string*>(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+    return temp;
+  }
+}
+inline void Diagnostic::set_allocated_message(::std::string* message) {
+  if (message_ != &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
+    delete message_;
+  }
+  if (message) {
+    set_has_message();
+    message_ = message;
+  } else {
+    clear_has_message();
+    message_ = const_cast< ::std::string*>(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+  }
+  // @@protoc_insertion_point(field_set_allocated:Diagnostic.message)
+}
+
+// optional string category = 5;
+inline bool Diagnostic::has_category() const {
+  return (_has_bits_[0] & 0x00000010u) != 0;
+}
+inline void Diagnostic::set_has_category() {
+  _has_bits_[0] |= 0x00000010u;
+}
+inline void Diagnostic::clear_has_category() {
+  _has_bits_[0] &= ~0x00000010u;
+}
+inline void Diagnostic::clear_category() {
+  if (category_ != &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
+    category_->clear();
+  }
+  clear_has_category();
+}
+inline const ::std::string& Diagnostic::category() const {
+  // @@protoc_insertion_point(field_get:Diagnostic.category)
+  return *category_;
+}
+inline void Diagnostic::set_category(const ::std::string& value) {
+  set_has_category();
+  if (category_ == &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
+    category_ = new ::std::string;
+  }
+  category_->assign(value);
+  // @@protoc_insertion_point(field_set:Diagnostic.category)
+}
+inline void Diagnostic::set_category(const char* value) {
+  set_has_category();
+  if (category_ == &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
+    category_ = new ::std::string;
+  }
+  category_->assign(value);
+  // @@protoc_insertion_point(field_set_char:Diagnostic.category)
+}
+inline void Diagnostic::set_category(const char* value, size_t size) {
+  set_has_category();
+  if (category_ == &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
+    category_ = new ::std::string;
+  }
+  category_->assign(reinterpret_cast<const char*>(value), size);
+  // @@protoc_insertion_point(field_set_pointer:Diagnostic.category)
+}
+inline ::std::string* Diagnostic::mutable_category() {
+  set_has_category();
+  if (category_ == &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
+    category_ = new ::std::string;
+  }
+  // @@protoc_insertion_point(field_mutable:Diagnostic.category)
+  return category_;
+}
+inline ::std::string* Diagnostic::release_category() {
+  clear_has_category();
+  if (category_ == &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
+    return NULL;
+  } else {
+    ::std::string* temp = category_;
+    category_ = const_cast< ::std::string*>(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+    return temp;
+  }
+}
+inline void Diagnostic::set_allocated_category(::std::string* category) {
+  if (category_ != &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
+    delete category_;
+  }
+  if (category) {
+    set_has_category();
+    category_ = category;
+  } else {
+    clear_has_category();
+    category_ = const_cast< ::std::string*>(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+  }
+  // @@protoc_insertion_point(field_set_allocated:Diagnostic.category)
+}
+
+// -------------------------------------------------------------------
+
 // TranslationUnit
 
 // required string name = 1;
@@ -2979,6 +3350,36 @@ inline ::google::protobuf::RepeatedPtrField< ::CStruct >*
 TranslationUnit::mutable_struct_() {
   // @@protoc_insertion_point(field_mutable_list:TranslationUnit.struct)
   return &struct__;
+}
+
+// repeated .Diagnostic diagnostic = 100;
+inline int TranslationUnit::diagnostic_size() const {
+  return diagnostic_.size();
+}
+inline void TranslationUnit::clear_diagnostic() {
+  diagnostic_.Clear();
+}
+inline const ::Diagnostic& TranslationUnit::diagnostic(int index) const {
+  // @@protoc_insertion_point(field_get:TranslationUnit.diagnostic)
+  return diagnostic_.Get(index);
+}
+inline ::Diagnostic* TranslationUnit::mutable_diagnostic(int index) {
+  // @@protoc_insertion_point(field_mutable:TranslationUnit.diagnostic)
+  return diagnostic_.Mutable(index);
+}
+inline ::Diagnostic* TranslationUnit::add_diagnostic() {
+  // @@protoc_insertion_point(field_add:TranslationUnit.diagnostic)
+  return diagnostic_.Add();
+}
+inline const ::google::protobuf::RepeatedPtrField< ::Diagnostic >&
+TranslationUnit::diagnostic() const {
+  // @@protoc_insertion_point(field_list:TranslationUnit.diagnostic)
+  return diagnostic_;
+}
+inline ::google::protobuf::RepeatedPtrField< ::Diagnostic >*
+TranslationUnit::mutable_diagnostic() {
+  // @@protoc_insertion_point(field_mutable_list:TranslationUnit.diagnostic)
+  return &diagnostic_;
 }
 
 
