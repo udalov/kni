@@ -176,5 +176,5 @@
         <move file="${download}/clang-c" todir="${lib}"/>
     </target>
 
-    <target name="all" depends="init,libffi,kotlin,junit,protobuf,protobuf-java,clang"/>
+    <target name="all" depends="init,libffi,kotlin,junit,protobuf,protobuf-java,jnr-ffi,clang"/>
 </project>
