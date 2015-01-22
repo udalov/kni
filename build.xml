@@ -3,7 +3,7 @@
     <property name="lib" location="${basedir}/lib"/>
 
     <property name="kotlinc" location="${lib}/kotlinc"/>
-    <property name="protobuf.jar" location="${lib}/protobuf-2.6.0.jar"/>
+    <property name="protobuf.jar" location="${lib}/protobuf-java-2.6.0.jar"/>
 
     <property name="indexer.src" location="${basedir}/indexer"/>
     <property name="indexer.target" location="${output}/build/indexer"/>
