@@ -56,6 +56,14 @@ message CStruct {
     repeated CField field = 2;
 }
 
+message Diagnostic {
+    required uint32 severity = 1;
+    required uint32 line = 2;
+    required uint32 column = 3;
+    required string message = 4;
+    optional string category = 5;
+}
+
 message TranslationUnit {
     required string name = 1;
     repeated ObjCClass class = 2;
@@ -63,4 +71,5 @@ message TranslationUnit {
     repeated ObjCCategory category = 4;
     repeated Function function = 5;
     repeated CStruct struct = 6;
+    repeated Diagnostic diagnostic = 100;
 }

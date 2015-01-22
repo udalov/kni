@@ -46,6 +46,7 @@ public fun generateStub(translationUnit: TranslationUnit, dylib: File, outputFil
             out.println("import jnr.ffi.*")
             out.println("import jnr.ffi.types.*")
             out.println()
+            translationUnit.getStructList().forEach { generator.genCStruct(it) }
             generator.genCFunctions(translationUnit.getFunctionList().distinct())
         }
         else -> error("Unknown language: ${options.language}")
@@ -142,17 +143,23 @@ class Generator(private val out: Printer, private val namer: Namer, private val 
     }
 
     fun genCFunctions(functions: Iterable<Function>) {
-        out.println()
-        out.println("public trait ${namer.cFunctionsInterfaceName()} {")
+        out.println("\npublic trait ${namer.cFunctionsInterfaceName()} {")
         for (function in functions) {
             out.print("    ")
             makeFunSignature(function)
             out.println()
         }
         out.println("}")
-        out.println()
-        out.println("public fun get_${namer.cFunctionsInterfaceName()}(libName: String): ${namer.cFunctionsInterfaceName()} = LibraryLoader.create(javaClass<${namer.cFunctionsInterfaceName()}>()).load(libName)")
-        out.println()
+        out.println("\npublic fun get_${namer.cFunctionsInterfaceName()}(libName: String): ${namer.cFunctionsInterfaceName()} = LibraryLoader.create(javaClass<${namer.cFunctionsInterfaceName()}>()).load(libName)\n")
+    }
+
+    fun genCStruct(struct: CStruct) {
+        out.println("\nclass ${struct.getName()}(runtime: jnr.ffi.Runtime) : Struct(runtime) {")
+        for (field in struct.getFieldList()) {
+            val t = parseType(field.getType()).str
+            out.println("    public var ${field.getName()}: $t = $t()")
+        }
+        out.println("}")
     }
 
     private fun genObjCFunction(function: Function, open: Boolean) {

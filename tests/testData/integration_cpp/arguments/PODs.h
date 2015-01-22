@@ -1,6 +1,6 @@
 
-#ifndef kni_test_integration_arguments_pod_h
-#define kni_test_integration_arguments_pod_h
+#ifndef kni_test_integration_arguments_pods_h
+#define kni_test_integration_arguments_pods_h
 
 #ifdef __cplusplus
 extern "C" {
@@ -12,4 +12,4 @@ int ifathenbelsec(bool a, int b, int c);
 }
 #endif
 
-#endif // kni_test_integration_arguments_pod_h
+#endif // kni_test_integration_arguments_pods_h
