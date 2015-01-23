@@ -14,14 +14,16 @@ class IndexerTest {
         file.writeText(content)
 
         val tu = buildNativeIndex(file, NativeIndexingOptions(Language.OBJC))
-        Assert.assertEquals(expected, "$tu")
+        val actual = tu.toString().replace(file.getPath(), "%SOURCE_PATH%")
+        Assert.assertEquals(expected, actual)
     }
 
     test fun simpleClass() {
         doTest("""
 @interface A
 @end
-""", expected = """class {
+""", expected = """name: "%SOURCE_PATH%"
+class {
   name: "A"
 }
 """
@@ -38,7 +40,8 @@ class IndexerTest {
 
 @interface A(Cat)
 @end
-""", expected = """class {
+""", expected = """name: "%SOURCE_PATH%"
+class {
   name: "A"
   category: "A+"
   category: "A+Cat"
