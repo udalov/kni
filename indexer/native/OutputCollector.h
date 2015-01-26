@@ -6,6 +6,10 @@
 
 #include "NativeIndex.pb.h"
 
+struct ProcessingMode {
+    typedef enum { unknown, c, cpp, objc } type;
+};
+
 class OutputCollector {
     public:
 
@@ -47,6 +51,10 @@ class OutputCollector {
         // Transfers ownership of the returned string to the caller
         std::string *serialize();
 
+        ProcessingMode::type mode() const { return m_mode; }
+
+        OutputCollector(ProcessingMode::type mode): m_mode(mode) { assertFalse(mode == ProcessingMode::unknown); }
 private:
+        ProcessingMode::type m_mode;
         TranslationUnit m_result;
 };

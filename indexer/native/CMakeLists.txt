@@ -16,6 +16,7 @@ include_directories("../../lib")
 include_directories("../../lib/protobuf/include")
 link_directories("/usr/local/lib")
 link_directories("/usr/local/Cellar/llvm/3.5.0/lib")
+#link_directories("/Users/lige/Work/clang/build/Debug+Asserts/lib")
 link_directories("../../lib")
 link_directories("../../lib/protobuf/lib")
 

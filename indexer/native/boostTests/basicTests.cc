@@ -5,6 +5,7 @@
 
 #include "Indexer.hh"
 #include "NativeIndex.pb.h"
+#include "AutoCXString.h"
 #include <boost/filesystem/path.hpp>
 #include <boost/filesystem/operations.hpp>
 #include <boost/filesystem/fstream.hpp>
@@ -97,7 +98,10 @@ void indexAndCompare(const fs::path& file, Cont args) {
 BOOST_AUTO_TEST_CASE( indexer_basic)
 {
     BOOST_MESSAGE(boost::filesystem::current_path());
-    indexAndCompare("testData/c.h", params { "-c++" });
-    indexAndCompare("/Users/lige/Work/kotlin/kni/tests/testData/integration/arguments/bool.m", params {"-ObjC", "-Wall"});
+    AutoCXString ver(clang_getClangVersion());
+    BOOST_MESSAGE("CLang " << ver.str());
+    indexAndCompare("testData/c.h", params { });
+    indexAndCompare("testData/cpp.hh", params { "-c++" });
+//    indexAndCompare("/Users/lige/Work/kotlin/kni/tests/testData/integration/arguments/bool.m", params { "-ObjC" });
     //indexAndCompare(boost::filesystem::current_path() / "../../tests/testData/integration_cpp/arguments/PODs.cpp");
 }

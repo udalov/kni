@@ -2,7 +2,6 @@
 #include <map>
 #include <vector>
 #include <sstream>
-#include <clang-c/Index.h>
 #include <iostream>
 
 #include "clang-c/Index.h"
@@ -40,6 +39,7 @@ const std::map<CXTypeKind, std::string>& initializePrimitiveTypesMap() {
     static std::map<CXTypeKind, std::string> m;
 
     m[CXType_Void] = "V";
+    m[CXType_Bool] = "Z";
     m[CXType_UChar] = "UC";
     m[CXType_UShort] = "US";
     m[CXType_UInt] = "UI";
@@ -95,12 +95,16 @@ void serializeType(const CXType& type, std::string& result) {
 
     if (type.kind == CXType_Typedef) {
         serializeType(untypedefType(type), result);
-    } else if (type.kind == CXType_Pointer) {
+        return;
+    }
+    if (type.kind == CXType_Pointer) {
         result += "*";
         auto pointeeType = clang_getPointeeType(type);
         serializeType(pointeeType, result);
         result += ";";
-    } else if (type.kind == CXType_ObjCObjectPointer) {
+        return;
+    }
+    if (type.kind == CXType_ObjCObjectPointer) {
         auto pointeeType = untypedefType(clang_getPointeeType(type));
 
         if (pointeeType.kind == CXType_Unexposed) {
@@ -116,13 +120,33 @@ void serializeType(const CXType& type, std::string& result) {
             AutoCXString spelling = clang_getTypeKindSpelling(pointeeType.kind);
             failWithMsg("Unknown Objective-C pointee type: %s\n", spelling.str());
         }
-    } else {
-        // Unsupported kind / unexposed type
-        result += "X(";
-        AutoCXString spelling = clang_getTypeKindSpelling(type.kind);
-        result += spelling.str();
-        result += ")";
+        return;
     }
+    if (type.kind == CXType_Record) {
+        result += "R";
+        std::string name = AutoCXString(clang_getTypeSpelling(type)).str();
+        const std::string struct_pfx("struct ");
+        // starts with
+        if (name.length() > struct_pfx.length() && name.substr(0, struct_pfx.length()) == struct_pfx)
+            name.erase(0, struct_pfx.length());
+        result += name;
+        return;
+    }
+    if (type.kind == CXType_Unexposed) {
+        auto ctype = clang_getCanonicalType(type);
+        if (ctype.kind != CXType_Unexposed) {
+            serializeType(ctype, result);
+            return;
+        }
+    }
+    // Unsupported kind
+    result += "X(";
+    AutoCXString spelling = clang_getTypeKindSpelling(type.kind);
+    result += spelling.str();
+    result += ".";
+    AutoCXString tsp = clang_getTypeSpelling(type);
+    result += tsp.str();
+    result += ")";
 }
 
 std::string serializeType(const CXType& type) {
@@ -267,9 +291,17 @@ void indexFunction(const CXIdxDeclInfo *info, OutputCollector *data) {
 
 void indexStruct(const CXIdxDeclInfo *info, OutputCollector *data) {
 
+    std::string name;
+    if (info->entityInfo->name)
+        name.assign(info->entityInfo->name);
+    else {
+        auto cur = info->entityInfo->cursor;
+        auto type = clang_getCursorType(cur);
+        name.assign( AutoCXString(clang_getTypeSpelling(type)).str());
+    }
     if (info->isDefinition) {
         auto struct_ = data->result().add_struct_();
-        struct_->set_name(info->entityInfo->name);
+        struct_->set_name(name);
         data->c.structs[info->entityInfo->USR] = struct_;
     }
     else
@@ -282,7 +314,7 @@ void indexField(const CXIdxDeclInfo *info, OutputCollector *data) {
     if (structIt != data->c.structs.end()) {
         auto field = structIt->second->add_field();
         field->set_name(info->entityInfo->name);
-        auto type = serializeType(clang_getCursorResultType(info->cursor));
+        auto type = serializeType(clang_getCursorType(info->cursor));
         field->set_type(type);
     }
 }
@@ -318,28 +350,34 @@ void indexDeclaration(CXClientData clientData, const CXIdxDeclInfo *info) {
 
     OutputCollector *data = static_cast<OutputCollector *>(clientData);
 
-    switch (info->entityInfo->kind) {
-        case CXIdxEntity_ObjCClass:
-            indexObjCClass(info, data); break;
-        case CXIdxEntity_ObjCProtocol:
-            indexObjCProtocol(info, data); break;
-        case CXIdxEntity_ObjCCategory:
-            indexObjCCategory(info, data); break;
-        case CXIdxEntity_ObjCInstanceMethod:
-            indexMethod(info, data, false); break;
-        case CXIdxEntity_ObjCClassMethod:
-            indexMethod(info, data, true); break;
-        case CXIdxEntity_ObjCProperty:
-            indexProperty(info, data); break;
-        case CXIdxEntity_Function:
-            indexFunction(info, data); break;
-        case CXIdxEntity_Struct:
-            indexStruct(info, data); break;
-        case CXIdxEntity_Field:
-            indexField(info, data); break;
-        default:
-            break;
-    }
+    if (data->mode() == ProcessingMode::objc)
+        switch (info->entityInfo->kind) {
+            case CXIdxEntity_ObjCClass:
+                indexObjCClass(info, data); break;
+            case CXIdxEntity_ObjCProtocol:
+                indexObjCProtocol(info, data); break;
+            case CXIdxEntity_ObjCCategory:
+                indexObjCCategory(info, data); break;
+            case CXIdxEntity_ObjCInstanceMethod:
+                indexMethod(info, data, false); break;
+            case CXIdxEntity_ObjCClassMethod:
+                indexMethod(info, data, true); break;
+            case CXIdxEntity_ObjCProperty:
+                indexProperty(info, data); break;
+            default:
+                break;
+        }
+    else
+        switch (info->entityInfo->kind) {
+            case CXIdxEntity_Function:
+                indexFunction(info, data); break;
+            case CXIdxEntity_Struct:
+                indexStruct(info, data); break;
+            case CXIdxEntity_Field:
+                indexField(info, data); break;
+            default:
+                break;
+        }
 }
 
 void diagnostic(CXClientData clientData, CXDiagnosticSet diagSet, void *reserved) {
@@ -403,12 +441,27 @@ std::string *doIndex(const std::vector<std::string>& args) {
     callbacks.indexDeclaration = indexDeclaration;
     callbacks.diagnostic = diagnostic;
 
-    OutputCollector data;
-
     std::vector<const char *> cxArgs;
+    std::string name;
+    ProcessingMode::type mode = ProcessingMode::unknown;
     std::transform(args.begin(), args.end(), std::back_inserter(cxArgs), [](const std::string & s) { return s.c_str(); });
+    // \todo consider more advanced parsing
+    for (auto arg: args) {
+        if (arg[0] != '-') {
+            assertTrue(name.empty());
+            name = arg;
+        }
+        else if (arg == "-ObjC") {
+            assertTrue(mode == ProcessingMode::unknown);
+            mode = ProcessingMode::objc;
+        }
+    }
+    if (mode == ProcessingMode::unknown)
+        mode = ProcessingMode::cpp;
 
-    data.result().set_name(args[0]);
+    OutputCollector data(mode);
+
+    data.result().set_name(name);
 
     clang_indexSourceFile(action, &data, &callbacks, sizeof(callbacks), 0, 0,
             &cxArgs[0], static_cast<int>(cxArgs.size()), 0, 0, 0, 0);
