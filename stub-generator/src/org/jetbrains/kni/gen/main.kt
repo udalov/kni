@@ -9,5 +9,5 @@ fun main(args: Array<String>) {
     val file = "tests/testData/integration/simpleClassObject.h"
     val options = NativeIndexingOptions(Language.OBJC)
     val tu = buildNativeIndex(File(file), options)
-    generateStub(tu, File("libKNITest.dylib"), File("out/kni-stub.kt"), options)
+    generateStub(tu, File("libKNITest.dylib"), File("out/kni-stub.kt"), options, InteropRuntime.ObjC)
 }

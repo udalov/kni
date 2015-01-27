@@ -7,7 +7,13 @@ import java.nio.file.Paths
 import org.jetbrains.kni.indexer.NativeIndexingOptions
 import org.jetbrains.kni.indexer.Language.*
 
-public fun generateStub(translationUnit: TranslationUnit, dylib: File, outputFile: File, options: NativeIndexingOptions): File {
+public enum class InteropRuntime {
+    ObjC
+    JNR
+}
+
+
+public fun generateStub(translationUnit: TranslationUnit, dylib: File, outputFile: File, options: NativeIndexingOptions, runtime: InteropRuntime): File {
     val result = StringBuilder()
     val out = Printer(result)
 
@@ -17,7 +23,7 @@ public fun generateStub(translationUnit: TranslationUnit, dylib: File, outputFil
     out.println()
 
     val namer = Namer(translationUnit)
-    val generator = Generator(out, namer, dylib)
+    val generator = Generator(out, namer, dylib, runtime)
 
     when (options.language) {
         OBJC -> {
@@ -57,7 +63,7 @@ public fun generateStub(translationUnit: TranslationUnit, dylib: File, outputFil
     return outputFile
 }
 
-class Generator(private val out: Printer, private val namer: Namer, private val dylib: File) {
+class Generator(private val out: Printer, private val namer: Namer, private val dylib: File, private val runtime: InteropRuntime) {
     fun genClass(klass: ObjCClass) {
         out.print("open class ${klass.getName()}(pointer: Long)")
 
@@ -156,8 +162,8 @@ class Generator(private val out: Printer, private val namer: Namer, private val 
     fun genCStruct(struct: CStruct) {
         out.println("\nclass ${struct.getName()}(runtime: jnr.ffi.Runtime) : Struct(runtime) {")
         for (field in struct.getFieldList()) {
-            val t = parseType(field.getType()).str
-            out.println("    public var ${field.getName()}: $t = $t()")
+            val t = parseType(field.getType(), runtime)
+            out.println("    public var ${field.getName()}: ${t.name(runtime)} = ${t.defaultVal(runtime)}")
         }
         out.println("}")
     }
@@ -183,8 +189,8 @@ class Generator(private val out: Printer, private val namer: Namer, private val 
                     }
                 }
         out.print(")")
-        if (returnType != UnitType && returnType.str != "Any") {
-            out.print(" as ${returnType.str}")
+        if (returnType != UnitType && returnType.name(runtime) != "Any") {
+            out.print(" as ${returnType.name(runtime)}")
         }
         out.println()
         out.pop()
@@ -196,12 +202,12 @@ class Generator(private val out: Printer, private val namer: Namer, private val 
         out.print("fun ${namer.methodName(function.getName())}")
 
         function.getParameterList()
-                .mapIndexed { i, p -> namer.parameterName(p.getName(), i) + ": " + parseType(p.getType()).str }
+                .mapIndexed { i, p -> namer.parameterName(p.getName(), i) + ": " + parseType(p.getType(), runtime).name(runtime) }
                 .joinTo(out, separator = ", ", prefix = "(", postfix = ")")
 
-        val returnType = parseType(function.getReturnType())
+        val returnType = parseType(function.getReturnType(), runtime)
         if (returnType != UnitType) {
-            out.print(": ${returnType.str}")
+            out.print(": ${returnType.name(runtime)}")
         }
         return returnType
     }
@@ -219,9 +225,9 @@ class Generator(private val out: Printer, private val namer: Namer, private val 
             DoubleType -> "double"
             ObjCClassType -> "interface kni.objc.ObjCClass"
             OpaquePointerType, is PointerType -> "class kni.objc.Pointer"
-            ObjCObjectType, ObjCSelectorType -> "class kni.objc.${type.str}"
+            ObjCObjectType, ObjCSelectorType -> "class kni.objc.${type.name(runtime)}"
             is FunctionType -> "class kotlin.Function${type.paramTypes.size()}"
-            else -> "class objc.${type.str}"
+            else -> "class objc.${type.name(runtime)}"
         }
     }
 }

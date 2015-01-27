@@ -130,6 +130,7 @@ void serializeType(const CXType& type, std::string& result) {
         if (name.length() > struct_pfx.length() && name.substr(0, struct_pfx.length()) == struct_pfx)
             name.erase(0, struct_pfx.length());
         result += name;
+        result += ";";
         return;
     }
     if (type.kind == CXType_Unexposed) {

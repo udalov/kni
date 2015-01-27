@@ -3,45 +3,63 @@ package org.jetbrains.kni.gen
 import java.util.ArrayList
 
 trait Type {
-    val str: String
-
-    override fun toString() = str
+    internal val str: String
+    public fun name(runtime: InteropRuntime): String = str
+    public fun defaultVal(runtime: InteropRuntime): String = "${name(runtime)}()"
 }
 
 class BuiltInType(override val str: String) : Type
+
+class PODType(override val str: String, public val defaultLiteral: String) : Type {
+    override fun defaultVal(runtime: InteropRuntime): String = defaultLiteral
+}
 
 class ClassType(val name: String) : Type {
     override val str: String get() = name
 }
 
+class RecordType(val name: String) : Type {
+    override val str: String get() = name
+}
+
 object OpaquePointerType : Type {
-    override val str: String get() = "Pointer<*>"
+    override val str: String = ""
+    public override fun name(runtime: InteropRuntime): String = when (runtime) {
+        InteropRuntime.ObjC -> "Pointer<*>"
+        InteropRuntime.JNR -> "Pointer"
+    }
 }
 
 class PointerType(val pointee: Type) : Type {
-    override val str: String get() = "Pointer<${pointee.str}>"
+    override val str: String = ""
+    public override fun name(runtime: InteropRuntime): String = when (runtime) {
+        InteropRuntime.ObjC -> "Pointer<${pointee.str}>"
+        InteropRuntime.JNR -> "Pointer"
+    }
 }
 
 class FunctionType(val paramTypes: List<Type>, val returnType: Type) : Type {
-    override val str: String get() =
-            paramTypes.map { it.str }.joinToString(
+    override val str: String = ""
+    public override fun name(runtime: InteropRuntime): String =
+            paramTypes.map { it.name(runtime) }.joinToString(
                     separator = ", ",
                     prefix = "(",
                     postfix = ")"
-            ) + " -> " + returnType.str
+            ) + " -> " + returnType.name(runtime)
+    override fun defaultVal(runtime: InteropRuntime): String = "null"
 }
 
 val ObjCObjectType = BuiltInType("ObjCObject")
 val ObjCClassType = BuiltInType("ObjCClass")
 val ObjCSelectorType = BuiltInType("ObjCSelector")
 val UnitType = BuiltInType("Unit")
-val CharType = BuiltInType("Char")
-val ShortType = BuiltInType("Short")
-val IntType = BuiltInType("Int")
-val LongType = BuiltInType("Long")
-val BooleanType = BuiltInType("Boolean")
-val FloatType = BuiltInType("Float")
-val DoubleType = BuiltInType("Double")
+val CharType = PODType("Char", "0")
+val ShortType = PODType("Short", "0")
+val IntType = PODType("Int", "0")
+val LongType = PODType("Long", "0")
+val BooleanType = PODType("Boolean", "false")
+val FloatType = PODType("Float", "0.0f")
+val DoubleType = PODType("Double", "0.0")
 
 val builtInTypesMap = mapOf(
         "V" to UnitType,
@@ -62,7 +80,7 @@ val builtInTypesMap = mapOf(
 )
 
 
-class TypeParser(private val type: String) {
+class TypeParser(private val type: String, private val runtime: InteropRuntime) {
     private var at = 0
 
     private fun at(s: String): Boolean = type.substring(at).startsWith(s)
@@ -99,6 +117,16 @@ class TypeParser(private val type: String) {
             return ClassType(className)
         }
 
+        if (advance("R")) {
+            val semicolon = type.indexOf(';', at)
+            if (semicolon < 0) error("L without a matching semicolon")
+            val recordName = type.substring(at, semicolon)
+            expect(recordName)
+            expect(";")
+            // \todo check if we really don't want structs in ObjC
+            return if (runtime == InteropRuntime.ObjC) ClassType("Any") else RecordType(recordName)
+        }
+
         if (advance("*(")) {
             val paramTypes = ArrayList<Type>()
             while (!advance(")")) {
@@ -121,7 +149,8 @@ class TypeParser(private val type: String) {
         if (advance("*")) {
             val pointee = parse()
             expect(";")
-            return PointerType(pointee)
+            // if pointer to struct - omit pointer
+            return if (runtime == InteropRuntime.JNR && pointee is RecordType) pointee else PointerType(pointee)
         }
 
         if (at("X(")) {
@@ -135,4 +164,4 @@ class TypeParser(private val type: String) {
     }
 }
 
-fun parseType(type: String): Type = TypeParser(type).parse()
+fun parseType(type: String, runtime: InteropRuntime): Type = TypeParser(type, runtime).parse()

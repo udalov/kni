@@ -9,8 +9,9 @@ import org.junit.Assert
 import kotlin.properties.Delegates
 import java.nio.file.Paths
 import kni.objc.loadLibrary
+import org.jetbrains.kni.gen.InteropRuntime
 
-abstract class AbstractIntegrationTest(val options: NativeIndexingOptions) {
+abstract class AbstractIntegrationTest(val options: NativeIndexingOptions, val runtime: InteropRuntime) {
 
     abstract protected val kotlinLibs: List<File>
 
@@ -25,12 +26,17 @@ abstract class AbstractIntegrationTest(val options: NativeIndexingOptions) {
         val kotlinSource = File(source).getAbsoluteFile()
 
         val tmpdir = Files.createTempDirectory("knitest").toFile()
+        println("Testing '$source' in '$tmpdir'")
         val dylib = File(tmpdir, "libKNITest.dylib")
 
         compileNative(implementation, dylib)
 
         val stubSource = File(tmpdir, kotlinSource.getPath().substringAfterLast(File.separator))
-        generateStub(buildNativeIndex(header, options), dylib, stubSource, options)
+        val translationUnit = buildNativeIndex(header, options)
+        val srcIndex = File(tmpdir, "idx")
+        srcIndex.writeText(translationUnit.toString())
+
+        generateStub(translationUnit, dylib, stubSource, options, runtime)
         val stubClasses = File(tmpdir, "stub")
         compileKotlin(stubSource, stubClasses, kotlinLibs)
 
@@ -58,6 +64,7 @@ abstract class AbstractIntegrationTest(val options: NativeIndexingOptions) {
     }
 
     protected fun runProcess(command: String): String {
+        println(command)
         val process = Runtime.getRuntime().exec(command)
         process.waitFor()
 

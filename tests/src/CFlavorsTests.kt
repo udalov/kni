@@ -5,8 +5,9 @@ import org.jetbrains.kni.indexer.NativeIndexingOptions
 import org.jetbrains.kni.indexer.Language
 import java.io.File
 import kotlin.properties.Delegates
+import org.jetbrains.kni.gen.InteropRuntime
 
-public abstract class ObjCTest : AbstractIntegrationTest(NativeIndexingOptions(Language.OBJC)) {
+public abstract class ObjCTest : AbstractIntegrationTest(NativeIndexingOptions(Language.OBJC), InteropRuntime.ObjC) {
 
     override protected fun src2header(source: String): String = source.replace(".kt", ".h")
     override protected fun src2implementation(source: String): String = source.replace(".kt", ".m")
@@ -23,7 +24,7 @@ public abstract class ObjCTest : AbstractIntegrationTest(NativeIndexingOptions(L
 }
 
 
-public abstract class CPlusPlusTest : AbstractIntegrationTest(NativeIndexingOptions(Language.CPP)) {
+public abstract class CPlusPlusTest : AbstractIntegrationTest(NativeIndexingOptions(Language.CPP), InteropRuntime.JNR) {
 
     override protected fun src2header(source: String): String = source.replace(".kt", ".h")
     override protected fun src2implementation(source: String): String = source.replace(".kt", ".cpp")
