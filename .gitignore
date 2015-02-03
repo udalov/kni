@@ -3,3 +3,7 @@
 /dependencies
 /dist
 /lib
+
+indexer/native/CMakeCache.txt
+indexer/native/Makefile
+indexer/native/cmake_install.cmake

@@ -9,7 +9,7 @@ find_package(Java REQUIRED COMPONENTS Runtime Development)
 find_package(JNI REQUIRED)
 find_package(Boost 1.56.0 COMPONENTS system filesystem unit_test_framework)
 find_package(Protobuf REQUIRED)
-find_package(LLVM 3.5.0 REQUIRED CONFIG)
+find_package(LLVM 3.5 REQUIRED CONFIG)
 
 message(STATUS "Found LLVM ${LLVM_PACKAGE_VERSION} ")
 find_library(libclang_lib clang "${LLVM_LIBRARY_DIRS}")
@@ -72,11 +72,11 @@ add_library(KNIIndexer SHARED ${INDEXER_SOURCE_FILES})
 target_link_libraries(KNIIndexer clang ${PROTOBUF_LIBRARY})
 
 add_executable(tests ${INDEXER_SOURCE_FILES} ${TESTS_SOURCE_FILES})
-target_link_libraries(tests clang ${PROTOBUF_LIBRARY})
+target_link_libraries(tests ${libclang_lib} ${PROTOBUF_LIBRARY})
 
 add_executable(boost_tests ${INDEXER_SOURCE_FILES} ${BOOST_TESTS_SOURCE_FILES})
 target_link_libraries(boost_tests ${Boost_FILESYSTEM_LIBRARY}
                                   ${Boost_SYSTEM_LIBRARY}
-                                  clang
+                                  ${libclang_lib}
                                   ${PROTOBUF_LIBRARY})
 
