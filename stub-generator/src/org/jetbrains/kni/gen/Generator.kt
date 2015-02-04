@@ -12,6 +12,11 @@ public enum class InteropRuntime {
     JNR
 }
 
+public enum class LexicalScope {
+    General
+    Record
+}
+
 
 public fun generateStub(translationUnit: TranslationUnit, dylib: File, outputFile: File, options: NativeIndexingOptions, runtime: InteropRuntime): File {
     val result = StringBuilder()
@@ -49,7 +54,7 @@ public fun generateStub(translationUnit: TranslationUnit, dylib: File, outputFil
         CPP -> {
             out.println("package native")
             out.println()
-            out.println("import jnr.ffi.*")
+//            out.println("import jnr.ffi.*")
             out.println("import jnr.ffi.types.*")
             out.println()
             translationUnit.getStructList().forEach { generator.genCStruct(it) }
@@ -63,7 +68,11 @@ public fun generateStub(translationUnit: TranslationUnit, dylib: File, outputFil
     return outputFile
 }
 
-class Generator(private val out: Printer, private val namer: Namer, private val dylib: File, private val runtime: InteropRuntime) {
+class Generator(private val out: Printer,
+                private val namer: Namer,
+                private val dylib: File,
+                private val runtime: InteropRuntime) {
+
     fun genClass(klass: ObjCClass) {
         out.print("open class ${klass.getName()}(pointer: Long)")
 
@@ -156,13 +165,13 @@ class Generator(private val out: Printer, private val namer: Namer, private val 
             out.println()
         }
         out.println("}")
-        out.println("\npublic fun get_${namer.cFunctionsInterfaceName()}(libName: String): ${namer.cFunctionsInterfaceName()} = LibraryLoader.create(javaClass<${namer.cFunctionsInterfaceName()}>()).load(libName)\n")
+        out.println("\npublic fun get_${namer.cFunctionsInterfaceName()}(libName: String): ${namer.cFunctionsInterfaceName()} = jnr.ffi.LibraryLoader.create(javaClass<${namer.cFunctionsInterfaceName()}>()).load(libName)\n")
     }
 
     fun genCStruct(struct: CStruct) {
-        out.println("\nclass ${struct.getName()}(runtime: jnr.ffi.Runtime) : Struct(runtime) {")
+        out.println("\nclass ${struct.getName()}(runtime: jnr.ffi.Runtime) : jnr.ffi.Struct(runtime) {")
         for (field in struct.getFieldList()) {
-            val t = parseType(field.getType(), runtime)
+            val t = parseType(field.getType(), runtime, LexicalScope.Record)
             out.println("    public var ${field.getName()}: ${t.name(runtime)} = ${t.defaultVal(runtime)}")
         }
         out.println("}")
@@ -202,10 +211,10 @@ class Generator(private val out: Printer, private val namer: Namer, private val 
         out.print("fun ${namer.methodName(function.getName())}")
 
         function.getParameterList()
-                .mapIndexed { i, p -> namer.parameterName(p.getName(), i) + ": " + parseType(p.getType(), runtime).name(runtime) }
+                .mapIndexed { i, p -> namer.parameterName(p.getName(), i) + ": " + parseType(p.getType(), runtime, LexicalScope.General).name(runtime) }
                 .joinTo(out, separator = ", ", prefix = "(", postfix = ")")
 
-        val returnType = parseType(function.getReturnType(), runtime)
+        val returnType = parseType(function.getReturnType(), runtime, LexicalScope.General)
         if (returnType != UnitType) {
             out.print(": ${returnType.name(runtime)}")
         }

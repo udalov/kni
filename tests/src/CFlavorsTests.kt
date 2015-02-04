@@ -44,6 +44,6 @@ public abstract class CPlusPlusTest : AbstractIntegrationTest(NativeIndexingOpti
     }
 
     override protected fun compileNative(source: File, target: File) {
-        runProcess("/usr/bin/clang --std=c++11 -stdlib=libstdc++ -dynamiclib $source -o $target")
+        runProcess("/usr/bin/c++ --std=c++11 -fPIC -stdlib=libstdc++ -dynamiclib $source -o $target")
     }
 }

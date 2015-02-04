@@ -8,10 +8,14 @@ trait Type {
     public fun defaultVal(runtime: InteropRuntime): String = "${name(runtime)}()"
 }
 
-class BuiltInType(override val str: String) : Type
+open class BuiltInType(override val str: String) : Type
 
 class PODType(override val str: String, public val defaultLiteral: String) : Type {
     override fun defaultVal(runtime: InteropRuntime): String = defaultLiteral
+}
+
+class JNRStructFieldType(internal val baseName: String) : BuiltInType("jnr.ffi.Struct.$baseName") {
+    override fun defaultVal(runtime: InteropRuntime): String = "super.$baseName()"
 }
 
 class ClassType(val name: String) : Type {
@@ -61,23 +65,56 @@ val BooleanType = PODType("Boolean", "false")
 val FloatType = PODType("Float", "0.0f")
 val DoubleType = PODType("Double", "0.0")
 
-val builtInTypesMap = mapOf(
-        "V" to UnitType,
-       "UC" to CharType,
-       "US" to ShortType,
-       "UI" to IntType,
-       "UJ" to LongType,
-        "C" to CharType,
-        "Z" to BooleanType,
-        "S" to ShortType,
-        "I" to IntType,
-        "J" to LongType,
-        "F" to FloatType,
-        "D" to DoubleType,
-        "OI" to ObjCObjectType,
-        "OC" to ObjCClassType,
-        "OS" to ObjCSelectorType
-)
+val JNRStructBool = JNRStructFieldType("Boolean")
+val JNRStructUInt8 = JNRStructFieldType("Unsigned8")
+val JNRStructSInt8 = JNRStructFieldType("Signed8")
+val JNRStructUInt16 = JNRStructFieldType("Unsigned16")
+val JNRStructSInt16 = JNRStructFieldType("Signed16")
+val JNRStructUInt32 = JNRStructFieldType("Unsigned32")
+val JNRStructSInt32 = JNRStructFieldType("Signed32")
+val JNRStructUInt64 = JNRStructFieldType("Unsigned64")
+val JNRStructSInt64 = JNRStructFieldType("Signed64")
+val JNRStructULong = JNRStructFieldType("UnsignedLong")
+val JNRStructSLong = JNRStructFieldType("SignedLong")
+val JNRStructFloat = JNRStructFieldType("Float")
+val JNRStructDouble = JNRStructFieldType("Double")
+
+object primitiveTypesMapper {
+    val generalTypes = mapOf(
+            "V" to UnitType,
+            "UC" to CharType,
+            "US" to ShortType,
+            "UI" to IntType,
+            "UJ" to LongType,
+            "C" to CharType,
+            "Z" to BooleanType,
+            "S" to ShortType,
+            "I" to IntType,
+            "J" to LongType,
+            "F" to FloatType,
+            "D" to DoubleType,
+            "OI" to ObjCObjectType,
+            "OC" to ObjCClassType,
+            "OS" to ObjCSelectorType
+    )
+    val jnrStructTypes = mapOf(
+            "Z"  to JNRStructBool,
+            "UC" to JNRStructUInt8,
+            "C"  to JNRStructSInt8,
+            "US" to JNRStructUInt16,
+            "S"  to JNRStructSInt16,
+            "UI" to JNRStructUInt32,
+            "I"  to JNRStructSInt32,
+            "I8" to JNRStructUInt64,
+            "U8" to JNRStructSInt64,
+            "UJ" to JNRStructULong,
+            "J"  to JNRStructSLong,
+            "F"  to JNRStructFloat,
+            "D"  to JNRStructDouble
+    )
+    public fun get_types(runtime: InteropRuntime, scope: LexicalScope): Map<String, Type> =
+            if (runtime == InteropRuntime.JNR && scope == LexicalScope.Record) jnrStructTypes else generalTypes
+}
 
 
 class TypeParser(private val type: String, private val runtime: InteropRuntime) {
@@ -99,10 +136,10 @@ class TypeParser(private val type: String, private val runtime: InteropRuntime) 
 
     private fun error(s: String) = throw IllegalStateException(s + ": " + type)
 
-    fun parse(): Type {
+    fun parse(scope: LexicalScope): Type {
         if (at == type.length()) error("No type to parse")
 
-        for ((string, type) in builtInTypesMap.entrySet()) {
+        for ((string, type) in primitiveTypesMapper.get_types(runtime, scope).entrySet()) {
             if (advance(string)) return type
         }
 
@@ -134,9 +171,9 @@ class TypeParser(private val type: String, private val runtime: InteropRuntime) 
                     // TODO: support vararg
                     continue
                 }
-                paramTypes.add(parse())
+                paramTypes.add(parse(scope))
             }
-            val returnType = parse()
+            val returnType = parse(scope)
             expect(";")
             return FunctionType(paramTypes, returnType)
         }
@@ -147,7 +184,7 @@ class TypeParser(private val type: String, private val runtime: InteropRuntime) 
         }
 
         if (advance("*")) {
-            val pointee = parse()
+            val pointee = parse(scope)
             expect(";")
             // if pointer to struct - omit pointer
             return if (runtime == InteropRuntime.JNR && pointee is RecordType) pointee else PointerType(pointee)
@@ -164,4 +201,4 @@ class TypeParser(private val type: String, private val runtime: InteropRuntime) 
     }
 }
 
-fun parseType(type: String, runtime: InteropRuntime): Type = TypeParser(type, runtime).parse()
+fun parseType(type: String, runtime: InteropRuntime, baseScope: LexicalScope): Type = TypeParser(type, runtime).parse(baseScope)
