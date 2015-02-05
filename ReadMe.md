@@ -5,9 +5,9 @@ This is **work in progress** and currently only basic Objective-C interoperabili
 
 ## Prerequisites
 
-You should have Xcode Command Line Tools installed.
+You should have Xcode Command Line Tools, [CMake](http://cmake.org) and [Boost](http://boost.org) installed.
 
-Also, unfortunately, at the moment you need to install system-wide LLVM (3.5.0) via [Homebrew](http://brew.sh)
+Also, unfortunately, at the moment you need to install system-wide LLVM (3.5.1) via [Homebrew](http://brew.sh)
 (this is likely to improve in the future):
 
 ```sh
@@ -16,8 +16,8 @@ $ brew install llvm --with-clang
 
 Be aware that LLVM build can take a long time (about half an hour on an average Mac).
 
-See [these instructions](http://stackoverflow.com/questions/3987683/homebrew-install-specific-version-of-formula)
-on installing a specific version of a formula if, for example, you have a newer version already installed.
+If you have a newer version of LLVM and it doesn't work,
+see [these instructions](http://stackoverflow.com/questions/3987683/homebrew-install-specific-version-of-formula) on installing another version.
 
 ## Building
 
