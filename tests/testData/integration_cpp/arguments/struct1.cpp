@@ -1,5 +1,5 @@
 
-#include "struct1.h"
+#include "struct1.hpp"
 
 int getabcdsize()
 {

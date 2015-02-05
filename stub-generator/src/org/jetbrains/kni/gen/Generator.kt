@@ -4,7 +4,7 @@ import java.io.File
 import org.jetbrains.kni.indexer.NativeIndex.*
 import java.util.HashMap
 import java.nio.file.Paths
-import org.jetbrains.kni.indexer.NativeIndexingOptions
+import org.jetbrains.kni.indexer.IndexerOptions
 import org.jetbrains.kni.indexer.Language.*
 
 public enum class InteropRuntime {
@@ -17,8 +17,22 @@ public enum class LexicalScope {
     Record
 }
 
+public enum class CharStringType {
+    Ascii
+    Utf8
+}
 
-public fun generateStub(translationUnit: TranslationUnit, dylib: File, outputFile: File, options: NativeIndexingOptions, runtime: InteropRuntime): File {
+public class GeneratorOptions(
+        public val runtime: InteropRuntime,
+        public val charStringType: CharStringType = CharStringType.Ascii
+) {}
+
+public fun generateStub(translationUnit: TranslationUnit,
+                        dylib: File,
+                        outputFile: File,
+                        indexingOptions: IndexerOptions,
+                        generatorOptions: GeneratorOptions
+): File {
     val result = StringBuilder()
     val out = Printer(result)
 
@@ -28,9 +42,9 @@ public fun generateStub(translationUnit: TranslationUnit, dylib: File, outputFil
     out.println()
 
     val namer = Namer(translationUnit)
-    val generator = Generator(out, namer, dylib, runtime)
+    val generator = Generator(out, namer, dylib, generatorOptions)
 
-    when (options.language) {
+    when (indexingOptions.language) {
         OBJC -> {
             out.println("package objc")
             out.println()
@@ -54,13 +68,12 @@ public fun generateStub(translationUnit: TranslationUnit, dylib: File, outputFil
         CPP -> {
             out.println("package native")
             out.println()
-//            out.println("import jnr.ffi.*")
             out.println("import jnr.ffi.types.*")
             out.println()
             translationUnit.getStructList().forEach { generator.genCStruct(it) }
             generator.genCFunctions(translationUnit.getFunctionList().distinct())
         }
-        else -> error("Unknown language: ${options.language}")
+        else -> error("Unknown language: ${indexingOptions.language}")
     }
 
     outputFile.getParentFile().mkdirs()
@@ -71,7 +84,7 @@ public fun generateStub(translationUnit: TranslationUnit, dylib: File, outputFil
 class Generator(private val out: Printer,
                 private val namer: Namer,
                 private val dylib: File,
-                private val runtime: InteropRuntime) {
+                private val options: GeneratorOptions) {
 
     fun genClass(klass: ObjCClass) {
         out.print("open class ${klass.getName()}(pointer: Long)")
@@ -171,8 +184,8 @@ class Generator(private val out: Printer,
     fun genCStruct(struct: CStruct) {
         out.println("\nclass ${struct.getName()}(runtime: jnr.ffi.Runtime) : jnr.ffi.Struct(runtime) {")
         for (field in struct.getFieldList()) {
-            val t = parseType(field.getType(), runtime, LexicalScope.Record)
-            out.println("    public var ${field.getName()}: ${t.name(runtime)} = ${t.defaultVal(runtime)}")
+            val t = parseType(field.getType(), options, LexicalScope.Record)
+            out.println("    public var ${field.getName()}: ${t.name} = ${t.defaultVal}")
         }
         out.println("}")
     }
@@ -198,8 +211,8 @@ class Generator(private val out: Printer,
                     }
                 }
         out.print(")")
-        if (returnType != UnitType && returnType.name(runtime) != "Any") {
-            out.print(" as ${returnType.name(runtime)}")
+        if (returnType != UnitType && returnType.name != "Any") {
+            out.print(" as ${returnType.name}")
         }
         out.println()
         out.pop()
@@ -211,12 +224,12 @@ class Generator(private val out: Printer,
         out.print("fun ${namer.methodName(function.getName())}")
 
         function.getParameterList()
-                .mapIndexed { i, p -> namer.parameterName(p.getName(), i) + ": " + parseType(p.getType(), runtime, LexicalScope.General).name(runtime) }
+                .mapIndexed { i, p -> namer.parameterName(p.getName(), i) + ": " + parseType(p.getType(), options, LexicalScope.General).name }
                 .joinTo(out, separator = ", ", prefix = "(", postfix = ")")
 
-        val returnType = parseType(function.getReturnType(), runtime, LexicalScope.General)
+        val returnType = parseType(function.getReturnType(), options, LexicalScope.General)
         if (returnType != UnitType) {
-            out.print(": ${returnType.name(runtime)}")
+            out.print(": ${returnType.name}")
         }
         return returnType
     }
@@ -233,10 +246,10 @@ class Generator(private val out: Printer,
             LongType -> "long"
             DoubleType -> "double"
             ObjCClassType -> "interface kni.objc.ObjCClass"
-            OpaquePointerType, is PointerType -> "class kni.objc.Pointer"
-            ObjCObjectType, ObjCSelectorType -> "class kni.objc.${type.name(runtime)}"
+            ObjCOpaquePointerType, is ObjCPointerType -> "class kni.objc.Pointer"
+            ObjCObjectType, ObjCSelectorType -> "class kni.objc.${type.name}"
             is FunctionType -> "class kotlin.Function${type.paramTypes.size()}"
-            else -> "class objc.${type.name(runtime)}"
+            else -> "class objc.${type.name}"
         }
     }
 }

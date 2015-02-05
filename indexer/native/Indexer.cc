@@ -72,6 +72,9 @@ void serializeType(const CXType& type, std::string& result) {
 
     static auto primitiveTypes = initializePrimitiveTypesMap();
 
+    if (clang_isConstQualifiedType(type))
+        result += "c";
+
     auto it = primitiveTypes.find(type.kind);
     if (it != primitiveTypes.end()) {
         result += it->second;
@@ -447,7 +450,9 @@ std::string *doIndex(const std::vector<std::string>& args) {
     ProcessingMode::type mode = ProcessingMode::unknown;
     std::transform(args.begin(), args.end(), std::back_inserter(cxArgs), [](const std::string & s) { return s.c_str(); });
     // \todo consider more advanced parsing
+    std::cerr << "Indexing with args:";
     for (auto arg: args) {
+        std::cerr << " " << arg;
         if (arg[0] != '-') {
             assertTrue(name.empty());
             name = arg;
@@ -457,6 +462,7 @@ std::string *doIndex(const std::vector<std::string>& args) {
             mode = ProcessingMode::objc;
         }
     }
+    std::cerr << std::endl;
     if (mode == ProcessingMode::unknown)
         mode = ProcessingMode::cpp;
 

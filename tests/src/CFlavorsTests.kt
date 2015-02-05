@@ -1,13 +1,14 @@
 
 package org.jetbrains.kni.tests
 
-import org.jetbrains.kni.indexer.NativeIndexingOptions
+import org.jetbrains.kni.indexer.IndexerOptions
 import org.jetbrains.kni.indexer.Language
 import java.io.File
 import kotlin.properties.Delegates
 import org.jetbrains.kni.gen.InteropRuntime
+import org.jetbrains.kni.gen.GeneratorOptions
 
-public abstract class ObjCTest : AbstractIntegrationTest(NativeIndexingOptions(Language.OBJC), InteropRuntime.ObjC) {
+public abstract class ObjCTest : AbstractIntegrationTest(IndexerOptions(Language.OBJC), GeneratorOptions(InteropRuntime.ObjC)) {
 
     override protected fun src2header(source: String): String = source.replace(".kt", ".h")
     override protected fun src2implementation(source: String): String = source.replace(".kt", ".m")
@@ -24,9 +25,9 @@ public abstract class ObjCTest : AbstractIntegrationTest(NativeIndexingOptions(L
 }
 
 
-public abstract class CPlusPlusTest : AbstractIntegrationTest(NativeIndexingOptions(Language.CPP), InteropRuntime.JNR) {
+public abstract class CPlusPlusTest : AbstractIntegrationTest(IndexerOptions(Language.CPP), GeneratorOptions(InteropRuntime.JNR)) {
 
-    override protected fun src2header(source: String): String = source.replace(".kt", ".h")
+    override protected fun src2header(source: String): String = source.replace(".kt", ".hpp")
     override protected fun src2implementation(source: String): String = source.replace(".kt", ".cpp")
 
     override protected val kotlinLibs: List<File> by Delegates.lazy {

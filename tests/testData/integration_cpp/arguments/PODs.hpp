@@ -8,6 +8,8 @@ extern "C" {
 
 int ifathenbelsec(bool a, int b, int c);
 
+int stringlen(char* s);
+
 #ifdef __cplusplus
 }
 #endif

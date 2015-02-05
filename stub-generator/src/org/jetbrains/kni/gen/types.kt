@@ -3,54 +3,68 @@ package org.jetbrains.kni.gen
 import java.util.ArrayList
 
 trait Type {
-    internal val str: String
-    public fun name(runtime: InteropRuntime): String = str
-    public fun defaultVal(runtime: InteropRuntime): String = "${name(runtime)}()"
+    public val name: String
+    public val defaultVal: String get() = "${name}()"
 }
 
-open class BuiltInType(override val str: String) : Type
+open class BuiltInType(override val name: String) : Type
 
-class PODType(override val str: String, public val defaultLiteral: String) : Type {
-    override fun defaultVal(runtime: InteropRuntime): String = defaultLiteral
+class PODType(override val name: String, public val defaultLiteral: String) : Type {
+    override val defaultVal: String = defaultLiteral
 }
 
-class JNRStructFieldType(internal val baseName: String) : BuiltInType("jnr.ffi.Struct.$baseName") {
-    override fun defaultVal(runtime: InteropRuntime): String = "super.$baseName()"
+open class JNRType(baseName: String, annotation: String? = null)
+    : BuiltInType(if (annotation != null) "${annotation} ${baseName}" else baseName) {}
+
+open class JNRStructFieldType(internal val baseName: String) : BuiltInType("jnr.ffi.Struct.$baseName") {
+    override val defaultVal: String = "super.$baseName()"
 }
 
-class ClassType(val name: String) : Type {
-    override val str: String get() = name
+open class JNRStructPointerType(val pointee: Type) : JNRStructFieldType("Pointer") {}
+
+class JNRStructString(baseName: String, internal val size: Int = 0) : JNRStructFieldType(baseName) {
+    override val defaultVal: String = "super.$baseName(${if (size > 0) size.toString() else ""})"
 }
 
-class RecordType(val name: String) : Type {
-    override val str: String get() = name
+fun JNRStructString(isRef: Boolean, options: GeneratorOptions, size: Int = 0) =
+        when (options.charStringType) {
+            CharStringType.Ascii -> JNRStructString(if (isRef) "AsciiStringRef" else "AsciiString", size)
+            CharStringType.Utf8 -> JNRStructString(if (isRef) "UTF8StringRef" else "UTF8String", size)
+        }
+
+fun JNRStructString(options: GeneratorOptions, size: Int = 0) = JNRStructString(false, options, size)
+fun JNRStructStringRef(options: GeneratorOptions, size: Int = 0) = JNRStructString(true, options, size)
+
+class ObjCClassRefType(override val name: String) : Type {
 }
 
-object OpaquePointerType : Type {
-    override val str: String = ""
-    public override fun name(runtime: InteropRuntime): String = when (runtime) {
-        InteropRuntime.ObjC -> "Pointer<*>"
-        InteropRuntime.JNR -> "Pointer"
-    }
+class RecordType(override val name: String) : Type {
 }
 
-class PointerType(val pointee: Type) : Type {
-    override val str: String = ""
-    public override fun name(runtime: InteropRuntime): String = when (runtime) {
-        InteropRuntime.ObjC -> "Pointer<${pointee.str}>"
-        InteropRuntime.JNR -> "Pointer"
-    }
+object ObjCOpaquePointerType : Type {
+    override val name: String = "Pointer<*>"
+}
+
+object JNROpaquePointerType : Type {
+    override val name: String = "Pointer"
+}
+
+class ObjCPointerType(val pointee: Type) : Type {
+    override val name: String = "Pointer<${pointee.name}>"
+}
+
+class JNRPointerType(val pointee: Type) : Type {
+    override val name: String = "Pointer"
 }
 
 class FunctionType(val paramTypes: List<Type>, val returnType: Type) : Type {
-    override val str: String = ""
-    public override fun name(runtime: InteropRuntime): String =
-            paramTypes.map { it.name(runtime) }.joinToString(
+    override val name: String =
+            paramTypes.map { it.name }.joinToString(
                     separator = ", ",
                     prefix = "(",
                     postfix = ")"
-            ) + " -> " + returnType.name(runtime)
-    override fun defaultVal(runtime: InteropRuntime): String = "null"
+            ) + " -> " + returnType.name
+    override val defaultVal: String = "null"
 }
 
 val ObjCObjectType = BuiltInType("ObjCObject")
@@ -112,12 +126,12 @@ object primitiveTypesMapper {
             "F"  to JNRStructFloat,
             "D"  to JNRStructDouble
     )
-    public fun get_types(runtime: InteropRuntime, scope: LexicalScope): Map<String, Type> =
-            if (runtime == InteropRuntime.JNR && scope == LexicalScope.Record) jnrStructTypes else generalTypes
+    public fun get_types(options: GeneratorOptions, scope: LexicalScope): Map<String, Type> =
+            if (options.runtime == InteropRuntime.JNR && scope == LexicalScope.Record) jnrStructTypes else generalTypes
 }
 
 
-class TypeParser(private val type: String, private val runtime: InteropRuntime) {
+class TypeParser(private val type: String, private val options: GeneratorOptions) {
     private var at = 0
 
     private fun at(s: String): Boolean = type.substring(at).startsWith(s)
@@ -139,7 +153,9 @@ class TypeParser(private val type: String, private val runtime: InteropRuntime) 
     fun parse(scope: LexicalScope): Type {
         if (at == type.length()) error("No type to parse")
 
-        for ((string, type) in primitiveTypesMapper.get_types(runtime, scope).entrySet()) {
+        val isConst = advance("c")
+
+        for ((string, type) in primitiveTypesMapper.get_types(options, scope).entrySet()) {
             if (advance(string)) return type
         }
 
@@ -150,8 +166,8 @@ class TypeParser(private val type: String, private val runtime: InteropRuntime) 
             expect(className)
             expect(";")
             // TODO: for some reason Clang doesn't index forward declaration of the class named 'Protocol' defined in objc/Protocol.h
-            if ("Protocol" == className) return ClassType("Any?")
-            return ClassType(className)
+            if ("Protocol" == className) return ObjCClassRefType("Any?")
+            return ObjCClassRefType(className)
         }
 
         if (advance("R")) {
@@ -161,7 +177,7 @@ class TypeParser(private val type: String, private val runtime: InteropRuntime) 
             expect(recordName)
             expect(";")
             // \todo check if we really don't want structs in ObjC
-            return if (runtime == InteropRuntime.ObjC) ClassType("Any") else RecordType(recordName)
+            return if (options.runtime == InteropRuntime.ObjC) ObjCClassRefType("Any") else RecordType(recordName)
         }
 
         if (advance("*(")) {
@@ -180,14 +196,21 @@ class TypeParser(private val type: String, private val runtime: InteropRuntime) 
 
         if (advance("*V;")) {
             // Special case for "void *"
-            return OpaquePointerType
+            return ObjCOpaquePointerType
         }
 
         if (advance("*")) {
             val pointee = parse(scope)
             expect(";")
             // if pointer to struct - omit pointer
-            return if (runtime == InteropRuntime.JNR && pointee is RecordType) pointee else PointerType(pointee)
+            return if (options.runtime == InteropRuntime.JNR)
+                   when {
+                       pointee is RecordType -> pointee
+                       pointee == JNRStructSInt8 -> JNRStructStringRef(options)
+                       pointee == CharType ->  JNRType("String") // \todo consider: JNRType(if (isConst) "String" else "StringBuilder")
+                       else -> if (scope == LexicalScope.Record) JNRStructPointerType(pointee) else JNRPointerType(pointee)
+                   }
+                else ObjCPointerType(pointee)
         }
 
         if (at("X(")) {
@@ -197,8 +220,8 @@ class TypeParser(private val type: String, private val runtime: InteropRuntime) 
             throw UnsupportedOperationException("Unsupported type (at=" + at + "): " + type)
         }
 
-        return ClassType("Any")
+        return ObjCClassRefType("Any")
     }
 }
 
-fun parseType(type: String, runtime: InteropRuntime, baseScope: LexicalScope): Type = TypeParser(type, runtime).parse(baseScope)
+fun parseType(type: String, options: GeneratorOptions, baseScope: LexicalScope): Type = TypeParser(type, options).parse(baseScope)

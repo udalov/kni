@@ -3,15 +3,16 @@ package org.jetbrains.kni.tests
 import java.io.File
 import java.nio.file.Files
 import org.jetbrains.kni.indexer.buildNativeIndex
-import org.jetbrains.kni.indexer.NativeIndexingOptions
+import org.jetbrains.kni.indexer.IndexerOptions
 import org.jetbrains.kni.gen.generateStub
 import org.junit.Assert
 import kotlin.properties.Delegates
 import java.nio.file.Paths
 import kni.objc.loadLibrary
 import org.jetbrains.kni.gen.InteropRuntime
+import org.jetbrains.kni.gen.GeneratorOptions
 
-abstract class AbstractIntegrationTest(val options: NativeIndexingOptions, val runtime: InteropRuntime) {
+abstract class AbstractIntegrationTest(val indexerOptions: IndexerOptions, val generatorOptions: GeneratorOptions) {
 
     abstract protected val kotlinLibs: List<File>
 
@@ -32,11 +33,11 @@ abstract class AbstractIntegrationTest(val options: NativeIndexingOptions, val r
         compileNative(implementation, dylib)
 
         val stubSource = File(tmpdir, kotlinSource.getPath().substringAfterLast(File.separator))
-        val translationUnit = buildNativeIndex(header, options)
+        val translationUnit = buildNativeIndex(header, indexerOptions)
         val srcIndex = File(tmpdir, "idx")
         srcIndex.writeText(translationUnit.toString())
 
-        generateStub(translationUnit, dylib, stubSource, options, runtime)
+        generateStub(translationUnit, dylib, stubSource, indexerOptions, generatorOptions)
         val stubClasses = File(tmpdir, "stub")
         compileKotlin(stubSource, stubClasses, kotlinLibs)
 
@@ -72,8 +73,10 @@ abstract class AbstractIntegrationTest(val options: NativeIndexingOptions, val r
         val error = process.getErrorStream().reader().use { it.readText() }
         System.err.print(error)
 
+        fun format_res(str: String, result: String) = if (!result.isEmpty()) ", $str: \n$result\n" else ""
+
         val exitCode = process.exitValue()
-        assert(exitCode == 0) { "Process exited with code $exitCode, result: $result" }
+        assert(exitCode == 0) { "Process exited with code $exitCode${format_res("result", result)}${format_res("error", error)}" }
 
         return result
     }

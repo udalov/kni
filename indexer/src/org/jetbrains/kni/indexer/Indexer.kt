@@ -8,7 +8,7 @@ public enum class Language {
     OBJC
 }
 
-public data class NativeIndexingOptions(
+public data class IndexerOptions(
         public val language: Language
 ) {
     fun toParams(): String =
@@ -18,7 +18,7 @@ public data class NativeIndexingOptions(
             ).filterNotNull().join(" ")
 }
 
-public fun buildNativeIndex(headerFile: File, options: NativeIndexingOptions): TranslationUnit {
+public fun buildNativeIndex(headerFile: File, options: IndexerOptions): TranslationUnit {
     val bytes = IndexerNative.buildNativeIndex("${headerFile.getPath()} ${options.toParams()}")
     return TranslationUnit.parseFrom(bytes)
 }

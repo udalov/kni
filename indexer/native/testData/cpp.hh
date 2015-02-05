@@ -7,6 +7,7 @@ typedef struct UndefinedStructImpl UndefinedStruct;
 
 typedef struct St {
     int j;
+    bool b;
     char** p_str;
 } Struct;
 
