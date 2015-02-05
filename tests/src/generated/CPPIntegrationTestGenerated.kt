@@ -1,4 +1,5 @@
-// This file is auto-generated. DO NOT EDIT!
+// This file is auto-generated. You can mute individual tests by commenting them:
+// '// test fun ...'. All other changes will be lost!
 
 package org.jetbrains.kni.tests
 
