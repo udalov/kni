@@ -3,6 +3,7 @@
 #include <vector>
 #include <sstream>
 #include <iostream>
+#include <boost/xpressive/xpressive.hpp>
 
 #include "clang-c/Index.h"
 
@@ -11,6 +12,7 @@
 #include "Indexer.h"
 #include "OutputCollector.h"
 #include "NativeIndex.pb.h"
+#include "../../lib/clang-c/Index.h"
 
 
 std::vector<std::string> extractProtocolNames(const CXIdxObjCProtocolRefListInfo *protocols) {
@@ -61,6 +63,16 @@ const std::map<CXTypeKind, std::string>& initializePrimitiveTypesMap() {
     return m;
 }
 
+
+std::string getStrippedTypeSpelling(CXType const & type) {
+    using namespace boost::xpressive;
+    auto ctype = clang_getCanonicalType(type);
+    std::string name = AutoCXString( clang_getTypeSpelling(ctype)).str();
+    static sregex rex = *(*_s >> (as_xpr("const") | "struct") >> +_s) >> (s1= +_);
+    return regex_replace(name, rex, [](smatch const &what){return what[1].str();});
+}
+
+
 // TODO: write a long explanation
 void serializeType(const CXType& type, std::string& result) {
     // TODO: BlockPointer
@@ -69,6 +81,14 @@ void serializeType(const CXType& type, std::string& result) {
     // TODO: Record (for 'va_list' only?)
 
     // TODO: list of protocols for ObjCInterface type
+
+    if (type.kind == CXType_Unexposed) {
+        auto ctype = clang_getCanonicalType(type);
+        if (ctype.kind != CXType_Unexposed) {
+            serializeType(ctype, result);
+            return;
+        }
+    }
 
     static auto primitiveTypes = initializePrimitiveTypesMap();
 
@@ -127,21 +147,9 @@ void serializeType(const CXType& type, std::string& result) {
     }
     if (type.kind == CXType_Record) {
         result += "R";
-        std::string name = AutoCXString(clang_getTypeSpelling(type)).str();
-        const std::string struct_pfx("struct ");
-        // starts with
-        if (name.length() > struct_pfx.length() && name.substr(0, struct_pfx.length()) == struct_pfx)
-            name.erase(0, struct_pfx.length());
-        result += name;
+        result += getStrippedTypeSpelling(type);
         result += ";";
         return;
-    }
-    if (type.kind == CXType_Unexposed) {
-        auto ctype = clang_getCanonicalType(type);
-        if (ctype.kind != CXType_Unexposed) {
-            serializeType(ctype, result);
-            return;
-        }
     }
     // Unsupported kind
     result += "X(";
@@ -152,6 +160,7 @@ void serializeType(const CXType& type, std::string& result) {
     result += tsp.str();
     result += ")";
 }
+
 
 std::string serializeType(const CXType& type) {
     std::string result;
