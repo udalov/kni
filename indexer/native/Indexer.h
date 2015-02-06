@@ -13,7 +13,7 @@ extern "C" {
  * Signature: (Ljava/lang/String;)[B
  */
 JNIEXPORT jbyteArray JNICALL Java_org_jetbrains_kni_indexer_IndexerNative_buildNativeIndex
-  (JNIEnv *, jclass, jstring);
+  (JNIEnv *, jclass, jobjectArray);
 
 #ifdef __cplusplus
 }

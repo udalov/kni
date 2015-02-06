@@ -3,7 +3,7 @@
 #include <vector>
 #include <sstream>
 #include <iostream>
-#include <boost/xpressive/xpressive.hpp>
+#include <boost/xpressive/xpressive_static.hpp>
 
 #include "clang-c/Index.h"
 
@@ -12,7 +12,6 @@
 #include "Indexer.h"
 #include "OutputCollector.h"
 #include "NativeIndex.pb.h"
-#include "../../lib/clang-c/Index.h"
 
 
 std::vector<std::string> extractProtocolNames(const CXIdxObjCProtocolRefListInfo *protocols) {
@@ -499,11 +498,17 @@ void split(const std::string& s, char delimiter, std::vector<std::string>& resul
 }
 
 JNIEXPORT jbyteArray JNICALL Java_org_jetbrains_kni_indexer_IndexerNative_buildNativeIndex
-        (JNIEnv *env, jclass, jstring argsString) {
-    auto argsChars = env->GetStringUTFChars(argsString, nullptr);
+        (JNIEnv *env, jclass, jobjectArray stringArray) {
+
+    int stringCount = env->GetArrayLength(stringArray);
+
     std::vector<std::string> args;
-    split(argsChars, ' ', args);
-    env->ReleaseStringUTFChars(argsString, argsChars);
+    for (int i=0; i<stringCount; i++) {
+        jstring string = (jstring) env->GetObjectArrayElement(stringArray, i);
+        const char *rawString = env->GetStringUTFChars(string, 0);
+        args.push_back(rawString);
+        env->ReleaseStringUTFChars(string, rawString);
+    }
 
     auto string = doIndex(args);
 

@@ -112,6 +112,7 @@ object primitiveTypesMapper {
             "OS" to ObjCSelectorType
     )
     val jnrStructTypes = mapOf(
+            "V"  to UnitType,
             "Z"  to JNRStructBool,
             "UC" to JNRStructUInt8,
             "C"  to JNRStructSInt8,
@@ -187,9 +188,9 @@ class TypeParser(private val type: String, private val options: GeneratorOptions
                     // TODO: support vararg
                     continue
                 }
-                paramTypes.add(parse(scope))
+                paramTypes.add(parse(LexicalScope.General))
             }
-            val returnType = parse(scope)
+            val returnType = parse(LexicalScope.General)
             expect(";")
             return FunctionType(paramTypes, returnType)
         }

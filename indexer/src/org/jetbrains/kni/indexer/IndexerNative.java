@@ -5,5 +5,5 @@ public class IndexerNative {
         System.loadLibrary("KNIIndexer");
     }
 
-    public static native byte[] buildNativeIndex(String args);
+    public static native byte[] buildNativeIndex(String[] args);
 }
