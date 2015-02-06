@@ -211,7 +211,10 @@ class TypeParser(private val type: String, private val options: GeneratorOptions
                        pointee == CharType ->  JNRType("String") // \todo consider: JNRType(if (isConst) "String" else "StringBuilder")
                        else -> if (scope == LexicalScope.Record) JNRStructPointerType(pointee) else JNRPointerType(pointee)
                    }
-                else ObjCPointerType(pointee)
+                else when {
+                       pointee == ObjCSelectorType -> ObjCSelectorType
+                       else -> ObjCPointerType(pointee)
+                   }
         }
 
         if (at("X(")) {
