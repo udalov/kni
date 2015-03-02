@@ -14,7 +14,7 @@ public class CSimpleFunc(
 
     public fun signature(): String = "$retType $name(${params.map { "${it.type} ${it.name}" }.joinToString(", ")})"
     public fun declaration(): String = signature() + ";"
-    public fun definition(): String = "${signature()}\n$body\n}"
+    public fun definition(): String = "${signature()}{\n$body;\n}"
 }
 
 
@@ -57,7 +57,7 @@ ${funcs.map { it.definition() }.joinToString("\n\n")}
 public class CGenGrammar(
         val getNextChar:  (Char, Char) -> Char,
         val getRandomInt: (Int, Int) -> Int,
-        val maxIdentifierSize: Int = 1000,
+        val maxIdentifierSize: Int = 100,
         val maxParams: Int = 20) {
 
     class object {
@@ -73,8 +73,8 @@ public class CGenGrammar(
                 "xor", "xor_eq")
         val podTypes: Set<String> = hashSetOf(
                 "bool", "char", "char16_t", "char32_t", "double", "float", "int", "long", "long long",
-                "short", "signed char", "signed char16_t", "signed char32_t", "signed int", "signed long", "signed long long", "signed wchar_t",
-                "unsigned", "unsigned char", "unsigned char16_t", "unsigned char32_t", "unsigned int", "unsigned long", "unsigned long long", "unsigned wchar_t",
+                "short", "signed char", "signed int", "signed long", "signed long long",
+                "unsigned", "unsigned char", "unsigned int", "unsigned long", "unsigned long long",
                 "wchar_t")
 
         fun isValidIdChar(c: Char, isFirst: Boolean = false): Boolean =
