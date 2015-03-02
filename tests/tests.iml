@@ -8,9 +8,9 @@
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" name="kotlin-runtime" level="project" />
-    <orderEntry type="library" name="junit" level="project" />
     <orderEntry type="module" module-name="indexer" />
     <orderEntry type="module" module-name="stub-generator" />
     <orderEntry type="module" module-name="runtime-objc" />
+    <orderEntry type="library" name="junit:junit:4.12" level="project" />
   </component>
 </module>
