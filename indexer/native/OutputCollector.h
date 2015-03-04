@@ -48,8 +48,10 @@ class OutputCollector {
 
         TranslationUnit& result() { return m_result; }
 
-        // Transfers ownership of the returned string to the caller
-        std::string *serialize();
+        std::string serialize();
+        int serializedSize() { return m_result.ByteSize(); }
+        bool serializeToArray(void * data, int size) { return m_result.SerializeToArray(data, size); }
+        std::string debugString() { return m_result.DebugString(); }
 
         ProcessingMode::type mode() const { return m_mode; }
 

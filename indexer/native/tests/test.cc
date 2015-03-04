@@ -51,7 +51,7 @@ void renderResult(const std::string& filename, const TestResult& result) {
     printf("  %s  %s\n", s.c_str(), filename.c_str());
 }
 
-extern std::string *doIndex(const std::vector<std::string>& headers);
+extern std::string doIndexToString(const std::vector<std::string>& headers);
 
 void doTest(const std::string& filename) {
     std::cout << " --- " << filename << " ---\n";
@@ -62,10 +62,9 @@ void doTest(const std::string& filename) {
 
     try {
         TranslationUnit tu;
-        std::string *message = doIndex(headers);
-        tu.ParseFromString(*message);
+        std::string message = doIndex(headers);
+        tu.ParseFromString(message);
         auto actual = tu.DebugString();
-        delete message;
 
         std::ifstream expectedStream(expectedFile.c_str());
         if (!expectedStream) {

@@ -6,6 +6,6 @@
 #include <string>
 #include <vector>
 
-std::string *doIndex(const std::vector<std::string>& args);
+std::string doIndexToString(const std::vector<std::string>& args);
 
 #endif

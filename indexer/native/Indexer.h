@@ -10,7 +10,7 @@ extern "C" {
 /*
  * Class:     org_jetbrains_kni_indexer_IndexerNative
  * Method:    buildNativeIndex
- * Signature: (Ljava/lang/String;)[B
+ * Signature: ([Ljava/lang/String;)[B
  */
 JNIEXPORT jbyteArray JNICALL Java_org_jetbrains_kni_indexer_IndexerNative_buildNativeIndex
   (JNIEnv *, jclass, jobjectArray);

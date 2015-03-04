@@ -72,8 +72,8 @@ void indexAndCompare(const fs::path& file, Cont args) {
         auto vargs = std::vector<std::string> { file.string() };
         boost::copy(args, std::back_inserter(vargs));
         BOOST_MESSAGE( vector2str(vargs));
-        std::shared_ptr<std::string> message( doIndex( vargs));
-        tu.ParseFromString(*message);
+        auto message = doIndexToString( vargs);
+        tu.ParseFromString(message);
     }
 
     fs::path expectedFile = file;
@@ -101,7 +101,8 @@ BOOST_AUTO_TEST_CASE( indexer_basic)
     AutoCXString ver(clang_getClangVersion());
     BOOST_MESSAGE("CLang " << ver.str());
     indexAndCompare("testData/c.h", params { });
-    indexAndCompare("testData/cpp.hh", params { "-c++" });
+    indexAndCompare("testData/cpp.hh", params { "-c++" }); // "---v", "---d"
+    indexAndCompare("testData/rnd01.hh", params { "-c++" });
 //    indexAndCompare("/Users/lige/Work/kotlin/kni/tests/testData/integration/arguments/bool.m", params { "-ObjC" });
     //indexAndCompare(boost::filesystem::current_path() / "../../tests/testData/integration_cpp/arguments/PODs.cpp");
 }

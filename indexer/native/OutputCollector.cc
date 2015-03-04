@@ -1,12 +1,12 @@
+
 #include <fstream>
-#include <string>
 
 #include "asserts.h"
 #include "OutputCollector.h"
 
-std::string *OutputCollector::serialize() {
-    std::string *result = new std::string;
-    m_result.SerializeToString(result);
+std::string OutputCollector::serialize() {
+    std::string result;
+    m_result.SerializeToString(&result);
     return result;
 }
 

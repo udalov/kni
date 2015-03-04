@@ -1,0 +1,71 @@
+name: "testData/cpp.hh"
+function {
+  name: "foo"
+  return_type: "V"
+}
+function {
+  name: "bar"
+  return_type: "V"
+  parameter {
+    name: "arg"
+    type: "I"
+  }
+}
+function {
+  name: "baz"
+  return_type: "I"
+  parameter {
+    name: "by_value"
+    type: "RSt;"
+  }
+  parameter {
+    name: "by_reference"
+    type: "*RSt;;"
+  }
+}
+function {
+  name: "quux"
+  return_type: "*V;"
+  parameter {
+    name: ""
+    type: "RSt;"
+  }
+  parameter {
+    name: ""
+    type: "*RSt;;"
+  }
+  parameter {
+    name: ""
+    type: "RUndefinedStructImpl;"
+  }
+  parameter {
+    name: ""
+    type: "*RUndefinedStructImpl;;"
+  }
+}
+struct {
+  name: "St"
+  field {
+    name: "j"
+    type: "I"
+  }
+  field {
+    name: "b"
+    type: "Z"
+  }
+  field {
+    name: "p_str"
+    type: "**C;;"
+  }
+}
+struct {
+  name: "S1"
+  field {
+    name: "x"
+    type: "I"
+  }
+  field {
+    name: "y"
+    type: "F"
+  }
+}

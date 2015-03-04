@@ -414,7 +414,7 @@ void diagnostic(CXClientData clientData, CXDiagnosticSet diagSet, void *reserved
     }
 }
 
-void runPostIndexTasks(OutputCollector *data) {
+void runPostIndexTasks(const std::shared_ptr<OutputCollector> & data) {
     // For every forward-declared @class or @protocol which was never defined,
     // we create an empty class or protocol here. This is needed because a
     // pointer to such a class can still appear in the type position of method
@@ -443,11 +443,11 @@ void runPostIndexTasks(OutputCollector *data) {
 }
 
 
-std::string *doIndex(const std::vector<std::string>& args) {
+std::shared_ptr<OutputCollector> doIndex(const std::vector<std::string>& args) {
     GOOGLE_PROTOBUF_VERIFY_VERSION;
 
-    CXIndex index = clang_createIndex(false, false);
-    CXIndexAction action = clang_IndexAction_create(index);
+    std::shared_ptr<void> index(clang_createIndex(false, false), clang_disposeIndex);
+    std::shared_ptr<void> action(clang_IndexAction_create(index.get()), clang_IndexAction_dispose);
 
     IndexerCallbacks callbacks = {};
     callbacks.indexDeclaration = indexDeclaration;
@@ -455,38 +455,59 @@ std::string *doIndex(const std::vector<std::string>& args) {
 
     std::vector<const char *> cxArgs;
     std::string name;
+    bool verbose = false;
+    bool debugDump = false;
     ProcessingMode::type mode = ProcessingMode::unknown;
-    std::transform(args.begin(), args.end(), std::back_inserter(cxArgs), [](const std::string & s) { return s.c_str(); });
     // \todo consider more advanced parsing
-    std::cerr << "Indexing with args:";
     for (auto arg: args) {
-        std::cerr << " " << arg;
-        if (arg[0] != '-') {
-            assertTrue(name.empty());
-            name = arg;
-        }
-        else if (arg == "-ObjC") {
-            assertTrue(mode == ProcessingMode::unknown);
-            mode = ProcessingMode::objc;
+        // checking for args to indexer, that should be filtered out
+        if (arg == "---d") debugDump = true;
+        else if (arg == "---v") verbose = true;
+        else {
+            // other argumens are passed to libclang
+            if (arg[0] != '-') {
+                assertTrue(name.empty());
+                name = arg;
+            }
+            else {
+                cxArgs.push_back(arg.c_str());
+                if (arg == "-ObjC") {
+                    assertTrue(mode == ProcessingMode::unknown);
+                    mode = ProcessingMode::objc;
+                }
+            }
         }
     }
-    std::cerr << std::endl;
+    if (verbose) {
+        std::cerr << "Indexing '" << name << "' with args:";
+        for (auto const& a: cxArgs) std::cerr << " " << a;
+        std::cerr << std::endl;
+    }
     if (mode == ProcessingMode::unknown)
         mode = ProcessingMode::cpp;
 
-    OutputCollector data(mode);
+    auto data = std::shared_ptr<OutputCollector>(new OutputCollector(mode));
 
-    data.result().set_name(name);
+    data->result().set_name(name);
 
-    clang_indexSourceFile(action, &data, &callbacks, sizeof(callbacks), 0, 0,
+    clang_indexSourceFile(action.get(), data.get(), &callbacks, sizeof(callbacks), 0, name.c_str(),
             &cxArgs[0], static_cast<int>(cxArgs.size()), 0, 0, 0, 0);
 
-    runPostIndexTasks(&data);
+    runPostIndexTasks(data);
 
-    clang_IndexAction_dispose(action);
-    clang_disposeIndex(index);
+    if (debugDump) {
+        if (verbose)
+            std::cerr << "Dumping parsing results to '" << name << ".dump'" << std::endl;
+        std::ofstream os(name + ".dump");
+        os << data->debugString() << std::endl;
+        os.close();
+    }
 
-    return data.serialize();
+    return data;
+}
+
+std::string doIndexToString(const std::vector<std::string>& args) {
+    return doIndex(args)->serialize();
 }
 
 void split(const std::string& s, char delimiter, std::vector<std::string>& result) {
@@ -510,15 +531,18 @@ JNIEXPORT jbyteArray JNICALL Java_org_jetbrains_kni_indexer_IndexerNative_buildN
         env->ReleaseStringUTFChars(string, rawString);
     }
 
-    auto string = doIndex(args);
+    auto data = doIndex(args);
 
-    auto len = string->length();
+    auto len = data->serializedSize();
     auto result = env->NewByteArray(len);
-    env->SetByteArrayRegion(result, 0, len,
-            static_cast<const jbyte *>(static_cast<const void *>(string->c_str()))
-    );
+    jboolean isCopy;
+    jbyte* rawjBytes = env->GetByteArrayElements(result, &isCopy);
+    data->serializeToArray(rawjBytes, len);
+    env->ReleaseByteArrayElements(result, rawjBytes, 0);
 
-    delete string;
-    
+//    env->SetByteArrayRegion(result, 0, len,
+//            static_cast<const jbyte *>(static_cast<const void *>(data->serialize().c_str()))
+//    );
+
     return result;
 }
