@@ -1,0 +1,730 @@
+name: "testData/objc.h"
+class {
+  name: "NSObject"
+  protocol: "NSObject"
+  category: "NSObject+NSCoderMethods"
+  category: "NSObject+NSDeprecatedMethods"
+  category: "NSObject+NSDiscardableContentProxy"
+  method {
+    function {
+      name: "load"
+      return_type: "V"
+    }
+    class_method: true
+  }
+  method {
+    function {
+      name: "initialize"
+      return_type: "V"
+    }
+    class_method: true
+  }
+  method {
+    function {
+      name: "init"
+      return_type: "OI"
+    }
+    class_method: false
+  }
+  method {
+    function {
+      name: "new"
+      return_type: "OI"
+    }
+    class_method: true
+  }
+  method {
+    function {
+      name: "allocWithZone:"
+      return_type: "OI"
+      parameter {
+        name: "zone"
+        type: "*R_NSZone;;"
+      }
+    }
+    class_method: true
+  }
+  method {
+    function {
+      name: "alloc"
+      return_type: "OI"
+    }
+    class_method: true
+  }
+  method {
+    function {
+      name: "dealloc"
+      return_type: "V"
+    }
+    class_method: false
+  }
+  method {
+    function {
+      name: "finalize"
+      return_type: "V"
+    }
+    class_method: false
+  }
+  method {
+    function {
+      name: "copy"
+      return_type: "OI"
+    }
+    class_method: false
+  }
+  method {
+    function {
+      name: "mutableCopy"
+      return_type: "OI"
+    }
+    class_method: false
+  }
+  method {
+    function {
+      name: "copyWithZone:"
+      return_type: "OI"
+      parameter {
+        name: "zone"
+        type: "*R_NSZone;;"
+      }
+    }
+    class_method: true
+  }
+  method {
+    function {
+      name: "mutableCopyWithZone:"
+      return_type: "OI"
+      parameter {
+        name: "zone"
+        type: "*R_NSZone;;"
+      }
+    }
+    class_method: true
+  }
+  method {
+    function {
+      name: "instancesRespondToSelector:"
+      return_type: "Z"
+      parameter {
+        name: "aSelector"
+        type: "OS"
+      }
+    }
+    class_method: true
+  }
+  method {
+    function {
+      name: "conformsToProtocol:"
+      return_type: "Z"
+      parameter {
+        name: "protocol"
+        type: "LProtocol;"
+      }
+    }
+    class_method: true
+  }
+  method {
+    function {
+      name: "methodForSelector:"
+      return_type: "*(X(Unexposed.id)*OS;.)X(Unexposed.id);"
+      parameter {
+        name: "aSelector"
+        type: "OS"
+      }
+    }
+    class_method: false
+  }
+  method {
+    function {
+      name: "instanceMethodForSelector:"
+      return_type: "*(X(Unexposed.id)*OS;.)X(Unexposed.id);"
+      parameter {
+        name: "aSelector"
+        type: "OS"
+      }
+    }
+    class_method: true
+  }
+  method {
+    function {
+      name: "doesNotRecognizeSelector:"
+      return_type: "V"
+      parameter {
+        name: "aSelector"
+        type: "OS"
+      }
+    }
+    class_method: false
+  }
+  method {
+    function {
+      name: "forwardingTargetForSelector:"
+      return_type: "OI"
+      parameter {
+        name: "aSelector"
+        type: "OS"
+      }
+    }
+    class_method: false
+  }
+  method {
+    function {
+      name: "forwardInvocation:"
+      return_type: "V"
+      parameter {
+        name: "anInvocation"
+        type: "LNSInvocation;"
+      }
+    }
+    class_method: false
+  }
+  method {
+    function {
+      name: "methodSignatureForSelector:"
+      return_type: "LNSMethodSignature;"
+      parameter {
+        name: "aSelector"
+        type: "OS"
+      }
+    }
+    class_method: false
+  }
+  method {
+    function {
+      name: "instanceMethodSignatureForSelector:"
+      return_type: "LNSMethodSignature;"
+      parameter {
+        name: "aSelector"
+        type: "OS"
+      }
+    }
+    class_method: true
+  }
+  method {
+    function {
+      name: "allowsWeakReference"
+      return_type: "Z"
+    }
+    class_method: false
+  }
+  method {
+    function {
+      name: "retainWeakReference"
+      return_type: "Z"
+    }
+    class_method: false
+  }
+  method {
+    function {
+      name: "isSubclassOfClass:"
+      return_type: "Z"
+      parameter {
+        name: "aClass"
+        type: "OC"
+      }
+    }
+    class_method: true
+  }
+  method {
+    function {
+      name: "resolveClassMethod:"
+      return_type: "Z"
+      parameter {
+        name: "sel"
+        type: "OS"
+      }
+    }
+    class_method: true
+  }
+  method {
+    function {
+      name: "resolveInstanceMethod:"
+      return_type: "Z"
+      parameter {
+        name: "sel"
+        type: "OS"
+      }
+    }
+    class_method: true
+  }
+  method {
+    function {
+      name: "hash"
+      return_type: "UJ"
+    }
+    class_method: true
+  }
+  method {
+    function {
+      name: "superclass"
+      return_type: "OC"
+    }
+    class_method: true
+  }
+  method {
+    function {
+      name: "class"
+      return_type: "OC"
+    }
+    class_method: true
+  }
+  method {
+    function {
+      name: "description"
+      return_type: "LNSString;"
+    }
+    class_method: true
+  }
+  method {
+    function {
+      name: "debugDescription"
+      return_type: "LNSString;"
+    }
+    class_method: true
+  }
+}
+class {
+  name: "SomeClass"
+  base_class: "NSObject"
+  method {
+    function {
+      name: "getSelf"
+      return_type: "OC"
+    }
+    class_method: true
+  }
+}
+class {
+  name: "NSArray"
+}
+class {
+  name: "NSAttributedString"
+}
+class {
+  name: "NSCharacterSet"
+}
+class {
+  name: "NSCoder"
+}
+class {
+  name: "NSData"
+}
+class {
+  name: "NSDate"
+}
+class {
+  name: "NSDictionary"
+}
+class {
+  name: "NSEnumerator"
+}
+class {
+  name: "NSError"
+}
+class {
+  name: "NSInvocation"
+}
+class {
+  name: "NSLocale"
+}
+class {
+  name: "NSMethodSignature"
+}
+class {
+  name: "NSNull"
+}
+class {
+  name: "NSNumber"
+}
+class {
+  name: "NSSet"
+}
+class {
+  name: "NSString"
+}
+class {
+  name: "NSTimeZone"
+}
+class {
+  name: "NSURL"
+}
+protocol {
+  name: "NSObject"
+  method {
+    function {
+      name: "isEqual:"
+      return_type: "Z"
+      parameter {
+        name: "object"
+        type: "OI"
+      }
+    }
+    class_method: false
+  }
+  method {
+    function {
+      name: "hash"
+      return_type: "UJ"
+    }
+    class_method: false
+  }
+  method {
+    function {
+      name: "superclass"
+      return_type: "OC"
+    }
+    class_method: false
+  }
+  method {
+    function {
+      name: "class"
+      return_type: "OC"
+    }
+    class_method: false
+  }
+  method {
+    function {
+      name: "self"
+      return_type: "OI"
+    }
+    class_method: false
+  }
+  method {
+    function {
+      name: "performSelector:"
+      return_type: "OI"
+      parameter {
+        name: "aSelector"
+        type: "OS"
+      }
+    }
+    class_method: false
+  }
+  method {
+    function {
+      name: "performSelector:withObject:"
+      return_type: "OI"
+      parameter {
+        name: "aSelector"
+        type: "OS"
+      }
+      parameter {
+        name: "object"
+        type: "OI"
+      }
+    }
+    class_method: false
+  }
+  method {
+    function {
+      name: "performSelector:withObject:withObject:"
+      return_type: "OI"
+      parameter {
+        name: "aSelector"
+        type: "OS"
+      }
+      parameter {
+        name: "object1"
+        type: "OI"
+      }
+      parameter {
+        name: "object2"
+        type: "OI"
+      }
+    }
+    class_method: false
+  }
+  method {
+    function {
+      name: "isProxy"
+      return_type: "Z"
+    }
+    class_method: false
+  }
+  method {
+    function {
+      name: "isKindOfClass:"
+      return_type: "Z"
+      parameter {
+        name: "aClass"
+        type: "OC"
+      }
+    }
+    class_method: false
+  }
+  method {
+    function {
+      name: "isMemberOfClass:"
+      return_type: "Z"
+      parameter {
+        name: "aClass"
+        type: "OC"
+      }
+    }
+    class_method: false
+  }
+  method {
+    function {
+      name: "conformsToProtocol:"
+      return_type: "Z"
+      parameter {
+        name: "aProtocol"
+        type: "LProtocol;"
+      }
+    }
+    class_method: false
+  }
+  method {
+    function {
+      name: "respondsToSelector:"
+      return_type: "Z"
+      parameter {
+        name: "aSelector"
+        type: "OS"
+      }
+    }
+    class_method: false
+  }
+  method {
+    function {
+      name: "retain"
+      return_type: "OI"
+    }
+    class_method: false
+  }
+  method {
+    function {
+      name: "release"
+      return_type: "V"
+    }
+    class_method: false
+  }
+  method {
+    function {
+      name: "autorelease"
+      return_type: "OI"
+    }
+    class_method: false
+  }
+  method {
+    function {
+      name: "retainCount"
+      return_type: "UJ"
+    }
+    class_method: false
+  }
+  method {
+    function {
+      name: "zone"
+      return_type: "*R_NSZone;;"
+    }
+    class_method: false
+  }
+  method {
+    function {
+      name: "description"
+      return_type: "LNSString;"
+    }
+    class_method: false
+  }
+  method {
+    function {
+      name: "debugDescription"
+      return_type: "LNSString;"
+    }
+    class_method: false
+  }
+  property {
+    name: "hash"
+    type: "UJ"
+  }
+  property {
+    name: "superclass"
+    type: "OC"
+  }
+  property {
+    name: "description"
+    type: "LNSString;"
+  }
+  property {
+    name: "debugDescription"
+    type: "LNSString;"
+  }
+}
+protocol {
+  name: "NSCopying"
+  method {
+    function {
+      name: "copyWithZone:"
+      return_type: "OI"
+      parameter {
+        name: "zone"
+        type: "*R_NSZone;;"
+      }
+    }
+    class_method: false
+  }
+}
+protocol {
+  name: "NSMutableCopying"
+  method {
+    function {
+      name: "mutableCopyWithZone:"
+      return_type: "OI"
+      parameter {
+        name: "zone"
+        type: "*R_NSZone;;"
+      }
+    }
+    class_method: false
+  }
+}
+protocol {
+  name: "NSCoding"
+  method {
+    function {
+      name: "encodeWithCoder:"
+      return_type: "V"
+      parameter {
+        name: "aCoder"
+        type: "LNSCoder;"
+      }
+    }
+    class_method: false
+  }
+  method {
+    function {
+      name: "initWithCoder:"
+      return_type: "OI"
+      parameter {
+        name: "aDecoder"
+        type: "LNSCoder;"
+      }
+    }
+    class_method: false
+  }
+}
+protocol {
+  name: "NSSecureCoding"
+  base_protocol: "NSCoding"
+  method {
+    function {
+      name: "supportsSecureCoding"
+      return_type: "Z"
+    }
+    class_method: true
+  }
+}
+protocol {
+  name: "NSDiscardableContent"
+  method {
+    function {
+      name: "beginContentAccess"
+      return_type: "Z"
+    }
+    class_method: false
+  }
+  method {
+    function {
+      name: "endContentAccess"
+      return_type: "V"
+    }
+    class_method: false
+  }
+  method {
+    function {
+      name: "discardContentIfPossible"
+      return_type: "V"
+    }
+    class_method: false
+  }
+  method {
+    function {
+      name: "isContentDiscarded"
+      return_type: "Z"
+    }
+    class_method: false
+  }
+}
+category {
+  name: "NSObject+NSCoderMethods"
+  method {
+    function {
+      name: "version"
+      return_type: "J"
+    }
+    class_method: true
+  }
+  method {
+    function {
+      name: "setVersion:"
+      return_type: "V"
+      parameter {
+        name: "aVersion"
+        type: "J"
+      }
+    }
+    class_method: true
+  }
+  method {
+    function {
+      name: "classForCoder"
+      return_type: "OC"
+    }
+    class_method: false
+  }
+  method {
+    function {
+      name: "replacementObjectForCoder:"
+      return_type: "OI"
+      parameter {
+        name: "aCoder"
+        type: "LNSCoder;"
+      }
+    }
+    class_method: false
+  }
+  method {
+    function {
+      name: "awakeAfterUsingCoder:"
+      return_type: "OI"
+      parameter {
+        name: "aDecoder"
+        type: "LNSCoder;"
+      }
+    }
+    class_method: false
+  }
+  property {
+    name: "classForCoder"
+    type: "OC"
+  }
+}
+category {
+  name: "NSObject+NSDeprecatedMethods"
+  method {
+    function {
+      name: "poseAsClass:"
+      return_type: "V"
+      parameter {
+        name: "aClass"
+        type: "OC"
+      }
+    }
+    class_method: true
+  }
+}
+category {
+  name: "NSObject+NSDiscardableContentProxy"
+  method {
+    function {
+      name: "autoContentAccessingProxy"
+      return_type: "OI"
+    }
+    class_method: false
+  }
+  property {
+    name: "autoContentAccessingProxy"
+    type: "OI"
+  }
+}

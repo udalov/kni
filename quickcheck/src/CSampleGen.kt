@@ -1,9 +1,6 @@
 
 package org.jetbrains.kni.quickchecks
 
-import java.util.stream.IntStream
-
-
 public data class CTypedId(public val name: String, public val type: String) {}
 
 public class CSimpleFunc(

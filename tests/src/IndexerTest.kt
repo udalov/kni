@@ -13,7 +13,7 @@ class IndexerTest {
         file.deleteOnExit()
         file.writeText(content)
 
-        val tu = buildNativeIndex(file, IndexerOptions(Language.OBJC))
+        val tu = buildNativeIndex(file, IndexerOptions(Language.OBJC, verbose = true))
         val actual = tu.toString().replace(file.getPath(), "%SOURCE_PATH%")
         Assert.assertEquals(expected, actual)
     }

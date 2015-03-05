@@ -5,14 +5,15 @@
     <content url="file://$MODULE_DIR$">
       <sourceFolder url="file://$MODULE_DIR$/src" isTestSource="false" />
     </content>
-    <orderEntry type="jdk" jdkName="1.8" jdkType="JavaSDK" />
+    <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="library" name="kotlin-runtime" level="project" />
-    <orderEntry type="library" name="com.pholser:junit-quickcheck-core:0.5-alpha-1" level="project" />
-    <orderEntry type="library" name="com.pholser:junit-quickcheck-generators:0.5-alpha-1" level="project" />
     <orderEntry type="module" module-name="indexer" />
     <orderEntry type="library" name="junit:junit:4.12" level="project" />
     <orderEntry type="library" name="com.google.protobuf:protobuf-java:2.6.1" level="project" />
     <orderEntry type="library" name="org.hamcrest:hamcrest-all:1.3" level="project" />
+    <orderEntry type="module" module-name="stub-generator" />
+    <orderEntry type="library" name="com.pholser:junit-quickcheck-core:0.4" level="project" />
+    <orderEntry type="library" name="com.pholser:junit-quickcheck-generators:0.4" level="project" />
+    <orderEntry type="library" name="KotlinJavaRuntime" level="project" />
   </component>
 </module>

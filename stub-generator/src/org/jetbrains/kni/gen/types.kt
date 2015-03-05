@@ -101,6 +101,7 @@ object primitiveTypesMapper {
             "UI" to IntType,
             "UJ" to LongType,
             "C" to CharType,
+            "W" to CharType,
             "Z" to BooleanType,
             "S" to ShortType,
             "I" to IntType,

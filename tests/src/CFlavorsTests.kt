@@ -25,7 +25,7 @@ public abstract class ObjCTest : AbstractIntegrationTest(IndexerOptions(Language
 }
 
 
-public abstract class CPlusPlusTest : AbstractIntegrationTest(IndexerOptions(Language.CPP), GeneratorOptions(InteropRuntime.JNR)) {
+public abstract class CPlusPlusTest : AbstractIntegrationTest(IndexerOptions(Language.CPP, debugDump = true), GeneratorOptions(InteropRuntime.JNR)) {
 
     override protected fun src2header(source: String): String = source.replace(".kt", ".hpp")
     override protected fun src2implementation(source: String): String = source.replace(".kt", ".cpp")

@@ -10,6 +10,12 @@ import com.pholser.junit.quickcheck.From
 import com.pholser.junit.quickcheck.generator.Generator
 import com.pholser.junit.quickcheck.random.SourceOfRandomness
 import com.pholser.junit.quickcheck.generator.GenerationStatus
+import org.jetbrains.kni.gen.GeneratorOptions
+import org.jetbrains.kni.gen.InteropRuntime
+import org.jetbrains.kni.gen.generateStub
+import org.jetbrains.kni.indexer.IndexerOptions
+import org.jetbrains.kni.indexer.Language
+import org.jetbrains.kni.indexer.buildNativeIndex
 import java.nio.file.Files
 import java.io.File
 import java.nio.file.Paths
@@ -41,10 +47,12 @@ RunWith(javaClass<Theories>())
 public class SimpleCHeaderCheck : LastLogKeeper {
     var lastLogBuf: StringBuilder = StringBuilder()
     override val lastLog: String get() = lastLogBuf.toString()
+    val generatorOptions = GeneratorOptions(InteropRuntime.JNR)
 
-//    Rule public val onFailed : ErrorReporter = ErrorReporter(this)
+    // Rule public val onFailed : ErrorReporter = ErrorReporter(this)
 
-    Theory public fun NameAndGuard(ForAll From(javaClass<SimpleCHeaderGenerator>()) cunit: CSimpleTransUnit) {
+    Theory public fun SimpleSumFuncs(ForAll From(javaClass<SimpleCHeaderGenerator>()) cunit: CSimpleTransUnit) {
+        val indexerOptions = IndexerOptions(Language.CPP, verbose = false, debugDump = false)
         assumeNotNull(cunit, cunit.name)
         lastLogBuf = StringBuilder()
         val tmpdir = Files.createTempDirectory("kniqc").toFile()
@@ -54,14 +62,25 @@ public class SimpleCHeaderCheck : LastLogKeeper {
         val impFile = FileWriter(implFilePath.toString())
         impFile.write(cunit.source())
         impFile.flush()
-        val headerFile = FileWriter(Paths.get(tmpdir.getAbsolutePath(), "${cunit.headerName}").toString())
-        headerFile.write(cunit.header())
-        headerFile.flush()
+        val header = Paths.get(tmpdir.getAbsolutePath(), "${cunit.headerName}").toString()
+        val headerWriter = FileWriter(header)
+        headerWriter.write(cunit.header())
+        headerWriter.flush()
+
         val (success, msg) = compileNativeC(implFilePath.toFile(), dylib)
         lastLogBuf.appendln(msg)
         if (!success) println(lastLog)
         assertTrue(success)
+
+        val translationUnit = buildNativeIndex(File(header), indexerOptions)
+        val srcIndex = File(tmpdir, "idx")
+        lastLogBuf.appendln("Dimping index to ${srcIndex.getAbsolutePath()}")
+        srcIndex.writeText(translationUnit.toString())
+
+        val kotlinStub = File(tmpdir, "${cunit.name}.kt")
+        generateStub(translationUnit, dylib, kotlinStub, indexerOptions, generatorOptions)
 //        assertEquals(cunit.name, "a")
+
     }
 }
 

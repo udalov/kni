@@ -103,6 +103,7 @@ BOOST_AUTO_TEST_CASE( indexer_basic)
     indexAndCompare("testData/c.h", params { });
     indexAndCompare("testData/cpp.hh", params { "-c++" }); // "---v", "---d"
     indexAndCompare("testData/rnd01.hh", params { "-c++" });
+    indexAndCompare("testData/objc.h", params { "-ObjC" });
 //    indexAndCompare("/Users/lige/Work/kotlin/kni/tests/testData/integration/arguments/bool.m", params { "-ObjC" });
     //indexAndCompare(boost::filesystem::current_path() / "../../tests/testData/integration_cpp/arguments/PODs.cpp");
 }

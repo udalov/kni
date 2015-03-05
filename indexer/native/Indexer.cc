@@ -446,20 +446,13 @@ void runPostIndexTasks(const std::shared_ptr<OutputCollector> & data) {
 std::shared_ptr<OutputCollector> doIndex(const std::vector<std::string>& args) {
     GOOGLE_PROTOBUF_VERIFY_VERSION;
 
-    std::shared_ptr<void> index(clang_createIndex(false, false), clang_disposeIndex);
-    std::shared_ptr<void> action(clang_IndexAction_create(index.get()), clang_IndexAction_dispose);
-
-    IndexerCallbacks callbacks = {};
-    callbacks.indexDeclaration = indexDeclaration;
-    callbacks.diagnostic = diagnostic;
-
     std::vector<const char *> cxArgs;
     std::string name;
     bool verbose = false;
     bool debugDump = false;
     ProcessingMode::type mode = ProcessingMode::unknown;
     // \todo consider more advanced parsing
-    for (auto arg: args) {
+    for (auto const& arg: args) {
         // checking for args to indexer, that should be filtered out
         if (arg == "---d") debugDump = true;
         else if (arg == "---v") verbose = true;
@@ -478,17 +471,24 @@ std::shared_ptr<OutputCollector> doIndex(const std::vector<std::string>& args) {
             }
         }
     }
-    if (verbose) {
-        std::cerr << "Indexing '" << name << "' with args:";
-        for (auto const& a: cxArgs) std::cerr << " " << a;
-        std::cerr << std::endl;
-    }
     if (mode == ProcessingMode::unknown)
         mode = ProcessingMode::cpp;
 
+    if (verbose) {
+        std::cerr << "Indexing in " << ProcessingMode::str(mode) << " mode '" << name << "' with args:";
+        for (auto const& arg: cxArgs) std::cerr << " " << arg;
+        std::cerr << std::endl;
+    }
     auto data = std::shared_ptr<OutputCollector>(new OutputCollector(mode));
 
     data->result().set_name(name);
+
+    std::shared_ptr<void> index(clang_createIndex(false, false), clang_disposeIndex);
+    std::shared_ptr<void> action(clang_IndexAction_create(index.get()), clang_IndexAction_dispose);
+
+    IndexerCallbacks callbacks = {};
+    callbacks.indexDeclaration = indexDeclaration;
+    callbacks.diagnostic = diagnostic;
 
     clang_indexSourceFile(action.get(), data.get(), &callbacks, sizeof(callbacks), 0, name.c_str(),
             &cxArgs[0], static_cast<int>(cxArgs.size()), 0, 0, 0, 0);

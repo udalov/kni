@@ -7,7 +7,7 @@
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="library" name="kotlin-runtime" level="project" />
-    <orderEntry type="library" name="com.google.protobuf:protobuf-java:2.6.1" level="project" />
+    <orderEntry type="library" exported="" name="com.google.protobuf:protobuf-java:2.6.1" level="project" />
+    <orderEntry type="library" name="KotlinJavaRuntime" level="project" />
   </component>
 </module>

@@ -62,7 +62,7 @@ void doTest(const std::string& filename) {
 
     try {
         TranslationUnit tu;
-        std::string message = doIndex(headers);
+        std::string message = doIndexToString(headers);
         tu.ParseFromString(message);
         auto actual = tu.DebugString();
 

@@ -8,6 +8,14 @@
 
 struct ProcessingMode {
     typedef enum { unknown, c, cpp, objc } type;
+    static std::string str(type val) {
+        switch (val) {
+            case c: return "c";
+            case cpp: return "cpp";
+            case objc: return "objc";
+            default: return "unknown";
+        }
+    }
 };
 
 class OutputCollector {

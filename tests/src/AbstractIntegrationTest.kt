@@ -61,7 +61,8 @@ abstract class AbstractIntegrationTest(val indexerOptions: IndexerOptions, val g
                 .toCollection( baseLibs)
                 .map { it.getAbsolutePath() }
                 .joinToString(File.pathSeparator)
-        return runProcess("java ${if (libpath == null) "" else "-Djava.library.path=${File.pathSeparator}${libpath.getAbsolutePath()}"} -cp $cp test.TestPackage")
+        val javaBin = Paths.get(System.getProperty("java.home"), "bin", "java")
+        return runProcess("$javaBin ${if (libpath == null) "" else "-Djava.library.path=${File.pathSeparator}${libpath.getAbsolutePath()}"} -cp $cp test.TestPackage")
     }
 
     protected fun runProcess(command: String): String {
