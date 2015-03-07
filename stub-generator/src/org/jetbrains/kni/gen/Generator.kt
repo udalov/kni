@@ -45,34 +45,8 @@ public fun generateStub(translationUnit: TranslationUnit,
     val generator = Generator(out, namer, dylib, generatorOptions)
 
     when (indexingOptions.language) {
-        OBJC -> {
-            out.println("package objc")
-            out.println()
-            out.println("import kni.objc.*")
-            out.println()
-            for (protocol in translationUnit.getProtocolList()) {
-                generator.genProtocol(protocol)
-                out.println()
-            }
-
-            for (klass in translationUnit.getClass_List()) {
-                generator.genClass(klass)
-                out.println()
-            }
-
-            for (category in translationUnit.getCategoryList()) {
-                generator.genCategory(category)
-                out.println()
-            }
-        }
-        CPP -> {
-            out.println("package native")
-            out.println()
-            out.println("import jnr.ffi.types.*")
-            out.println()
-            translationUnit.getStructList().forEach { generator.genCStruct(it) }
-            generator.genCFunctions(translationUnit.getFunctionList().distinct())
-        }
+        OBJC -> generator.genObjCUnit(translationUnit)
+        CPP -> generator.genCppUnit(translationUnit)
         else -> error("Unknown language: ${indexingOptions.language}")
     }
 
@@ -85,6 +59,83 @@ class Generator(private val out: Printer,
                 private val namer: Namer,
                 private val dylib: File,
                 private val options: GeneratorOptions) {
+
+    public fun genObjCUnit(translationUnit: TranslationUnit) {
+        out.println("package objc")
+        out.println()
+        out.println("import kni.objc.*")
+        out.println()
+        for (protocol in translationUnit.getProtocolList()) {
+            genProtocol(protocol)
+            out.println()
+        }
+
+        for (klass in translationUnit.getClass_List()) {
+            genClass(klass)
+            out.println()
+        }
+
+        for (category in translationUnit.getCategoryList()) {
+            genCategory(category)
+            out.println()
+        }
+    }
+
+    public fun genCppUnit(translationUnit: TranslationUnit) {
+        out.println("package native")
+        out.println()
+        out.println("import jnr.ffi.types.*")
+        out.println()
+        translationUnit.getStructList().forEach { genCStruct(it) }
+        val funcParams = translationUnit.getFunctionList()
+                .flatMap {
+                    it.getParameterList()
+                            .map { parseType(it.getType(), options, LexicalScope.General) }
+                            .filter { it is FunctionType }
+                            .map { it as FunctionType }
+                }
+                .distinct()
+        out.println("\npublic trait ${namer.cFunctionsInterfaceName()} {")
+        out.push()
+        genFuncProxies(funcParams)
+        genCFunctions(translationUnit.getFunctionList().distinct(), funcParams)
+        out.pop()
+        out.println("}")
+        out.println()
+        // generate extension methods that accept directly kotlin lambdas
+        genCFunctionExts(translationUnit, funcParams, "${namer.cFunctionsInterfaceName()}.")
+        out.println("\npublic fun get_${namer.cFunctionsInterfaceName()}(libName: String): ${namer.cFunctionsInterfaceName()} = jnr.ffi.LibraryLoader.create(javaClass<${namer.cFunctionsInterfaceName()}>()).load(libName)\n")
+    }
+
+    private fun genCFunctionExts(translationUnit: TranslationUnit, funcParams: Set<FunctionType>, extPrefix: String) {
+        fun mapParam(idx: Int, p: Function.Parameter): String {
+            val type = parseType(p.getType(), options, LexicalScope.General)
+            val name = namer.parameterName(p.getName(), idx)
+            if (type is FunctionType && funcParams.contains(type))
+                return "object : ${namer.cFunctionsInterfaceName()}.${namer.funcProxyName(type.name)} { override ${proxyInvokeSignature(type)} = $name(${funcTypeParamsList(type, false)})}"
+            else
+                return name
+        }
+
+        translationUnit.getFunctionList()
+                .filter {
+                    it.getParameterList()
+                            .map { parseType(it.getType(), options, LexicalScope.General) }
+                            .any { it is FunctionType && funcParams.contains(it) }
+                }
+                .forEach {
+                    out.print("public ")
+                    makeFunSignature(it, hashSetOf(), extPrefix)
+                    out.println(" = ")
+                    out.push()
+                    out.print(namer.methodName(it.getName()))
+                    it.getParameterList()
+                            .mapIndexed { i, p -> mapParam(i, p) }
+                            .joinTo(out, separator = ", ", prefix = "(", postfix = ")")
+                    out.pop()
+                    out.println()
+                }
+    }
 
     fun genClass(klass: ObjCClass) {
         out.print("open class ${klass.getName()}(pointer: Long)")
@@ -170,22 +221,18 @@ class Generator(private val out: Printer,
         // TODO: methods
     }
 
-    fun genCFunctions(functions: Iterable<Function>) {
-        out.println("\npublic trait ${namer.cFunctionsInterfaceName()} {")
+    fun genCFunctions(functions: Iterable<Function>, funcParams: Set<FunctionType>) {
         for (function in functions) {
-            out.print("    ")
-            makeFunSignature(function)
+            makeFunSignature(function, funcParams)
             out.println()
         }
-        out.println("}")
-        out.println("\npublic fun get_${namer.cFunctionsInterfaceName()}(libName: String): ${namer.cFunctionsInterfaceName()} = jnr.ffi.LibraryLoader.create(javaClass<${namer.cFunctionsInterfaceName()}>()).load(libName)\n")
     }
 
     fun genCStruct(struct: CStruct) {
         out.println("\nclass ${struct.getName()}(runtime: jnr.ffi.Runtime) : jnr.ffi.Struct(runtime) {")
         for (field in struct.getFieldList()) {
             val t = parseType(field.getType(), options, LexicalScope.Record)
-            out.println("    public var ${field.getName()}: ${t.name} = ${t.defaultVal}")
+            out.println("    public var ${field.getName()}: ${t.expr} = ${t.defaultVal}")
         }
         out.println("}")
     }
@@ -194,7 +241,7 @@ class Generator(private val out: Printer,
         if (open) {
             out.print("open ")
         }
-        val returnType = makeFunSignature(function)
+        val returnType = makeFunSignature(function, hashSetOf())
         out.println(" {")
 
         out.push()
@@ -211,8 +258,8 @@ class Generator(private val out: Printer,
                     }
                 }
         out.print(")")
-        if (returnType != UnitType && returnType.name != "Any") {
-            out.print(" as ${returnType.name}")
+        if (returnType != UnitType && returnType.expr != "Any") {
+            out.print(" as ${returnType.expr}")
         }
         out.println()
         out.pop()
@@ -220,16 +267,21 @@ class Generator(private val out: Printer,
         out.println("}")
     }
 
-    private fun makeFunSignature(function: Function): Type {
-        out.print("fun ${namer.methodName(function.getName())}")
+    public fun makeFunSignature(function: Function, funcParams: Set<FunctionType>, extPrefix: String = ""): Type {
+
+        fun mapType(t: Type) =
+            if (t is FunctionType && funcParams.contains(t)) namer.funcProxyName(t.name)
+            else t.expr
+
+        out.print("fun $extPrefix${namer.methodName(function.getName())}")
 
         function.getParameterList()
-                .mapIndexed { i, p -> namer.parameterName(p.getName(), i) + ": " + parseType(p.getType(), options, LexicalScope.General).name }
+                .mapIndexed { i, p -> namer.parameterName(p.getName(), i) + ": " + mapType(parseType(p.getType(), options, LexicalScope.General)) }
                 .joinTo(out, separator = ", ", prefix = "(", postfix = ")")
 
         val returnType = parseType(function.getReturnType(), options, LexicalScope.General)
         if (returnType != UnitType) {
-            out.print(": ${returnType.name}")
+            out.print(": ${returnType.expr}")
         }
         return returnType
     }
@@ -247,10 +299,30 @@ class Generator(private val out: Printer,
             DoubleType -> "double"
             ObjCClassType -> "interface kni.objc.ObjCClass"
             ObjCOpaquePointerType, is ObjCPointerType -> "class kni.objc.Pointer"
-            ObjCObjectType, ObjCSelectorType -> "class kni.objc.${type.name}"
+            ObjCObjectType, ObjCSelectorType -> "class kni.objc.${type.expr}"
             is FunctionType -> "class kotlin.Function${type.paramTypes.size()}"
-            else -> "class objc.${type.name}"
+            else -> "class objc.${type.expr}"
         }
+    }
+
+    private fun funcTypeParamsList(fn: FunctionType, withTypes: Boolean): String =
+            fn.paramTypes
+                    .mapIndexed { i, p -> namer.parameterName("p${i+1}", i) + if (withTypes) ": ${p.expr}" else "" }
+                    .joinToString(separator = ", ")
+
+    private fun proxyInvokeSignature(fn: FunctionType): String = "fun invoke(${funcTypeParamsList(fn, true)}): ${fn.returnType.expr}"
+
+    public fun genFuncProxies(funcs: Set<FunctionType>) {
+        if (options.runtime == InteropRuntime.JNR)
+            for (fn in funcs) {
+                out.println("public trait ${namer.funcProxyName(fn.name)} {")
+                out.push()
+                out.println("jnr.ffi.annotations.Delegate")
+                out.println("public ${proxyInvokeSignature(fn)}")
+                out.pop()
+                out.println("}")
+                out.println()
+            }
     }
 }
 
@@ -306,6 +378,8 @@ class Namer(translationUnit: TranslationUnit) {
         val n = escape(name)
         return if (n.isEmpty()) "_$idx" else n
     }
+
+    fun funcProxyName(name: String): String = "fn_$name"
 
     private fun escape(name: String): String {
         // TODO: all Kotlin keywords

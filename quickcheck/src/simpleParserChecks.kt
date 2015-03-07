@@ -52,7 +52,7 @@ public class SimpleCHeaderCheck : LastLogKeeper {
     // Rule public val onFailed : ErrorReporter = ErrorReporter(this)
 
     Theory public fun SimpleSumFuncs(ForAll From(javaClass<SimpleCHeaderGenerator>()) cunit: CSimpleTransUnit) {
-        val indexerOptions = IndexerOptions(Language.CPP, verbose = false, debugDump = false)
+        val indexerOptions = IndexerOptions(Language.CPP, verbose = true, debugDump = false)
         assumeNotNull(cunit, cunit.name)
         lastLogBuf = StringBuilder()
         val tmpdir = Files.createTempDirectory("kniqc").toFile()

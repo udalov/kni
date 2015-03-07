@@ -26,6 +26,7 @@ void foo();
 void bar(int arg);
 int baz(Struct by_value, Struct* by_reference);
 void* quux(Struct, Struct*, UndefinedStruct, UndefinedStruct*);
+int callfn1(int (*cb)(int,char*));
 
 typedef int (Foo)();
 typedef char* (Bar)(int k, int*);

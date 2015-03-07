@@ -3,17 +3,18 @@ package org.jetbrains.kni.gen
 import java.util.ArrayList
 
 trait Type {
-    public val name: String
-    public val defaultVal: String get() = "${name}()"
+    public val expr: String
+    public val name: String get() = expr
+    public val defaultVal: String get() = "${expr}()"
 }
 
-open class BuiltInType(override val name: String) : Type
+open data class BuiltInType(override val expr: String) : Type
 
-class PODType(override val name: String, public val defaultLiteral: String) : Type {
+data class PODType(override val expr: String, public val defaultLiteral: String) : Type {
     override val defaultVal: String = defaultLiteral
 }
 
-open class JNRType(baseName: String, annotation: String? = null)
+open data class JNRType(baseName: String, annotation: String? = null)
     : BuiltInType(if (annotation != null) "${annotation} ${baseName}" else baseName) {}
 
 open class JNRStructFieldType(internal val baseName: String) : BuiltInType("jnr.ffi.Struct.$baseName") {
@@ -35,36 +36,38 @@ fun JNRStructString(isRef: Boolean, options: GeneratorOptions, size: Int = 0) =
 fun JNRStructString(options: GeneratorOptions, size: Int = 0) = JNRStructString(false, options, size)
 fun JNRStructStringRef(options: GeneratorOptions, size: Int = 0) = JNRStructString(true, options, size)
 
-class ObjCClassRefType(override val name: String) : Type {
+data class ObjCClassRefType(override val expr: String) : Type {
 }
 
-class RecordType(override val name: String) : Type {
+data class RecordType(override val expr: String) : Type {
 }
 
-object ObjCOpaquePointerType : Type {
-    override val name: String = "Pointer<*>"
+data object ObjCOpaquePointerType : Type {
+    override val expr: String = "Pointer<*>"
 }
 
-object JNROpaquePointerType : Type {
-    override val name: String = "Pointer"
+data object JNROpaquePointerType : Type {
+    override val expr: String = "Pointer"
 }
 
-class ObjCPointerType(val pointee: Type) : Type {
-    override val name: String = "Pointer<${pointee.name}>"
+data class ObjCPointerType(val pointee: Type) : Type {
+    override val expr: String = "Pointer<${pointee.expr}>"
 }
 
-class JNRPointerType(val pointee: Type) : Type {
-    override val name: String = "Pointer"
+data class JNRPointerType(val pointee: Type) : Type {
+    override val expr: String = "Pointer"
 }
 
-class FunctionType(val paramTypes: List<Type>, val returnType: Type) : Type {
-    override val name: String =
-            paramTypes.map { it.name }.joinToString(
+data class FunctionType(val paramTypes: List<Type>, val returnType: Type) : Type {
+    override val expr: String =
+            paramTypes.map { it.expr }.joinToString(
                     separator = ", ",
                     prefix = "(",
                     postfix = ")"
-            ) + " -> " + returnType.name
+            ) + " -> " + returnType.expr
     override val defaultVal: String = "null"
+    override val name: String =
+            paramTypes.map { it.expr }.joinToString( separator = "_" ) + "_" + returnType.expr
 }
 
 val ObjCObjectType = BuiltInType("ObjCObject")
