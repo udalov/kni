@@ -27,7 +27,7 @@ import org.junit.Rule
 
 public class SimpleCHeaderGenerator : Generator<CSimpleTransUnit>(javaClass<CSimpleTransUnit>()) {
     override fun generate( random: SourceOfRandomness, status: GenerationStatus): CSimpleTransUnit {
-        val gen = CGenGrammar({ (f,l) -> random.nextChar(f,l) }, { (f,l) -> random.nextInt(f,l) })
+        val gen = CGenGrammar({ (f,l) -> random.nextChar(f,l) }, { (f,l) -> random.nextLong(f,l) }, { (f,l) -> random.nextDouble(f,l) })
         return gen.generateSimpleTransUnit1(random.nextInt(1,100))
     }
 }
@@ -60,11 +60,11 @@ public class SimpleCHeaderCheck : LastLogKeeper {
         val dylib = File(tmpdir, "libKNIQC.dylib")
         val implFilePath = Paths.get(tmpdir.getAbsolutePath(), "${cunit.name}.cpp")
         val impFile = FileWriter(implFilePath.toString())
-        impFile.write(cunit.source())
+        impFile.write(cunit.source)
         impFile.flush()
         val header = Paths.get(tmpdir.getAbsolutePath(), "${cunit.headerName}").toString()
         val headerWriter = FileWriter(header)
-        headerWriter.write(cunit.header())
+        headerWriter.write(cunit.header)
         headerWriter.flush()
 
         val (success, msg) = compileNativeC(implFilePath.toFile(), dylib)
