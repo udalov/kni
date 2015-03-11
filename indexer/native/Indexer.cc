@@ -41,16 +41,21 @@ const std::map<CXTypeKind, std::string>& initializePrimitiveTypesMap() {
 
     m[CXType_Void] = "V";
     m[CXType_Bool] = "Z";
-    m[CXType_UChar] = "UC";
-    m[CXType_UShort] = "US";
-    m[CXType_UInt] = "UI";
-    m[CXType_ULong] = m[CXType_ULongLong] = "UJ";
+    m[CXType_Char_U] = "C";
     m[CXType_Char_S] = "C";
-    m[CXType_SChar] = "Z"; // BOOL in Objective-C
+    m[CXType_SChar] = "B"; // BOOL in Objective-C
+    m[CXType_UChar] = "UB";
     m[CXType_WChar] = "W";
+    m[CXType_Char16] = "W";
+    m[CXType_Char32] = "W";
     m[CXType_Short] = "S";
+    m[CXType_UShort] = "US";
     m[CXType_Int] = "I";
-    m[CXType_Long] = m[CXType_LongLong] = "J";
+    m[CXType_UInt] = "UI";
+    m[CXType_Long] = "I";   // assuming that int == long
+    m[CXType_ULong] = "UI";
+    m[CXType_LongLong] = "J";
+    m[CXType_ULongLong] = "UJ";
     m[CXType_Float] = "F";
     m[CXType_Double] = "D";
     // TODO: long double

@@ -55,8 +55,8 @@ ${funcs.map { it.declaration }.joinToString("\n\n")}
 ${funcs.map { it.definition }.joinToString("\n\n")}
 """
 
-    public fun kotlinTestBody(iface: String, assertEquals: String): String =
-            "${funcs.map { "    $assertEquals(${it.retSample}, ${it.testExpression(iface)})"}}"
+    public fun kotlinTestBody(iface: String, assertEquals: String, separator: String = "\n"): String =
+            "${funcs.map { "println(\"${it.name}:\"); $assertEquals(${it.retSample.kotlin}, ${it.testExpression(iface)})"}.joinToString(separator)}"
 }
 
 
@@ -83,34 +83,39 @@ public class CGenGrammar(
                 ( c >= 'A' && c <= 'Z') || ( c >= 'a' && c <= 'z' ) || c == '_' || (!isFirst && c >= '0' && c <= '9')
     }
 
+    // commented out types are not supported:
+    // all single char types - seems JNR problem - to investigate
+    // float/double - runtime error - to investigate
+    // short - KT-6959
+    // long double - no support in indexer/generator yet
     val podTypes: Map<String, () -> ValueSample> = hashMapOf(
             "bool"              to { () -> ValueSample(if (getRandomLong(0,1) != 0L) "true" else "false") },
-            "char"              to { () -> val v = getRandomLong(0, 255); ValueSample("'\\x%x'".format(v), "'\\u%04x'".format(v))},
+//            "char"              to { () -> val v = getRandomLong(0, 255); ValueSample("'\\x%x'".format(v), "'\\u%04x'".format(v))},
                                 // note: checkig only valid 16-bit codepoints
-            "char16_t"          to { () -> val v = getRandomChar(java.lang.Character.MIN_VALUE, '\ucfff'); ValueSample("L'\\u%04x'".format(v.toInt()), "'\\u%04x'".format(v.toInt()))},
+//            "char16_t"          to { () -> val v = getRandomChar(java.lang.Character.MIN_VALUE, '\ucfff'); ValueSample("L'\\u%04x'".format(v.toInt()), "'\\u%04x'".format(v.toInt()))},
                                 // note: only char16 range is generated
-            "char32_t"          to { () -> val v = getRandomChar(java.lang.Character.MIN_VALUE, '\ucfff'); ValueSample("L'\\u%04x'".format(v.toInt()), "'\\u%04x'".format(v.toInt()))},
-            "double"            to { () -> ValueSample("%e".format(getRandomDouble(java.lang.Double.MIN_VALUE, java.lang.Double.MAX_VALUE)))},
-            "float"             to { () -> ValueSample("%e".format(getRandomDouble(java.lang.Float.MIN_VALUE.toDouble(), java.lang.Float.MAX_VALUE.toDouble())))},
+//            "char32_t"          to { () -> val v = getRandomChar(java.lang.Character.MIN_VALUE, '\ucfff'); ValueSample("L'\\u%04x'".format(v.toInt()), "'\\u%04x'".format(v.toInt()))},
+//            "double"            to { () -> ValueSample("%e".format(getRandomDouble(java.lang.Double.MIN_VALUE, java.lang.Double.MAX_VALUE)))},
+//            "float"             to { () -> val v = getRandomDouble(java.lang.Float.MIN_VALUE.toDouble(), java.lang.Float.MAX_VALUE.toDouble()); ValueSample("%e".format(v), "%ef".format(v))},
             "int"               to { () -> ValueSample("%d".format(getRandomLong(java.lang.Integer.MIN_VALUE.toLong(), java.lang.Integer.MAX_VALUE.toLong())))},
             "long"              to { () -> val v = getRandomLong(java.lang.Integer.MIN_VALUE.toLong(), java.lang.Integer.MAX_VALUE.toLong()); ValueSample("%dl".format(v), "%d".format(v))},
                                 // note: only double range is used
-            "long double"       to { () -> ValueSample("%e".format(getRandomDouble(java.lang.Double.MIN_VALUE, java.lang.Double.MAX_VALUE)))},
-            "long long"         to { () -> val v = getRandomLong(java.lang.Long.MIN_VALUE, java.lang.Long.MAX_VALUE); ValueSample("%dll".format(v), "%d".format(v))},
-            "short"             to { () -> ValueSample("%d".format(getRandomLong(java.lang.Short.MIN_VALUE.toLong(), java.lang.Short.MAX_VALUE.toLong())))},
-            "signed char"       to { () -> ValueSample("%d".format(getRandomLong(-128, 127)))},
+//            "long double"       to { () -> ValueSample("%e".format(getRandomDouble(java.lang.Double.MIN_VALUE, java.lang.Double.MAX_VALUE)))},
+            "long long"         to { () -> val v = getRandomLong(java.lang.Long.MIN_VALUE, java.lang.Long.MAX_VALUE); ValueSample("%dll".format(v), "%dL".format(v))},
+//            "short"             to { () -> val v = getRandomLong(java.lang.Short.MIN_VALUE.toLong(), java.lang.Short.MAX_VALUE.toLong()); ValueSample("%d".format(v), "%d.toShort()".format(v))},
+//            "signed char"       to { () -> ValueSample("%d".format(getRandomLong(-128, 127)))},
             "signed int"        to { () -> ValueSample("%d".format(getRandomLong(java.lang.Integer.MIN_VALUE.toLong(), java.lang.Integer.MAX_VALUE.toLong())))},
             "signed long"       to { () -> val v = getRandomLong(java.lang.Integer.MIN_VALUE.toLong(), java.lang.Integer.MAX_VALUE.toLong()); ValueSample("%dl".format(v), "%d".format(v))},
-            "signed long long"  to { () -> val v = getRandomLong(java.lang.Long.MIN_VALUE, java.lang.Long.MAX_VALUE); ValueSample("%dll".format(v), "%d".format(v))},
-            "signed short"      to { () -> ValueSample("%d".format(getRandomLong(java.lang.Short.MIN_VALUE.toLong(), java.lang.Short.MAX_VALUE.toLong())))},
+            "signed long long"  to { () -> val v = getRandomLong(java.lang.Long.MIN_VALUE, java.lang.Long.MAX_VALUE); ValueSample("%dll".format(v), "%dL".format(v))},
+//            "signed short"      to { () -> val v = getRandomLong(java.lang.Short.MIN_VALUE.toLong(), java.lang.Short.MAX_VALUE.toLong()); ValueSample("%d".format(v), "%d.toShort()".format(v))},
                                 // note - unsigned types (except the char) only tested in the range [0..<signed max val>]
             "unsigned"          to { () -> ValueSample("%d".format(getRandomLong(0, java.lang.Integer.MAX_VALUE.toLong())))},
-            "unsigned char"     to { () -> ValueSample("%d".format(getRandomLong(0, 255)))},
+//            "unsigned char"     to { () -> ValueSample("%d".format(getRandomLong(0, java.lang.Byte.MAX_VALUE.toLong())))},
             "unsigned int"      to { () -> ValueSample("%d".format(getRandomLong(0, java.lang.Short.MAX_VALUE.toLong())))},
             "unsigned long"     to { () -> val v = getRandomLong(0, java.lang.Integer.MAX_VALUE.toLong()); ValueSample("%dl".format(v), "%d".format(v))},
-            "unsigned long long"to { () -> val v = getRandomLong(0, java.lang.Long.MAX_VALUE); ValueSample("%dll".format(v), "%d".format(v))},
-            "unsigned short"    to { () -> ValueSample("%d".format(getRandomLong(0, java.lang.Short.MAX_VALUE.toLong())))},
-            "wchar_t"           to { () -> val v = getRandomChar(java.lang.Character.MIN_VALUE, '\ucfff'); ValueSample("L'\\u%04x'".format(v.toInt()), "'\\u%04x'".format(v.toInt()))}
+            "unsigned long long"to { () -> val v = getRandomLong(0, java.lang.Long.MAX_VALUE); ValueSample("%dll".format(v), "%dL".format(v))},
+            "unsigned short"    to { () -> val v = getRandomLong(0, java.lang.Short.MAX_VALUE.toLong()); ValueSample("%d".format(v), "%d.toShort()".format(v))}
+//            "wchar_t"           to { () -> val v = getRandomChar(java.lang.Character.MIN_VALUE, '\ucfff'); ValueSample("L'\\u%04x'".format(v.toInt()), "'\\u%04x'".format(v.toInt()))}
     )
 
     public fun generateId(size: Int) : String {

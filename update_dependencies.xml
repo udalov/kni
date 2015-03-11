@@ -6,7 +6,7 @@
 
     <!-- TODO: update to newer libffi -->
     <property name="libffi.version" value="3.0.13"/>
-    <property name="junit.version" value="4.10"/>
+    <property name="junit.version" value="4.12"/>
     <property name="protobuf.version" value="2.6.0"/>
     <property name="clang.version" value="3.5.0"/>
     <property name="jnr-ffi.version" value="2.0.1"/>

@@ -74,6 +74,7 @@ val ObjCObjectType = BuiltInType("ObjCObject")
 val ObjCClassType = BuiltInType("ObjCClass")
 val ObjCSelectorType = BuiltInType("ObjCSelector")
 val UnitType = BuiltInType("Unit")
+val ByteType = PODType("Byte", "0")
 val CharType = PODType("Char", "0")
 val ShortType = PODType("Short", "0")
 val IntType = PODType("Int", "0")
@@ -99,10 +100,11 @@ val JNRStructDouble = JNRStructFieldType("Double")
 object primitiveTypesMapper {
     val generalTypes = mapOf(
             "V" to UnitType,
-            "UC" to CharType,
             "US" to ShortType,
             "UI" to IntType,
             "UJ" to LongType,
+            "UB" to ByteType,
+            "B" to ByteType,
             "C" to CharType,
             "W" to CharType,
             "Z" to BooleanType,
