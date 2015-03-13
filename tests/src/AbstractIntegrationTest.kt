@@ -16,45 +16,42 @@ abstract class AbstractIntegrationTest(val indexerOptions: IndexerOptions, val g
 
     abstract protected val kotlinLibs: List<File>
 
-    abstract protected fun src2header(source: String): String
-    abstract protected fun src2implementation(source: String): String
-
-    abstract protected fun compileNative(source: File, target: File)
-
-    protected fun doTest(source: String) {
-        val header = File( src2header(source)).getAbsoluteFile()
-        val implementation = File( src2implementation(source)).getAbsoluteFile()
-        val kotlinSource = File(source).getAbsoluteFile()
-
-        val tmpdir = Files.createTempDirectory("knitest").toFile()
-        println("Testing '$source' in '$tmpdir'")
-        val dylib = File(tmpdir, "libKNITest.dylib")
-
-        compileNative(implementation, dylib)
-
-        val stubSource = File(tmpdir, kotlinSource.getPath().substringAfterLast(File.separator))
-        val translationUnit = buildNativeIndex(header, indexerOptions)
-        val srcIndex = File(tmpdir, "idx")
-        srcIndex.writeText(translationUnit.toString())
-
-        generateStub(translationUnit, dylib, stubSource, indexerOptions, generatorOptions)
-        val stubClasses = File(tmpdir, "stub")
-        compileKotlin(stubSource, stubClasses, kotlinLibs)
-
-        val mainClasses = File(tmpdir, "main")
-        compileKotlin(kotlinSource, mainClasses, kotlinLibs + stubClasses)
-
-        val result = runKotlin(mainClasses, stubClasses, libpath = tmpdir)
-        Assert.assertEquals("OK", result)
+    fun diagSeverity(severity: Int) = when(severity) {
+        0, 1 -> "Note"
+        2 -> "Warning"
+        3 -> "Error"
+        4 -> "Fatal"
+        else -> "Unknown"
     }
 
-    private fun compileKotlin(file: File, destination: File, classpath: List<File>) {
+    protected fun makeStub(cHeader: File, nativeLib: File, target: File, tempDir: File, dumpIdx: Boolean = false): File {
+        val stubSource = File(tempDir, target.getPath().substringAfterLast(File.separator))
+        val translationUnit = buildNativeIndex(cHeader, indexerOptions)
+        if (dumpIdx) {
+            val srcIndex = File(tempDir, "idx")
+            srcIndex.writeText(translationUnit.toString())
+        }
+        var hasErrors = false
+        for (diag in translationUnit.getDiagnosticList())
+            if (diag.getSeverity() > 1) {
+                println("${diagSeverity(diag.getSeverity())} at (${diag.getLine()},${diag.getColumn()}: ${diag.getMessage()}")
+                hasErrors = hasErrors || (diag.getSeverity() > 2)
+            }
+        assert(!hasErrors)
+
+        generateStub(translationUnit, nativeLib, stubSource, indexerOptions, generatorOptions)
+        val stubClasses = File(tempDir, "stub")
+        compileKotlin(stubSource, stubClasses, kotlinLibs)
+        return stubClasses
+    }
+
+    protected fun compileKotlin(file: File, destination: File, classpath: List<File>) {
         val kotlinc = File("lib/kotlinc/bin/kotlinc").getAbsoluteFile()
         val cp = classpath.joinToString(File.pathSeparator)
         runProcess("$kotlinc $file -d $destination -cp $cp")
     }
 
-    private fun runKotlin(vararg classpath: File, libpath: File? = null): String {
+    protected fun runKotlin(vararg classpath: File, libpath: File? = null): String {
         val baseLibs = arrayListOf(*classpath)
         baseLibs.add(File("lib/kotlinc/lib/kotlin-runtime.jar"))
         val cp = kotlinLibs

@@ -7,11 +7,10 @@ import java.io.File
 import kotlin.properties.Delegates
 import org.jetbrains.kni.gen.InteropRuntime
 import org.jetbrains.kni.gen.GeneratorOptions
+import org.junit.Assert
+import java.nio.file.Files
 
 public abstract class ObjCTest : AbstractIntegrationTest(IndexerOptions(Language.OBJC), GeneratorOptions(InteropRuntime.ObjC)) {
-
-    override protected fun src2header(source: String): String = source.replace(".kt", ".h")
-    override protected fun src2implementation(source: String): String = source.replace(".kt", ".m")
 
     override protected val kotlinLibs: List<File> by Delegates.lazy {
         val target = File("dist/kni-objc-runtime.jar")
@@ -19,16 +18,30 @@ public abstract class ObjCTest : AbstractIntegrationTest(IndexerOptions(Language
         listOf(target)
     }
 
-    override protected fun compileNative(source: File, target: File) {
-        runProcess("/usr/bin/clang -ObjC -dynamiclib -framework Foundation $source -o $target")
+    protected fun doTest(source: String) {
+        val header = File( source.replace(".kt", ".h")).getAbsoluteFile()
+        val implementation = File( source.replace(".kt", ".m")).getAbsoluteFile()
+        val kotlinSource = File(source).getAbsoluteFile()
+
+        val tmpdir = Files.createTempDirectory("knitest").toFile()!!
+        println("Testing '$source' in '$tmpdir'")
+        val dylib = File(tmpdir, "libKNITest.dylib")
+
+        runProcess("/usr/bin/clang -ObjC -dynamiclib -framework Foundation $implementation -o $dylib")
+
+        val stubClasses = makeStub(header, dylib, kotlinSource, tmpdir, true)
+
+        val mainClasses = File(tmpdir, "main")
+        compileKotlin(kotlinSource, mainClasses, kotlinLibs + stubClasses)
+
+        val result = runKotlin(mainClasses, stubClasses, libpath = tmpdir)
+        Assert.assertEquals("OK", result)
     }
+
 }
 
 
 public abstract class CPlusPlusTest : AbstractIntegrationTest(IndexerOptions(Language.CPP, debugDump = false), GeneratorOptions(InteropRuntime.JNR)) {
-
-    override protected fun src2header(source: String): String = source.replace(".kt", ".hpp")
-    override protected fun src2implementation(source: String): String = source.replace(".kt", ".cpp")
 
     override protected val kotlinLibs: List<File> by Delegates.lazy {
         File("lib/jnr").listFiles().toArrayList()
@@ -48,7 +61,24 @@ public abstract class CPlusPlusTest : AbstractIntegrationTest(IndexerOptions(Lan
         */
     }
 
-    override protected fun compileNative(source: File, target: File) {
-        runProcess("/usr/bin/c++ --std=c++11 -fPIC -stdlib=libstdc++ -dynamiclib $source -o $target")
+    protected fun doTest(source: String) {
+        val header = File( source.replace(".kt", ".hpp")).getAbsoluteFile()
+        val implementation = File( source.replace(".kt", ".cpp")).getAbsoluteFile()
+        val kotlinSource = File(source).getAbsoluteFile()
+
+        val tmpdir = Files.createTempDirectory("knitest").toFile()!!
+        println("Testing '$source' in '$tmpdir'")
+        val dylib = File(tmpdir, "libKNITest.dylib")
+
+        runProcess("/usr/bin/c++ --std=c++11 -fPIC -stdlib=libstdc++ -dynamiclib $implementation -o $dylib")
+
+        val stubClasses = makeStub(header, dylib, kotlinSource, tmpdir, true)
+
+        val mainClasses = File(tmpdir, "main")
+        compileKotlin(kotlinSource, mainClasses, kotlinLibs + stubClasses)
+
+        val result = runKotlin(mainClasses, stubClasses, libpath = tmpdir)
+        Assert.assertEquals("OK", result)
     }
+
 }
