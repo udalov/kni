@@ -86,18 +86,22 @@ class Generator(private val out: Printer,
         out.println()
         out.println("import jnr.ffi.types.*")
         out.println()
-        translationUnit.getStructList().forEach { genCStruct(it) }
-        val funcParams = translationUnit.getFunctionList()
-                .flatMap {
-                    it.getParameterList()
-                            .map { parseType(it.getType(), options, LexicalScope.General) }
-                            .filter { it is FunctionType }
-                            .map { it as FunctionType }
-                }
+        val funcParams =
+                (translationUnit.getFunctionList()
+                    .flatMap { it.getParameterList().map { parseType(it.getType(), options, LexicalScope.General) }}
+                 +
+                 translationUnit.getStructList()
+                     .flatMap { it.getFieldList().map { parseType(it.getType(), options, LexicalScope.General) }}
+                )
+                .filter { it is FunctionType }
+                .map { it as FunctionType }
                 .distinct()
         out.println("\npublic trait ${namer.cFunctionsInterfaceName()} {")
         out.push()
         genFuncProxies(funcParams)
+        out.println()
+        translationUnit.getStructList().forEach { genCStruct(it, funcParams) }
+        out.println()
         genCFunctions(translationUnit.getFunctionList().distinct(), funcParams)
         out.pop()
         out.println("}")
@@ -221,19 +225,26 @@ class Generator(private val out: Printer,
         // TODO: methods
     }
 
-    fun genCFunctions(functions: Iterable<Function>, funcParams: Set<FunctionType>) {
+    fun genCFunctions(functions: Iterable<Function>, funcTypes: Set<FunctionType>) {
         for (function in functions) {
-            makeFunSignature(function, funcParams)
+            makeFunSignature(function, funcTypes)
             out.println()
         }
     }
 
-    fun genCStruct(struct: CStruct) {
-        out.println("\nclass ${struct.getName()}(runtime: jnr.ffi.Runtime) : jnr.ffi.Struct(runtime) {")
+    fun genCStruct(struct: CStruct, funcTypes: Set<FunctionType>) {
+        out.println("class ${struct.getName()}(runtime: jnr.ffi.Runtime) : jnr.ffi.Struct(runtime) {")
+        out.push()
         for (field in struct.getFieldList()) {
             val t = parseType(field.getType(), options, LexicalScope.Record)
-            out.println("    public var ${field.getName()}: ${t.expr} = ${t.defaultVal}")
+            if (t is FunctionType && funcTypes.contains(t)) {
+                val proxy = namer.funcProxyName(t.name)
+                out.println("public var ${field.getName()}: jnr.ffi.Struct.Function<$proxy> = function(javaClass<$proxy>())")
+            }
+            else
+                out.println("public var ${field.getName()}: ${t.expr} = ${t.defaultVal}")
         }
+        out.pop()
         out.println("}")
     }
 

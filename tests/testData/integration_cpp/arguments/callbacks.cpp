@@ -3,11 +3,15 @@
 
 int callfn1(int (*cb)(int))
 {
-    return cb(42);
+    return cb ? cb(42) : -1;
 }
 
 int callfn2(int (*cb)(int,const char*))
 {
-    return cb(42, "42");
+    return cb ? cb(42, "42") : -1;
 }
 
+int callwrapper(cbwrapper * w)
+{
+    return w ? callfn1(w->cb1) + callfn2(w->cb2) : -1;
+}

@@ -31,10 +31,13 @@ public abstract class CPlusPlusTest : AbstractIntegrationTest(IndexerOptions(Lan
     override protected fun src2implementation(source: String): String = source.replace(".kt", ".cpp")
 
     override protected val kotlinLibs: List<File> by Delegates.lazy {
-        val targets = listOf(
-                File("lib/jnr-ffi-2.0.1.jar"),
-                File("lib/jffi-1.2.7.jar"),
-                File("lib/jffi-1.2.7-native.jar"),
+        File("lib/jnr").listFiles().toArrayList()
+        /*
+        val targets =
+                listOf(
+                File("lib/jnr/jnr-ffi.jar"),
+                File("lib/jnr/jffi-1.2.8.jar"),
+                File("lib/jnr/jffi-1.2.8-native.jar"),
                 File("lib/asm-all-5.0.3.jar"),
                 File("lib/jnr-x86asm-1.0.2.jar")
         )
@@ -42,6 +45,7 @@ public abstract class CPlusPlusTest : AbstractIntegrationTest(IndexerOptions(Lan
             assert(target.exists()) { "$target is not found. Execute 'ant -f update_dependencies.xml' and 'ant dist' before running tests" }
         }
         targets
+        */
     }
 
     override protected fun compileNative(source: File, target: File) {

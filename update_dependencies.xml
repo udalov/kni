@@ -8,9 +8,9 @@
     <property name="libffi.version" value="3.0.13"/>
     <property name="junit.version" value="4.12"/>
     <property name="protobuf.version" value="2.6.0"/>
-    <property name="clang.version" value="3.5.0"/>
-    <property name="jnr-ffi.version" value="2.0.1"/>
-    <property name="jffi.version" value="1.2.7"/>
+    <property name="clang.version" value="3.5.1"/>
+    <property name="jnr-ffi.version" value="2.0.2"/>
+    <property name="jffi.version" value="1.2.8"/>
     <property name="asm-all.version" value="5.0.3"/>
     <property name="jnr-x86asm.version" value="1.0.2"/>
 
@@ -153,12 +153,14 @@
         <download-maven-library group="com/google/protobuf" artifact="protobuf-java" version="${protobuf.version}"/>
     </target>
 
+    <!--
     <target name="jnr-ffi">
         <download-maven-library group="com/github/jnr" artifact="jnr-ffi" version="${jnr-ffi.version}"/>
         <download-maven-library group="com/github/jnr" artifact="jffi" version="${jffi.version}" native="true"/>
         <download-maven-library group="org/ow2/asm" artifact="asm-all" version="${asm-all.version}"/>
         <download-maven-library group="com/github/jnr" artifact="jnr-x86asm" version="${jnr-x86asm.version}"/>
     </target>
+    -->
 
     <target name="clang">
         <property name="cfe" value="cfe-${clang.version}"/>

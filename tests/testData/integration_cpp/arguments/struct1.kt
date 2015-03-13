@@ -7,7 +7,7 @@ import jnr.ffi.types.*
 fun main(args: Array<String>) {
     val iface = native.get_iface_struct1_hpp("KNITest")
     val runtime = jnr.ffi.Runtime.getRuntime(iface)
-    val st1 = native.abcd(runtime)
+    val st1 = native.iface_struct1_hpp.abcd(runtime)
     val sz_i = jnr.ffi.Struct.size(st1)
 
     st1.i.set(100)
