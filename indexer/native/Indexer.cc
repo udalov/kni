@@ -36,14 +36,18 @@ const CXType untypedefType(CXType type) {
     return type;
 }
 
-const std::map<CXTypeKind, std::string>& initializePrimitiveTypesMap() {
+// todo: conert static map with non-obvious intitialisation into explicit indexing config/status class
+const std::map<CXTypeKind, std::string>& getPrimitiveTypesMap(ProcessingMode::type mode = ProcessingMode::unknown) {
     static std::map<CXTypeKind, std::string> m;
 
+    if (mode == ProcessingMode::unknown && m.empty())
+        throw std::logic_error("primitive types map is not initialized");
+    
     m[CXType_Void] = "V";
     m[CXType_Bool] = "Z";
     m[CXType_Char_U] = "C";
     m[CXType_Char_S] = "C";
-    m[CXType_SChar] = "B"; // BOOL in Objective-C
+    m[CXType_SChar] = mode == ProcessingMode::objc ? "Z" : "B"; // BOOL in Objective-C
     m[CXType_UChar] = "UB";
     m[CXType_WChar] = "W";
     m[CXType_Char16] = "W";
@@ -60,9 +64,11 @@ const std::map<CXTypeKind, std::string>& initializePrimitiveTypesMap() {
     m[CXType_Double] = "D";
     // TODO: long double
 
-    m[CXType_ObjCId] = "OI";
-    m[CXType_ObjCClass] = "OC";
-    m[CXType_ObjCSel] = "OS";
+    if (mode == ProcessingMode::objc) {
+        m[CXType_ObjCId] = "OI";
+        m[CXType_ObjCClass] = "OC";
+        m[CXType_ObjCSel] = "OS";
+    }
 
     return m;
 }
@@ -75,7 +81,6 @@ std::string getStrippedTypeSpelling(CXType const & type) {
     static sregex rex = *(*_s >> (as_xpr("const") | "struct") >> +_s) >> (s1= +_);
     return regex_replace(name, rex, [](smatch const &what){return what[1].str();});
 }
-
 
 // TODO: write a long explanation
 void serializeType(const CXType& type, std::string& result) {
@@ -94,11 +99,10 @@ void serializeType(const CXType& type, std::string& result) {
         }
     }
 
-    static auto primitiveTypes = initializePrimitiveTypesMap();
-
     if (clang_isConstQualifiedType(type))
         result += "c";
 
+    auto primitiveTypes = getPrimitiveTypesMap();
     auto it = primitiveTypes.find(type.kind);
     if (it != primitiveTypes.end()) {
         result += it->second;
@@ -487,6 +491,8 @@ std::shared_ptr<OutputCollector> doIndex(const std::vector<std::string>& args) {
     auto data = std::shared_ptr<OutputCollector>(new OutputCollector(mode));
 
     data->result().set_name(name);
+    
+    getPrimitiveTypesMap(mode);
 
     std::shared_ptr<void> index(clang_createIndex(false, false), clang_disposeIndex);
     std::shared_ptr<void> action(clang_IndexAction_create(index.get()), clang_IndexAction_dispose);
