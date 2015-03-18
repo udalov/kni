@@ -17,7 +17,8 @@ class LibCLangTests : AbstractIntegrationTest(
         GeneratorOptions(InteropRuntime.JNR)) {
 
     override protected val kotlinLibs: List<File> by Delegates.lazy {
-        File("lib/jnr").listFiles().toArrayList()
+        File("lib/jnr").listFiles().toArrayList() +
+        (File("lib").listFiles { it.name.contains("junit") }?.toList() ?: listOf())
         /*
         val targets =
                 listOf(
@@ -37,7 +38,7 @@ class LibCLangTests : AbstractIntegrationTest(
     test fun JNRateLibCLang() {
         val tmpdir = Files.createTempDirectory("liclangtest").toFile()
         val header = File("lib/clang-c/Index.h").getAbsoluteFile()
-        val kotlinSource = File("testData/libCLang/libCLangTest.kt").getAbsoluteFile()
+        val kotlinSource = File("tests/testData/libCLang/libCLangTest.kt").getAbsoluteFile()
         val dylib = File("libclang.dylib")
 
         val stubClasses = makeStub(header, dylib, kotlinSource, tmpdir, true)
