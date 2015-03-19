@@ -119,7 +119,7 @@ public class CGenGrammar(
     )
 
     public fun generateId(size: Int) : String {
-        val str = FunctionStream({ getRandomChar(firstValidIdChar, lastValidIdChar) })
+        val str = FunctionSequence({ getRandomChar(firstValidIdChar, lastValidIdChar) })
         return (str.dropWhile { !isValidIdChar(it, true) }.take(1) +
                 str.filter { isValidIdChar(it, false) }.take(size - 1)
                ).joinToString("")
@@ -134,11 +134,11 @@ public class CGenGrammar(
                  .filter { !reservedKeywords.contains(it) }
 
     public fun generateValidId(size: Int) : String =
-        streamValidIds(FunctionStream<Int>({ size })).first()
+        streamValidIds(FunctionSequence<Int>({ size })).first()
 
     public fun streamUniqueIds() : Stream<String> {
         val ids = hashSetOf<String>()
-        return streamValidIds(FunctionStream({ getRandomLong(1, maxIdentifierSize.toLong()).toInt() }))
+        return streamValidIds(FunctionSequence({ getRandomLong(1, maxIdentifierSize.toLong()).toInt() }))
                 .filter { if (ids.contains(it)) false else { ids.add(it); true } }
     }
 
