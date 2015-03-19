@@ -107,7 +107,7 @@ class Generator(private val out: Printer,
             // \todo support forward defs
             structs.add( genCStruct(it, funcParams, structs))
         out.println()
-        genCFunctions(translationUnit.getFunctionList().distinct(), funcParams, setOf())
+        genCFunctions(translationUnit.getFunctionList().distinct(), funcParams, structs)
         out.pop()
         out.println("}")
         out.println()
@@ -147,7 +147,6 @@ class Generator(private val out: Printer,
                     makeFunSignature(it, hashSetOf(), ifaceTypes, extPrefix)
                     out.println(" = ")
                     out.push()
-                    out.print(extPrefix)
                     out.print(namer.methodName(it.getName()))
                     it.getParameterList()
                             .mapIndexed { i, p -> mapParam(i, p) }
@@ -317,9 +316,9 @@ class Generator(private val out: Printer,
                 .joinTo(out, separator = ", ", prefix = "(", postfix = ")")
 
         val returnType = parseType(function.getReturnType(), options, LexicalScope.General)
-        if (returnType != UnitType) {
+//        if (returnType != UnitType) {
             out.print(": ${typeMapper(returnType).getExpr()}")
-        }
+//        }
         return returnType
     }
 
@@ -426,7 +425,7 @@ class Namer(translationUnit: TranslationUnit) {
     private fun escape(name: String): String {
         val fname: String = name.filter { !invalidIdChars.contains(it) };
         return when (fname) {
-            in reservedWords -> "'$fname'"
+            in reservedWords -> "`$fname`"
             else -> fname
         }
     }
