@@ -40,35 +40,37 @@ const CXType untypedefType(CXType type) {
 const std::map<CXTypeKind, std::string>& getPrimitiveTypesMap(ProcessingMode::type mode = ProcessingMode::unknown) {
     static std::map<CXTypeKind, std::string> m;
 
-    if (mode == ProcessingMode::unknown && m.empty())
-        throw std::logic_error("primitive types map is not initialized");
-    
-    m[CXType_Void] = "V";
-    m[CXType_Bool] = "Z";
-    m[CXType_Char_U] = "C";
-    m[CXType_Char_S] = "C";
-    m[CXType_SChar] = mode == ProcessingMode::objc ? "Z" : "B"; // BOOL in Objective-C
-    m[CXType_UChar] = "UB";
-    m[CXType_WChar] = "W";
-    m[CXType_Char16] = "W";
-    m[CXType_Char32] = "W";
-    m[CXType_Short] = "S";
-    m[CXType_UShort] = "US";
-    m[CXType_Int] = "I";
-    m[CXType_UInt] = "UI";
-    m[CXType_Long] = "I";   // assuming that int == long
-    m[CXType_ULong] = "UI";
-    m[CXType_LongLong] = "J";
-    m[CXType_ULongLong] = "UJ";
-    m[CXType_Float] = "F";
-    m[CXType_Double] = "D";
-    // TODO: long double
+    if (mode != ProcessingMode::unknown) {
 
-    if (mode == ProcessingMode::objc) {
-        m[CXType_ObjCId] = "OI";
-        m[CXType_ObjCClass] = "OC";
-        m[CXType_ObjCSel] = "OS";
+        m[CXType_Void] = "V";
+        m[CXType_Bool] = "Z";
+        m[CXType_Char_U] = "C";
+        m[CXType_Char_S] = "C";
+        m[CXType_SChar] = mode == ProcessingMode::objc ? "Z" : "B"; // BOOL in Objective-C
+        m[CXType_UChar] = "UB";
+        m[CXType_WChar] = "W";
+        m[CXType_Char16] = "W";
+        m[CXType_Char32] = "W";
+        m[CXType_Short] = "S";
+        m[CXType_UShort] = "US";
+        m[CXType_Int] = "I";
+        m[CXType_UInt] = "UI";
+        m[CXType_Long] = "I";   // assuming that int == long
+        m[CXType_ULong] = "UI";
+        m[CXType_LongLong] = "J";
+        m[CXType_ULongLong] = "UJ";
+        m[CXType_Float] = "F";
+        m[CXType_Double] = "D";
+        // TODO: long double
+
+        if (mode == ProcessingMode::objc) {
+            m[CXType_ObjCId] = "OI";
+            m[CXType_ObjCClass] = "OC";
+            m[CXType_ObjCSel] = "OS";
+        }
     }
+    else if (m.empty())
+            throw std::logic_error("primitive types map is not initialized");
 
     return m;
 }

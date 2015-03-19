@@ -1,7 +1,7 @@
 #include "long.h"
 
 @implementation A
-+ (long) foo {
++ (long long) foo {
     return 123456789123456789L;
 }
 
