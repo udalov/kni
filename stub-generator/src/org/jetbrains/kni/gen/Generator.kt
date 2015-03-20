@@ -23,6 +23,12 @@ public enum class CharStringType {
     Utf8
 }
 
+enum class OverrideQualifier {
+    none
+    `open`
+    `override`
+}
+
 public class GeneratorOptions(
         public val runtime: InteropRuntime,
         public val charStringType: CharStringType = CharStringType.Ascii
@@ -71,8 +77,12 @@ class Generator(private val out: Printer,
             out.println()
         }
 
+        // preparing list of all classes methods signatures for finding overrides
+        val classes = hashMapOf<String, ObjCClass>()
+        translationUnit.getClass_List().forEach { classes.put(it.getName(), it) }
+
         for (klass in translationUnit.getClass_List()) {
-            genClass(klass)
+            genClass(klass, classes)
             out.println()
         }
 
@@ -144,7 +154,7 @@ class Generator(private val out: Printer,
                 }
                 .forEach {
                     out.print("public ")
-                    makeFunSignature(it, hashSetOf(), ifaceTypes, extPrefix)
+                    out.print( makeFunSignature(it, hashSetOf(), ifaceTypes, extPrefix))
                     out.println(" = ")
                     out.push()
                     out.print(namer.methodName(it.getName()))
@@ -156,17 +166,29 @@ class Generator(private val out: Printer,
                 }
     }
 
-    fun genClass(klass: ObjCClass) {
+    fun genClass(klass: ObjCClass, classes: Map<String, ObjCClass>) {
+
+        fun getAllBaseMethodsSignatures(klass: ObjCClass): Collection<String> {
+            if (klass.hasBaseClass()) {
+                val baseClass = classes.get(klass.getBaseClass())
+                if (baseClass != null)
+                    return baseClass.getMethodList().filter { it.getFunction().getName() != "finalize" && !it.getClassMethod() }
+                                                    .map { makeFunSignature(it.getFunction()) } +
+                           getAllBaseMethodsSignatures(baseClass)
+            }
+            return listOf()
+        }
+
         out.print("open class ${klass.getName()}(pointer: Long)")
 
-        val baseClass =
+        val baseClassName =
                 if (klass.hasBaseClass()) klass.getBaseClass()
                 else "ObjCObject"
         val protocols = klass.getProtocolList()
         val categories = klass.getCategoryList()
 
         val baseList =
-            listOf("$baseClass(pointer)") +
+            listOf("$baseClassName(pointer)") +
             protocols.map { namer.protocolName(it) } +
             categories.map { namer.categoryName(it) }
 
@@ -179,8 +201,13 @@ class Generator(private val out: Printer,
         // TODO: unhardcode
         val methods = klass.getMethodList().filter { it.getFunction().getName() != "finalize" }
 
+        val baseMethodsSignatures = getAllBaseMethodsSignatures(klass).toHashSet()
+
         for (method in methods.filter { !it.getClassMethod() }) {
-            genObjCFunction(method.getFunction(), open = true)
+            val sig = makeFunSignature(method.getFunction(), hashSetOf(), hashSetOf())
+            genObjCFunction(method.getFunction(),
+                            qualifier = if (baseMethodsSignatures.contains(sig)) OverrideQualifier.`override` else OverrideQualifier.`open`,
+                            signature = sig)
             out.println()
         }
 
@@ -207,7 +234,7 @@ class Generator(private val out: Printer,
         var first = true
         for (method in methods.filter { it.getClassMethod() }) {
             if (first) first = false else out.println()
-            genObjCFunction(method.getFunction(), open = false)
+            genObjCFunction(method.getFunction())
         }
 
         out.pop()
@@ -242,8 +269,7 @@ class Generator(private val out: Printer,
 
     fun genCFunctions(functions: Iterable<Function>, funcTypes: Set<FunctionType>, ifaceTypes: Set<Type>) {
         for (function in functions) {
-            makeFunSignature(function, funcTypes, ifaceTypes)
-            out.println()
+            out.println( makeFunSignature(function, funcTypes, ifaceTypes))
         }
     }
 
@@ -269,11 +295,13 @@ class Generator(private val out: Printer,
         return RecordType(struct.getName())
     }
 
-    private fun genObjCFunction(function: Function, open: Boolean) {
-        if (open) {
-            out.print("open ")
+    private fun genObjCFunction(function: Function, qualifier: OverrideQualifier = OverrideQualifier.none, signature: String? = null) {
+        when (qualifier) {
+            OverrideQualifier.`open` -> out.print("open ")
+            OverrideQualifier.`override` -> out.print("override ")
         }
-        val returnType = makeFunSignature(function, hashSetOf(), hashSetOf())
+        out.print(signature ?: makeFunSignature(function, hashSetOf(), hashSetOf()))
+        val returnType = parseType(function.getReturnType(), options, LexicalScope.General)
         out.println(" {")
 
         out.push()
@@ -299,7 +327,7 @@ class Generator(private val out: Printer,
         out.println("}")
     }
 
-    public fun makeFunSignature(function: Function, funcParams: Set<FunctionType>, ifaceTypes: Set<Type>, extPrefix: String = ""): Type {
+    public fun makeFunSignature(function: Function, funcParams: Set<FunctionType> = setOf(), ifaceTypes: Set<Type> = setOf(), extPrefix: String = ""): String {
 
         val typeMapper = { (t: Type) ->
             if (t is FunctionType && funcParams.contains(t)) makePrefixed(SimpleType(namer.funcProxyName(t.name)), extPrefix)
@@ -309,17 +337,13 @@ class Generator(private val out: Printer,
             else if (t is RecordType && !ifaceTypes.contains(t)) JNROpaquePointer
             else t }
 
-        out.print("fun $extPrefix${namer.methodName(function.getName())}")
-
-        function.getParameterList()
-                .mapIndexed { i, p -> namer.parameterName(p.getName(), i) + ": " + typeMapper(parseType(p.getType(), options, LexicalScope.General)).getExpr(typeMapper) }
-                .joinTo(out, separator = ", ", prefix = "(", postfix = ")")
-
         val returnType = parseType(function.getReturnType(), options, LexicalScope.General)
-//        if (returnType != UnitType) {
-            out.print(": ${typeMapper(returnType).getExpr()}")
-//        }
-        return returnType
+
+        return "fun $extPrefix${namer.methodName(function.getName())}" +
+            function.getParameterList()
+                    .mapIndexed { i, p -> namer.parameterName(p.getName(), i) + ": " + typeMapper(parseType(p.getType(), options, LexicalScope.General)).getExpr(typeMapper) }
+                    .joinToString(separator = ", ", prefix = "(", postfix = ")") +
+            ": ${typeMapper(returnType).getExpr()}"
     }
 
     private fun returnTypeReflectString(type: Type): String {
