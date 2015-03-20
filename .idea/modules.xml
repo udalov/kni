@@ -5,7 +5,6 @@
       <module fileurl="file://$PROJECT_DIR$/indexer/indexer.iml" filepath="$PROJECT_DIR$/indexer/indexer.iml" />
       <module fileurl="file://$PROJECT_DIR$/kni.iml" filepath="$PROJECT_DIR$/kni.iml" />
       <module fileurl="file://$PROJECT_DIR$/kni-jnrator/kni-jnrator.iml" filepath="$PROJECT_DIR$/kni-jnrator/kni-jnrator.iml" />
-      <module fileurl="file://$PROJECT_DIR$/quickcheck/quickcheck.iml" filepath="$PROJECT_DIR$/quickcheck/quickcheck.iml" />
       <module fileurl="file://$PROJECT_DIR$/runtime-objc/runtime-objc.iml" filepath="$PROJECT_DIR$/runtime-objc/runtime-objc.iml" />
       <module fileurl="file://$PROJECT_DIR$/stub-generator/stub-generator.iml" filepath="$PROJECT_DIR$/stub-generator/stub-generator.iml" />
       <module fileurl="file://$PROJECT_DIR$/tests/tests.iml" filepath="$PROJECT_DIR$/tests/tests.iml" />
