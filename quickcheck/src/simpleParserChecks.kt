@@ -33,8 +33,10 @@ public class SimpleCHeaderGenerator : Generator<CSimpleTransUnit>(javaClass<CSim
                               { (f,l) -> random.nextLong(f,l) },
                               { (f,l) -> random.nextDouble(f,l) },
                               maxIdentifierSize = 10,
-                              maxParams = 3)
-        return gen.generateSimpleTransUnit1(random.nextInt(1,10))
+                              // seems that more than 5 params lead to jffi problems
+                              // \todo investigate
+                              maxParams = 5)
+        return gen.generateSimpleTransUnit1(random.nextInt(30,100))
     }
 }
 
@@ -80,12 +82,13 @@ public class SimpleCHeaderCheck : LastLogKeeper {
                 || jar.getName().contains("junit") || jar.getName().contains("hamcrest"))
                 res.add(jar)
         //res.add(File("lib/kotlinc/lib/kotlin-runtime.jar"))
-        res
+        res +
+        File("lib/jnr").listFiles().toArrayList()
     }
 
     // Rule public val onFailed : ErrorReporter = ErrorReporter(this)
 
-    Theory public fun SimpleArgsFuncs(ForAll From(javaClass<SimpleCHeaderGenerator>()) cunit: CSimpleTransUnit) {
+    Theory public fun SimpleArgsFuncs(ForAll(sampleSize = 10) From(javaClass<SimpleCHeaderGenerator>()) cunit: CSimpleTransUnit) {
         val indexerOptions = IndexerOptions(Language.CPP, verbose = true, debugDump = false)
         assumeNotNull(cunit, cunit.name)
         lastLogBuf = StringBuilder()

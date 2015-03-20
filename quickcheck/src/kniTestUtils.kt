@@ -5,7 +5,7 @@ import java.io.File
 import java.nio.file.Paths
 
 public fun runProcess(command: Collection<String>): Pair<Boolean, String> {
-    //println(command.joinToString(" "))
+    // println(command.joinToString(" "))
     val process = Runtime.getRuntime().exec(command.copyToArray())
     process.waitFor()
 

@@ -392,7 +392,7 @@ class Namer(translationUnit: TranslationUnit) {
     val name = translationUnit.getName()
 
     // TODO: all Kotlin keywords
-    val reservedWords = setOf("class", "object", "fun", "in")
+    val reservedWords = setOf("class", "object", "fun", "in", "as")
     val invalidIdChars = setOf('<', '>', '*')
 
     private fun calculateProtocolNames(translationUnit: TranslationUnit) {

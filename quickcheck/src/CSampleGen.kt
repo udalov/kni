@@ -51,6 +51,17 @@ ${funcs.map { it.declaration }.joinToString("\n\n")}
 """
 #include "$headerName"
 #include <stdexcept>
+#include <sstream>
+
+template <typename T, typename U>
+void checkEq(const std::string& name, T actual, U expected)
+{
+    if (actual != expected) {
+        std::stringstream ss;
+        ss << "unexpected value of " << name << ": expecting " << expected << " but got " << actual;
+        throw std::logic_error(ss.str());
+    }
+}
 
 ${funcs.map { it.definition }.joinToString("\n\n")}
 """
@@ -77,7 +88,8 @@ public class CGenGrammar(
                 "new", "noexcept", "not", "not_eq", "nullptr", "operator", "or", "or_eq", "private", "protected", "public", "register", "reinterpret_cast",
                 "return", "short", "signed", "sizeof", "static", "static_assert", "static_cast", "struct", "switch", "template", "this", "thread_local",
                 "throw", "true", "try", "typedef", "typeid", "typename", "union", "unsigned", "using", "virtual", "void", "volatile", "wchar_t", "while",
-                "xor", "xor_eq")
+                "xor", "xor_eq",
+                "EOF", "NULL")
 
         fun isValidIdChar(c: Char, isFirst: Boolean = false): Boolean =
                 ( c >= 'A' && c <= 'Z') || ( c >= 'a' && c <= 'z' ) || c == '_' || (!isFirst && c >= '0' && c <= '9')
@@ -98,7 +110,7 @@ public class CGenGrammar(
 //            "double"            to { () -> ValueSample("%e".format(getRandomDouble(java.lang.Double.MIN_VALUE, java.lang.Double.MAX_VALUE)))},
 //            "float"             to { () -> val v = getRandomDouble(java.lang.Float.MIN_VALUE.toDouble(), java.lang.Float.MAX_VALUE.toDouble()); ValueSample("%e".format(v), "%ef".format(v))},
             "int"               to { () -> ValueSample("%d".format(getRandomLong(java.lang.Integer.MIN_VALUE.toLong(), java.lang.Integer.MAX_VALUE.toLong())))},
-            "long"              to { () -> val v = getRandomLong(java.lang.Integer.MIN_VALUE.toLong(), java.lang.Integer.MAX_VALUE.toLong()); ValueSample("%dl".format(v), "%d".format(v))},
+            "long"              to { () -> val v = getRandomLong(java.lang.Integer.MIN_VALUE.toLong() + 256L, java.lang.Integer.MAX_VALUE.toLong()); ValueSample("%dl".format(v), "%d".format(v))},
                                 // note: only double range is used
 //            "long double"       to { () -> ValueSample("%e".format(getRandomDouble(java.lang.Double.MIN_VALUE, java.lang.Double.MAX_VALUE)))},
             "long long"         to { () -> val v = getRandomLong(java.lang.Long.MIN_VALUE, java.lang.Long.MAX_VALUE); ValueSample("%dll".format(v), "%dL".format(v))},
@@ -109,12 +121,12 @@ public class CGenGrammar(
             "signed long long"  to { () -> val v = getRandomLong(java.lang.Long.MIN_VALUE, java.lang.Long.MAX_VALUE); ValueSample("%dll".format(v), "%dL".format(v))},
 //            "signed short"      to { () -> val v = getRandomLong(java.lang.Short.MIN_VALUE.toLong(), java.lang.Short.MAX_VALUE.toLong()); ValueSample("%d".format(v), "%d.toShort()".format(v))},
                                 // note - unsigned types (except the char) only tested in the range [0..<signed max val>]
-            "unsigned"          to { () -> ValueSample("%d".format(getRandomLong(0, java.lang.Integer.MAX_VALUE.toLong())))},
+            "unsigned"          to { () -> val v = getRandomLong(0, java.lang.Short.MAX_VALUE.toLong()); ValueSample("%du".format(v), "%d".format(v))},
 //            "unsigned char"     to { () -> ValueSample("%d".format(getRandomLong(0, java.lang.Byte.MAX_VALUE.toLong())))},
-            "unsigned int"      to { () -> ValueSample("%d".format(getRandomLong(0, java.lang.Short.MAX_VALUE.toLong())))},
-            "unsigned long"     to { () -> val v = getRandomLong(0, java.lang.Integer.MAX_VALUE.toLong()); ValueSample("%dl".format(v), "%d".format(v))},
-            "unsigned long long"to { () -> val v = getRandomLong(0, java.lang.Long.MAX_VALUE); ValueSample("%dll".format(v), "%dL".format(v))},
-            "unsigned short"    to { () -> val v = getRandomLong(0, java.lang.Short.MAX_VALUE.toLong()); ValueSample("%d".format(v), "%d.toShort()".format(v))}
+            "unsigned int"      to { () -> val v = getRandomLong(0, java.lang.Short.MAX_VALUE.toLong()); ValueSample("%du".format(v), "%d".format(v))},
+            "unsigned long"     to { () -> val v = getRandomLong(0, java.lang.Integer.MAX_VALUE.toLong()); ValueSample("%dul".format(v), "%d".format(v))},
+            "unsigned long long"to { () -> val v = getRandomLong(0, java.lang.Long.MAX_VALUE); ValueSample("%dull".format(v), "%dL".format(v))},
+            "unsigned short"    to { () -> val v = getRandomLong(0, java.lang.Short.MAX_VALUE.toLong()); ValueSample("%du".format(v), "%d.toShort()".format(v))}
 //            "wchar_t"           to { () -> val v = getRandomChar(java.lang.Character.MIN_VALUE, '\ucfff'); ValueSample("L'\\u%04x'".format(v.toInt()), "'\\u%04x'".format(v.toInt()))}
     )
 
@@ -150,14 +162,13 @@ public class CGenGrammar(
 
     public fun streamSimpleCheckFuncs() : Stream<CSimpleFunc> =
             streamUniqueIds()
-                .map {
+                .map { (func) ->
                     val ret = getRandomPodType()
                     val retSample = podTypes.get(ret)!!()
                     val params = streamSimpleParams().take(getRandomLong(1, maxParams.toLong()).toInt()).toArrayList()
-                    CSimpleFunc(it, ret, retSample, params,
+                    CSimpleFunc(func, ret, retSample, params,
 """
-    if (${params.map { "${it.name} != ${it.sample.native}" }.joinToString("\n        || ")})
-      throw std::logic_error("unexpected value");
+    ${params.map {"checkEq(\"$func.${it.name}(${it.type})\", ${it.name}, ${it.sample.native});"}.joinToString("\n    ")}
     return ${retSample.native};""")
                 }
 
