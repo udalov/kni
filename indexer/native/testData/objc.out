@@ -250,7 +250,7 @@ class {
   method {
     function {
       name: "hash"
-      return_type: "UJ"
+      return_type: "UI"
     }
     class_method: true
   }
@@ -364,7 +364,7 @@ protocol {
   method {
     function {
       name: "hash"
-      return_type: "UJ"
+      return_type: "UI"
     }
     class_method: false
   }
@@ -509,7 +509,7 @@ protocol {
   method {
     function {
       name: "retainCount"
-      return_type: "UJ"
+      return_type: "UI"
     }
     class_method: false
   }
@@ -536,7 +536,7 @@ protocol {
   }
   property {
     name: "hash"
-    type: "UJ"
+    type: "UI"
   }
   property {
     name: "superclass"
@@ -651,7 +651,7 @@ category {
   method {
     function {
       name: "version"
-      return_type: "J"
+      return_type: "I"
     }
     class_method: true
   }
@@ -661,7 +661,7 @@ category {
       return_type: "V"
       parameter {
         name: "aVersion"
-        type: "J"
+        type: "I"
       }
     }
     class_method: true

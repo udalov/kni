@@ -349,8 +349,8 @@ void protobuf_AddDesc_NativeIndex_2eproto() {
     "\010protocol\030\003 \003(\0132\r.ObjCProtocol\022\037\n\010catego"
     "ry\030\004 \003(\0132\r.ObjCCategory\022\033\n\010function\030\005 \003("
     "\0132\t.Function\022\030\n\006struct\030\006 \003(\0132\010.CStruct\022\037"
-    "\n\ndiagnostic\030d \003(\0132\013.DiagnosticB\036\n\031org.j"
-    "etbrains.kni.indexer\210\001\000", 1063);
+    "\n\ndiagnostic\030d \003(\0132\013.DiagnosticB \n\031org.j"
+    "etbrains.kni.indexerH\001\210\001\000", 1065);
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedFile(
     "NativeIndex.proto", &protobuf_RegisterTypes);
   Function::default_instance_ = new Function();

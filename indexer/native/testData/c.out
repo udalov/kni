@@ -43,6 +43,14 @@ function {
     type: "*RUndefinedStructImpl;;"
   }
 }
+function {
+  name: "callfn1"
+  return_type: "I"
+  parameter {
+    name: "cb"
+    type: "*(I*C;)I;"
+  }
+}
 struct {
   name: "Struct"
   field {

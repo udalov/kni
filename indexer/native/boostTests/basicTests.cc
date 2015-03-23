@@ -63,7 +63,7 @@ std::string vector2str(const std::vector<std::string> args)
 }
 
 template <class Cont>
-void indexAndCompare(const fs::path& file, Cont args) {
+void indexAndCompare(const fs::path& file, Cont args, const fs::path& expectedHint = fs::path()) {
 
     BOOST_MESSAGE( file.string());
 
@@ -78,11 +78,19 @@ void indexAndCompare(const fs::path& file, Cont args) {
 
     fs::path expectedFile = file;
     expectedFile.replace_extension("out");
+    if (!expectedHint.empty()) {
+        if (!fs::exists(expectedHint))
+            BOOST_CHECK_MESSAGE(false, "hint path doesn't exist: " << expectedHint);
+        else if (fs::is_directory(expectedHint))
+            expectedFile = expectedHint / expectedFile.filename();
+        else
+            expectedFile = expectedHint;
+    }
 
     BOOST_REQUIRE_MESSAGE(fs::exists(expectedFile), "File not found: " << expectedFile);
 
     {
-        fs::path actualFile = file;
+        fs::path actualFile = expectedFile;
         actualFile.replace_extension("actual");
         fs::ofstream expectedStream(actualFile);
         expectedStream << tu.DebugString();
@@ -103,7 +111,10 @@ BOOST_AUTO_TEST_CASE( indexer_basic)
     indexAndCompare("testData/c.h", params { });
     indexAndCompare("testData/cpp.hh", params { "-c++" }); // "---v", "---d"
     indexAndCompare("testData/rnd01.hh", params { "-c++" });
+    indexAndCompare("../../lib/clang-c/Index.h", params { "-c++" }, "testData/Index.out");
     indexAndCompare("testData/objc.h", params { "-ObjC" });
+    indexAndCompare("../../tests/testData/integration/simpleClass.h", params { "-ObjC" }, "testData/simpleClass.out");
+    indexAndCompare("/System/Library/Frameworks/AppKit.framework/Headers/AppKit.h", params { "-ObjC" }, "testData/AppKit.out");
 //    indexAndCompare("/Users/lige/Work/kotlin/kni/tests/testData/integration/arguments/bool.m", params { "-ObjC" });
     //indexAndCompare(boost::filesystem::current_path() / "../../tests/testData/integration_cpp/arguments/PODs.cpp");
 }

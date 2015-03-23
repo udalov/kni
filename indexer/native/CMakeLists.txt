@@ -71,6 +71,9 @@ set(INDEXER_SOURCE_FILES
 add_library(KNIIndexer SHARED ${INDEXER_SOURCE_FILES})
 target_link_libraries(KNIIndexer clang ${PROTOBUF_LIBRARY})
 
+add_executable(kniidx ${INDEXER_SOURCE_FILES} kniidx.cc)
+target_link_libraries(kniidx ${libclang_lib} ${PROTOBUF_LIBRARY})
+
 add_executable(tests ${INDEXER_SOURCE_FILES} ${TESTS_SOURCE_FILES})
 target_link_libraries(tests ${libclang_lib} ${PROTOBUF_LIBRARY})
 

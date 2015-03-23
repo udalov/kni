@@ -55,7 +55,8 @@ const std::map<CXTypeKind, std::string>& getPrimitiveTypesMap(ProcessingMode::ty
         m[CXType_UShort] = "US";
         m[CXType_Int] = "I";
         m[CXType_UInt] = "UI";
-        m[CXType_Long] = "I";   // assuming that int == long
+        m[CXType_Long] = "I";   // assuming that long is at least int, so it is mapped into jvm Integer, for cross-platform compatibility
+                                // \todo implement an option for mapping long into jvm Long for some specific cases
         m[CXType_ULong] = "UI";
         m[CXType_LongLong] = "J";
         m[CXType_ULongLong] = "UJ";
