@@ -1,0 +1,971 @@
+name: "../../lib/clang-c/Index.h"
+function {
+  name: "asctime"
+  return_type: "*C;"
+  parameter {
+    name: ""
+    type: "*cRtm;;"
+  }
+}
+function {
+  name: "clock"
+  return_type: "UI"
+}
+function {
+  name: "ctime"
+  return_type: "*C;"
+  parameter {
+    name: ""
+    type: "*cI;"
+  }
+}
+function {
+  name: "difftime"
+  return_type: "D"
+  parameter {
+    name: ""
+    type: "I"
+  }
+  parameter {
+    name: ""
+    type: "I"
+  }
+}
+function {
+  name: "getdate"
+  return_type: "*Rtm;;"
+  parameter {
+    name: ""
+    type: "*cC;"
+  }
+}
+function {
+  name: "gmtime"
+  return_type: "*Rtm;;"
+  parameter {
+    name: ""
+    type: "*cI;"
+  }
+}
+function {
+  name: "localtime"
+  return_type: "*Rtm;;"
+  parameter {
+    name: ""
+    type: "*cI;"
+  }
+}
+function {
+  name: "mktime"
+  return_type: "I"
+  parameter {
+    name: ""
+    type: "*Rtm;;"
+  }
+}
+function {
+  name: "strftime"
+  return_type: "UI"
+  parameter {
+    name: ""
+    type: "*C;"
+  }
+  parameter {
+    name: ""
+    type: "UI"
+  }
+  parameter {
+    name: ""
+    type: "*cC;"
+  }
+  parameter {
+    name: ""
+    type: "*cRtm;;"
+  }
+}
+function {
+  name: "strptime"
+  return_type: "*C;"
+  parameter {
+    name: ""
+    type: "*cC;"
+  }
+  parameter {
+    name: ""
+    type: "*cC;"
+  }
+  parameter {
+    name: ""
+    type: "*Rtm;;"
+  }
+}
+function {
+  name: "time"
+  return_type: "I"
+  parameter {
+    name: ""
+    type: "*I;"
+  }
+}
+function {
+  name: "tzset"
+  return_type: "V"
+}
+function {
+  name: "asctime_r"
+  return_type: "*C;"
+  parameter {
+    name: ""
+    type: "*cRtm;;"
+  }
+  parameter {
+    name: ""
+    type: "*C;"
+  }
+}
+function {
+  name: "ctime_r"
+  return_type: "*C;"
+  parameter {
+    name: ""
+    type: "*cI;"
+  }
+  parameter {
+    name: ""
+    type: "*C;"
+  }
+}
+function {
+  name: "gmtime_r"
+  return_type: "*Rtm;;"
+  parameter {
+    name: ""
+    type: "*cI;"
+  }
+  parameter {
+    name: ""
+    type: "*Rtm;;"
+  }
+}
+function {
+  name: "localtime_r"
+  return_type: "*Rtm;;"
+  parameter {
+    name: ""
+    type: "*cI;"
+  }
+  parameter {
+    name: ""
+    type: "*Rtm;;"
+  }
+}
+function {
+  name: "posix2time"
+  return_type: "I"
+  parameter {
+    name: ""
+    type: "I"
+  }
+}
+function {
+  name: "tzsetwall"
+  return_type: "V"
+}
+function {
+  name: "time2posix"
+  return_type: "I"
+  parameter {
+    name: ""
+    type: "I"
+  }
+}
+function {
+  name: "timelocal"
+  return_type: "I"
+  parameter {
+    name: ""
+    type: "c*Rtm;;"
+  }
+}
+function {
+  name: "timegm"
+  return_type: "I"
+  parameter {
+    name: ""
+    type: "c*Rtm;;"
+  }
+}
+function {
+  name: "nanosleep"
+  return_type: "I"
+  parameter {
+    name: ""
+    type: "*cRtimespec;;"
+  }
+  parameter {
+    name: ""
+    type: "*Rtimespec;;"
+  }
+}
+function {
+  name: "clang_visitChildrenWithBlock"
+  return_type: "UI"
+  parameter {
+    name: "parent"
+    type: "RCXCursor;"
+  }
+  parameter {
+    name: "block"
+    type: "X(BlockPointer.enum CXChildVisitResult (^)(CXCursor, CXCursor))"
+  }
+}
+struct {
+  name: "__darwin_pthread_handler_rec"
+  field {
+    name: "__routine"
+    type: "*(*V;)V;"
+  }
+  field {
+    name: "__arg"
+    type: "*V;"
+  }
+  field {
+    name: "__next"
+    type: "*R__darwin_pthread_handler_rec;;"
+  }
+}
+struct {
+  name: "_opaque_pthread_attr_t"
+  field {
+    name: "__sig"
+    type: "I"
+  }
+  field {
+    name: "__opaque"
+    type: "X(ConstantArray.char [56])"
+  }
+}
+struct {
+  name: "_opaque_pthread_cond_t"
+  field {
+    name: "__sig"
+    type: "I"
+  }
+  field {
+    name: "__opaque"
+    type: "X(ConstantArray.char [40])"
+  }
+}
+struct {
+  name: "_opaque_pthread_condattr_t"
+  field {
+    name: "__sig"
+    type: "I"
+  }
+  field {
+    name: "__opaque"
+    type: "X(ConstantArray.char [8])"
+  }
+}
+struct {
+  name: "_opaque_pthread_mutex_t"
+  field {
+    name: "__sig"
+    type: "I"
+  }
+  field {
+    name: "__opaque"
+    type: "X(ConstantArray.char [56])"
+  }
+}
+struct {
+  name: "_opaque_pthread_mutexattr_t"
+  field {
+    name: "__sig"
+    type: "I"
+  }
+  field {
+    name: "__opaque"
+    type: "X(ConstantArray.char [8])"
+  }
+}
+struct {
+  name: "_opaque_pthread_once_t"
+  field {
+    name: "__sig"
+    type: "I"
+  }
+  field {
+    name: "__opaque"
+    type: "X(ConstantArray.char [8])"
+  }
+}
+struct {
+  name: "_opaque_pthread_rwlock_t"
+  field {
+    name: "__sig"
+    type: "I"
+  }
+  field {
+    name: "__opaque"
+    type: "X(ConstantArray.char [192])"
+  }
+}
+struct {
+  name: "_opaque_pthread_rwlockattr_t"
+  field {
+    name: "__sig"
+    type: "I"
+  }
+  field {
+    name: "__opaque"
+    type: "X(ConstantArray.char [16])"
+  }
+}
+struct {
+  name: "_opaque_pthread_t"
+  field {
+    name: "__sig"
+    type: "I"
+  }
+  field {
+    name: "__cleanup_stack"
+    type: "*R__darwin_pthread_handler_rec;;"
+  }
+  field {
+    name: "__opaque"
+    type: "X(ConstantArray.char [8176])"
+  }
+}
+struct {
+  name: "timespec"
+  field {
+    name: "tv_sec"
+    type: "I"
+  }
+  field {
+    name: "tv_nsec"
+    type: "I"
+  }
+}
+struct {
+  name: "tm"
+  field {
+    name: "tm_sec"
+    type: "I"
+  }
+  field {
+    name: "tm_min"
+    type: "I"
+  }
+  field {
+    name: "tm_hour"
+    type: "I"
+  }
+  field {
+    name: "tm_mday"
+    type: "I"
+  }
+  field {
+    name: "tm_mon"
+    type: "I"
+  }
+  field {
+    name: "tm_year"
+    type: "I"
+  }
+  field {
+    name: "tm_wday"
+    type: "I"
+  }
+  field {
+    name: "tm_yday"
+    type: "I"
+  }
+  field {
+    name: "tm_isdst"
+    type: "I"
+  }
+  field {
+    name: "tm_gmtoff"
+    type: "I"
+  }
+  field {
+    name: "tm_zone"
+    type: "*C;"
+  }
+}
+struct {
+  name: "CXUnsavedFile"
+  field {
+    name: "Filename"
+    type: "*cC;"
+  }
+  field {
+    name: "Contents"
+    type: "*cC;"
+  }
+  field {
+    name: "Length"
+    type: "UI"
+  }
+}
+struct {
+  name: "CXVersion"
+  field {
+    name: "Major"
+    type: "I"
+  }
+  field {
+    name: "Minor"
+    type: "I"
+  }
+  field {
+    name: "Subminor"
+    type: "I"
+  }
+}
+struct {
+  name: "CXFileUniqueID"
+  field {
+    name: "data"
+    type: "X(ConstantArray.unsigned long long [3])"
+  }
+}
+struct {
+  name: "CXSourceLocation"
+  field {
+    name: "ptr_data"
+    type: "X(ConstantArray.const void *[2])"
+  }
+  field {
+    name: "int_data"
+    type: "UI"
+  }
+}
+struct {
+  name: "CXSourceRange"
+  field {
+    name: "ptr_data"
+    type: "X(ConstantArray.const void *[2])"
+  }
+  field {
+    name: "begin_int_data"
+    type: "UI"
+  }
+  field {
+    name: "end_int_data"
+    type: "UI"
+  }
+}
+struct {
+  name: "CXSourceRangeList"
+  field {
+    name: "count"
+    type: "UI"
+  }
+  field {
+    name: "ranges"
+    type: "*RCXSourceRange;;"
+  }
+}
+struct {
+  name: "CXTUResourceUsageEntry"
+  field {
+    name: "kind"
+    type: "X(Enum.enum CXTUResourceUsageKind)"
+  }
+  field {
+    name: "amount"
+    type: "UI"
+  }
+}
+struct {
+  name: "CXTUResourceUsage"
+  field {
+    name: "data"
+    type: "*V;"
+  }
+  field {
+    name: "numEntries"
+    type: "UI"
+  }
+  field {
+    name: "entries"
+    type: "*RCXTUResourceUsageEntry;;"
+  }
+}
+struct {
+  name: "CXCursor"
+  field {
+    name: "kind"
+    type: "X(Enum.enum CXCursorKind)"
+  }
+  field {
+    name: "xdata"
+    type: "I"
+  }
+  field {
+    name: "data"
+    type: "X(ConstantArray.const void *[3])"
+  }
+}
+struct {
+  name: "CXPlatformAvailability"
+  field {
+    name: "Platform"
+    type: "I"
+  }
+  field {
+    name: "Introduced"
+    type: "RCXVersion;"
+  }
+  field {
+    name: "Deprecated"
+    type: "RCXVersion;"
+  }
+  field {
+    name: "Obsoleted"
+    type: "RCXVersion;"
+  }
+  field {
+    name: "Unavailable"
+    type: "I"
+  }
+  field {
+    name: "Message"
+    type: "I"
+  }
+}
+struct {
+  name: "CXType"
+  field {
+    name: "kind"
+    type: "X(Enum.enum CXTypeKind)"
+  }
+  field {
+    name: "data"
+    type: "X(ConstantArray.void *[2])"
+  }
+}
+struct {
+  name: "CXToken"
+  field {
+    name: "int_data"
+    type: "X(ConstantArray.unsigned int [4])"
+  }
+  field {
+    name: "ptr_data"
+    type: "*V;"
+  }
+}
+struct {
+  name: "CXCompletionResult"
+  field {
+    name: "CursorKind"
+    type: "X(Enum.enum CXCursorKind)"
+  }
+  field {
+    name: "CompletionString"
+    type: "*V;"
+  }
+}
+struct {
+  name: "CXCodeCompleteResults"
+  field {
+    name: "Results"
+    type: "*RCXCompletionResult;;"
+  }
+  field {
+    name: "NumResults"
+    type: "UI"
+  }
+}
+struct {
+  name: "CXCursorAndRangeVisitor"
+  field {
+    name: "context"
+    type: "*V;"
+  }
+  field {
+    name: "visit"
+    type: "*(*V;RCXCursor;RCXSourceRange;)X(Enum.enum CXVisitorResult);"
+  }
+}
+struct {
+  name: "CXIdxLoc"
+  field {
+    name: "ptr_data"
+    type: "X(ConstantArray.void *[2])"
+  }
+  field {
+    name: "int_data"
+    type: "UI"
+  }
+}
+struct {
+  name: "CXIdxIncludedFileInfo"
+  field {
+    name: "hashLoc"
+    type: "RCXIdxLoc;"
+  }
+  field {
+    name: "filename"
+    type: "*cC;"
+  }
+  field {
+    name: "file"
+    type: "*V;"
+  }
+  field {
+    name: "isImport"
+    type: "I"
+  }
+  field {
+    name: "isAngled"
+    type: "I"
+  }
+  field {
+    name: "isModuleImport"
+    type: "I"
+  }
+}
+struct {
+  name: "CXIdxImportedASTFileInfo"
+  field {
+    name: "file"
+    type: "*V;"
+  }
+  field {
+    name: "module"
+    type: "*V;"
+  }
+  field {
+    name: "loc"
+    type: "RCXIdxLoc;"
+  }
+  field {
+    name: "isImplicit"
+    type: "I"
+  }
+}
+struct {
+  name: "CXIdxAttrInfo"
+  field {
+    name: "kind"
+    type: "X(Enum.CXIdxAttrKind)"
+  }
+  field {
+    name: "cursor"
+    type: "RCXCursor;"
+  }
+  field {
+    name: "loc"
+    type: "RCXIdxLoc;"
+  }
+}
+struct {
+  name: "CXIdxEntityInfo"
+  field {
+    name: "kind"
+    type: "X(Enum.CXIdxEntityKind)"
+  }
+  field {
+    name: "templateKind"
+    type: "X(Enum.CXIdxEntityCXXTemplateKind)"
+  }
+  field {
+    name: "lang"
+    type: "X(Enum.CXIdxEntityLanguage)"
+  }
+  field {
+    name: "name"
+    type: "*cC;"
+  }
+  field {
+    name: "USR"
+    type: "*cC;"
+  }
+  field {
+    name: "cursor"
+    type: "RCXCursor;"
+  }
+  field {
+    name: "attributes"
+    type: "*c*cRCXIdxAttrInfo;;;"
+  }
+  field {
+    name: "numAttributes"
+    type: "UI"
+  }
+}
+struct {
+  name: "CXIdxContainerInfo"
+  field {
+    name: "cursor"
+    type: "RCXCursor;"
+  }
+}
+struct {
+  name: "CXIdxIBOutletCollectionAttrInfo"
+  field {
+    name: "attrInfo"
+    type: "*cRCXIdxAttrInfo;;"
+  }
+  field {
+    name: "objcClass"
+    type: "*cRCXIdxEntityInfo;;"
+  }
+  field {
+    name: "classCursor"
+    type: "RCXCursor;"
+  }
+  field {
+    name: "classLoc"
+    type: "RCXIdxLoc;"
+  }
+}
+struct {
+  name: "CXIdxDeclInfo"
+  field {
+    name: "entityInfo"
+    type: "*cRCXIdxEntityInfo;;"
+  }
+  field {
+    name: "cursor"
+    type: "RCXCursor;"
+  }
+  field {
+    name: "loc"
+    type: "RCXIdxLoc;"
+  }
+  field {
+    name: "semanticContainer"
+    type: "*cRCXIdxContainerInfo;;"
+  }
+  field {
+    name: "lexicalContainer"
+    type: "*cRCXIdxContainerInfo;;"
+  }
+  field {
+    name: "isRedeclaration"
+    type: "I"
+  }
+  field {
+    name: "isDefinition"
+    type: "I"
+  }
+  field {
+    name: "isContainer"
+    type: "I"
+  }
+  field {
+    name: "declAsContainer"
+    type: "*cRCXIdxContainerInfo;;"
+  }
+  field {
+    name: "isImplicit"
+    type: "I"
+  }
+  field {
+    name: "attributes"
+    type: "*c*cRCXIdxAttrInfo;;;"
+  }
+  field {
+    name: "numAttributes"
+    type: "UI"
+  }
+  field {
+    name: "flags"
+    type: "UI"
+  }
+}
+struct {
+  name: "CXIdxObjCContainerDeclInfo"
+  field {
+    name: "declInfo"
+    type: "*cRCXIdxDeclInfo;;"
+  }
+  field {
+    name: "kind"
+    type: "X(Enum.CXIdxObjCContainerKind)"
+  }
+}
+struct {
+  name: "CXIdxBaseClassInfo"
+  field {
+    name: "base"
+    type: "*cRCXIdxEntityInfo;;"
+  }
+  field {
+    name: "cursor"
+    type: "RCXCursor;"
+  }
+  field {
+    name: "loc"
+    type: "RCXIdxLoc;"
+  }
+}
+struct {
+  name: "CXIdxObjCProtocolRefInfo"
+  field {
+    name: "protocol"
+    type: "*cRCXIdxEntityInfo;;"
+  }
+  field {
+    name: "cursor"
+    type: "RCXCursor;"
+  }
+  field {
+    name: "loc"
+    type: "RCXIdxLoc;"
+  }
+}
+struct {
+  name: "CXIdxObjCProtocolRefListInfo"
+  field {
+    name: "protocols"
+    type: "*c*cRCXIdxObjCProtocolRefInfo;;;"
+  }
+  field {
+    name: "numProtocols"
+    type: "UI"
+  }
+}
+struct {
+  name: "CXIdxObjCInterfaceDeclInfo"
+  field {
+    name: "containerInfo"
+    type: "*cRCXIdxObjCContainerDeclInfo;;"
+  }
+  field {
+    name: "superInfo"
+    type: "*cRCXIdxBaseClassInfo;;"
+  }
+  field {
+    name: "protocols"
+    type: "*cRCXIdxObjCProtocolRefListInfo;;"
+  }
+}
+struct {
+  name: "CXIdxObjCCategoryDeclInfo"
+  field {
+    name: "containerInfo"
+    type: "*cRCXIdxObjCContainerDeclInfo;;"
+  }
+  field {
+    name: "objcClass"
+    type: "*cRCXIdxEntityInfo;;"
+  }
+  field {
+    name: "classCursor"
+    type: "RCXCursor;"
+  }
+  field {
+    name: "classLoc"
+    type: "RCXIdxLoc;"
+  }
+  field {
+    name: "protocols"
+    type: "*cRCXIdxObjCProtocolRefListInfo;;"
+  }
+}
+struct {
+  name: "CXIdxObjCPropertyDeclInfo"
+  field {
+    name: "declInfo"
+    type: "*cRCXIdxDeclInfo;;"
+  }
+  field {
+    name: "getter"
+    type: "*cRCXIdxEntityInfo;;"
+  }
+  field {
+    name: "setter"
+    type: "*cRCXIdxEntityInfo;;"
+  }
+}
+struct {
+  name: "CXIdxCXXClassDeclInfo"
+  field {
+    name: "declInfo"
+    type: "*cRCXIdxDeclInfo;;"
+  }
+  field {
+    name: "bases"
+    type: "*c*cRCXIdxBaseClassInfo;;;"
+  }
+  field {
+    name: "numBases"
+    type: "UI"
+  }
+}
+struct {
+  name: "CXIdxEntityRefInfo"
+  field {
+    name: "kind"
+    type: "X(Enum.CXIdxEntityRefKind)"
+  }
+  field {
+    name: "cursor"
+    type: "RCXCursor;"
+  }
+  field {
+    name: "loc"
+    type: "RCXIdxLoc;"
+  }
+  field {
+    name: "referencedEntity"
+    type: "*cRCXIdxEntityInfo;;"
+  }
+  field {
+    name: "parentEntity"
+    type: "*cRCXIdxEntityInfo;;"
+  }
+  field {
+    name: "container"
+    type: "*cRCXIdxContainerInfo;;"
+  }
+}
+struct {
+  name: "IndexerCallbacks"
+  field {
+    name: "abortQuery"
+    type: "*(*V;*V;)I;"
+  }
+  field {
+    name: "diagnostic"
+    type: "*(*V;*V;*V;)V;"
+  }
+  field {
+    name: "enteredMainFile"
+    type: "*(*V;*V;*V;)*V;;"
+  }
+  field {
+    name: "ppIncludedFile"
+    type: "*(*V;*cRCXIdxIncludedFileInfo;;)*V;;"
+  }
+  field {
+    name: "importedASTFile"
+    type: "*(*V;*cRCXIdxImportedASTFileInfo;;)*V;;"
+  }
+  field {
+    name: "startedTranslationUnit"
+    type: "*(*V;*V;)*V;;"
+  }
+  field {
+    name: "indexDeclaration"
+    type: "*(*V;*cRCXIdxDeclInfo;;)V;"
+  }
+  field {
+    name: "indexEntityReference"
+    type: "*(*V;*cRCXIdxEntityRefInfo;;)V;"
+  }
+}
+diagnostic {
+  severity: 4
+  line: 21
+  column: 10
+  message: "../../lib/clang-c/Index.h:21:10: fatal error: \'clang-c/Platform.h\' file not found"
+  category: "Lexical or Preprocessor Issue"
+}

@@ -112,6 +112,7 @@ BOOST_AUTO_TEST_CASE( indexer_basic)
     indexAndCompare("testData/cpp.hh", params { "-c++" }); // "---v", "---d"
     indexAndCompare("testData/rnd01.hh", params { "-c++" });
     indexAndCompare("../../lib/clang-c/Index.h", params { "-c++" }, "testData/Index.out");
+    indexAndCompare("/usr/local/include/wine/windows/windows.h", params { "-c++" }, "testData/windows.out");
     indexAndCompare("testData/objc.h", params { "-ObjC" });
     indexAndCompare("../../tests/testData/integration/simpleClass.h", params { "-ObjC" }, "testData/simpleClass.out");
     indexAndCompare("/System/Library/Frameworks/AppKit.framework/Headers/AppKit.h", params { "-ObjC" }, "testData/AppKit.out");
