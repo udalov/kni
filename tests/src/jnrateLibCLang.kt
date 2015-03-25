@@ -36,7 +36,7 @@ class LibCLangTests : AbstractIntegrationTest(
     }
 
     test fun JNRateLibCLang() {
-        val tmpdir = Files.createTempDirectory("liclangtest").toFile()
+        val tmpdir = Files.createTempDirectory("libclangtest").toFile()
         val header = File("lib/clang-c/Index.h").getAbsoluteFile()
         val kotlinSource = File("tests/testData/libCLang/libCLangTest.kt").getAbsoluteFile()
         val dylib = File("libclang.dylib")
@@ -44,7 +44,7 @@ class LibCLangTests : AbstractIntegrationTest(
         val stubClasses = makeStub(header, dylib, kotlinSource, tmpdir, true)
 
         val mainClasses = File(tmpdir, "main")
-        compileKotlin(kotlinSource, mainClasses, kotlinLibs + stubClasses)
+        Assert.assertTrue( reportIfError( compileKotlin(kotlinSource, mainClasses, kotlinLibs + stubClasses)))
 
         // val result = runKotlin(mainClasses, stubClasses, libpath = tmpdir)
         // Assert.assertEquals("OK", result)

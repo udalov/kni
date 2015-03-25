@@ -7,6 +7,7 @@ import java.io.File
 import kotlin.properties.Delegates
 import org.jetbrains.kni.gen.InteropRuntime
 import org.jetbrains.kni.gen.GeneratorOptions
+import org.jetbrains.kni.tests.*
 import org.junit.Assert
 import java.nio.file.Files
 
@@ -27,15 +28,14 @@ public abstract class ObjCTest : AbstractIntegrationTest(IndexerOptions(Language
         println("Testing '$source' in '$tmpdir'")
         val dylib = File(tmpdir, "libKNITest.dylib")
 
-        runProcess("/usr/bin/clang -ObjC -dynamiclib -framework Foundation $implementation -o $dylib")
+        assert( reportIfError( compileObjC(implementation, dylib)))
 
-        val stubClasses = makeStub(header, dylib, kotlinSource, tmpdir, true)
+        val stubClasses = makeStub(header, dylib, kotlinSource, tmpdir, dumpIdx = true)
 
         val mainClasses = File(tmpdir, "main")
-        compileKotlin(kotlinSource, mainClasses, kotlinLibs + stubClasses)
+        Assert.assertTrue( reportIfError( compileKotlin(kotlinSource, mainClasses, kotlinLibs + stubClasses)))
 
-        val result = runKotlin(mainClasses, stubClasses, libpath = tmpdir)
-        Assert.assertEquals("OK", result)
+        Assert.assertTrue( reportIfError( runKotlin(listOf("test.TestPackage"), listOf(mainClasses, stubClasses) + kotlinLibs, libpath = tmpdir)))
     }
 
 }
@@ -70,15 +70,14 @@ public abstract class CPlusPlusTest : AbstractIntegrationTest(IndexerOptions(Lan
         println("Testing '$source' in '$tmpdir'")
         val dylib = File(tmpdir, "libKNITest.dylib")
 
-        runProcess("/usr/bin/c++ --std=c++11 -fPIC -stdlib=libstdc++ -dynamiclib $implementation -o $dylib")
+        Assert.assertTrue( reportIfError( compileNativeC(implementation, dylib)))
 
         val stubClasses = makeStub(header, dylib, kotlinSource, tmpdir, true)
 
         val mainClasses = File(tmpdir, "main")
-        compileKotlin(kotlinSource, mainClasses, kotlinLibs + stubClasses)
+        Assert.assertTrue( reportIfError( compileKotlin(kotlinSource, mainClasses, kotlinLibs + stubClasses)))
 
-        val result = runKotlin(mainClasses, stubClasses, libpath = tmpdir)
-        Assert.assertEquals("OK", result)
+        Assert.assertTrue( reportIfError( runKotlin(listOf("test.TestPackage"), listOf(mainClasses, stubClasses) + kotlinLibs, libpath = tmpdir)))
     }
 
 }

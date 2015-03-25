@@ -16,6 +16,7 @@ import org.jetbrains.kni.gen.generateStub
 import org.jetbrains.kni.indexer.IndexerOptions
 import org.jetbrains.kni.indexer.Language
 import org.jetbrains.kni.indexer.buildNativeIndex
+import org.jetbrains.kni.tests.*
 import java.nio.file.Files
 import java.io.File
 import java.nio.file.Paths
@@ -122,7 +123,7 @@ public class SimpleCHeaderCheck : LastLogKeeper {
         assertTrue( check( compileKotlin(testSource, testClasses, classpath + stubClasses)))
 
         assertTrue( check( runKotlin(arrayListOf("org.junit.runner.JUnitCore", "test.NativeTest"),
-                                     listOf(testClasses, stubClasses) + classpath, listOf(), libpath = tmpdir)))
+                                     listOf(testClasses, stubClasses) + classpath, libpath = tmpdir)))
     }
 
     fun check(res: Pair<Boolean, String>): Boolean {
