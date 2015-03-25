@@ -6,8 +6,7 @@ import java.nio.file.Paths
 import kotlin.concurrent.thread
 
 public fun runProcess(command: Collection<String>): Pair<Boolean, String> {
-    println(command.joinToString(" "))
-    //val process = Runtime.getRuntime().exec(command.copyToArray())
+    // println(command.joinToString(" "))
     val process = ProcessBuilder(command.toArrayList()).redirectErrorStream(false).start()
     val result = StringBuilder()
     val error = StringBuilder()
