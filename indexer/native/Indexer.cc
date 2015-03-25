@@ -36,7 +36,7 @@ const CXType untypedefType(CXType type) {
     return type;
 }
 
-// todo: conert static map with non-obvious intitialisation into explicit indexing config/status class
+// todo: convert static map with non-obvious intitialisation into explicit indexing config/status class
 const std::map<CXTypeKind, std::string>& getPrimitiveTypesMap(ProcessingMode::type mode = ProcessingMode::unknown) {
     static std::map<CXTypeKind, std::string> m;
 

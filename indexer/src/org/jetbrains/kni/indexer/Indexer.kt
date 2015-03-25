@@ -34,7 +34,7 @@ public data class IndexerOptions(
 public fun buildNativeIndex(headerFile: File, options: IndexerOptions): TranslationUnit {
 //    val args: ArrayList<String> = arrayListOf(headerFile.getPath())
 //    args.addAll(options.toParams())
-    val bytes = IndexerNative.buildNativeIndex((options.toParams() + headerFile.getPath()).toArrayList().toArray(array<String>()))
+    val bytes = IndexerNative.buildNativeIndex((options.toParams() + headerFile.getPath()).copyToArray())
     return TranslationUnit.parseFrom(bytes)
 }
 

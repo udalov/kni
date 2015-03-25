@@ -6,6 +6,7 @@ import java.util.HashMap
 import java.nio.file.Paths
 import org.jetbrains.kni.indexer.IndexerOptions
 import org.jetbrains.kni.indexer.Language.*
+import org.jetbrains.kotlin.renderer.KeywordStringsGenerated
 import java.util.ArrayList
 
 public enum class InteropRuntime {
@@ -130,17 +131,17 @@ class Generator(private val out: Printer,
 
         // \todo coded duplication in makeFunSignature
         val typeMapper = { (t: Type) ->
-            if (t is FunctionType && funcParams.contains(t)) makePrefixed(SimpleType(namer.funcProxyName(t.name)), extPrefix)
-            else if (ifaceTypes.contains(t)) makePrefixed(t, extPrefix)
+            if (t is FunctionType && t in funcParams) makePrefixed(SimpleType(namer.funcProxyName(t.name)), extPrefix)
+            else if (t in ifaceTypes) makePrefixed(t, extPrefix)
             // assuming those - externs
             // \todo - doublecheck
-            else if (t is RecordType && !ifaceTypes.contains(t)) JNROpaquePointer
+            else if (t is RecordType && t !in ifaceTypes) JNROpaquePointer
             else t }
 
         fun mapParam(idx: Int, p: Function.Parameter): String {
             val type = parseType(p.getType(), options, LexicalScope.General)
             val name = namer.parameterName(p.getName(), idx)
-            if (type is FunctionType && funcParams.contains(type))
+            if (type is FunctionType && type in funcParams)
                 return "object : ${namer.cFunctionsInterfaceName()}.${namer.funcProxyName(type.name)} { override ${proxyInvokeSignature(type, typeMapper)} = $name(${funcTypeParamsList(type, false, {it})})}"
             else
                 return name
@@ -150,7 +151,7 @@ class Generator(private val out: Printer,
                 .filter {
                     it.getParameterList()
                             .map { parseType(it.getType(), options, LexicalScope.General) }
-                            .any { it is FunctionType && funcParams.contains(it) }
+                            .any { it is FunctionType && it in funcParams }
                 }
                 .forEach {
                     out.print("public ")
@@ -206,7 +207,7 @@ class Generator(private val out: Printer,
         for (method in methods.filter { !it.getClassMethod() }) {
             val sig = makeFunSignature(method.getFunction(), hashSetOf(), hashSetOf())
             genObjCFunction(method.getFunction(),
-                            qualifier = if (baseMethodsSignatures.contains(sig)) OverrideQualifier.`override` else OverrideQualifier.`open`,
+                            qualifier = if (sig in baseMethodsSignatures) OverrideQualifier.`override` else OverrideQualifier.`open`,
                             signature = sig)
             out.println()
         }
@@ -276,12 +277,12 @@ class Generator(private val out: Printer,
     fun genCStruct(struct: CStruct, funcTypes: Set<FunctionType>, ifaceTypes: Set<Type>): RecordType {
 
         val typeMapper = { (t: Type) ->
-            if (t is FunctionType && funcTypes.contains(t)) JNRStructFunctionType(namer.funcProxyName(t.name))
+            if (t is FunctionType && t in funcTypes) JNRStructFunctionType(namer.funcProxyName(t.name))
             // assuming those - externs, and that structs are defined and processed in a correct order
             // \todo - doublecheck
             // \todo - support forward defs
-            else if ((t is RecordType && !ifaceTypes.contains(t)) ||
-                     (t is JNRStructPointerType && t.pointee is RecordType && !ifaceTypes.contains(t.pointee))) JNRStructPointerType()
+            else if ((t is RecordType && t !in ifaceTypes) ||
+                     (t is JNRStructPointerType && t.pointee is RecordType && t.pointee !in ifaceTypes)) JNRStructPointerType()
             else t }
 
         out.println("public class ${struct.getName()}(runtime: jnr.ffi.Runtime) : jnr.ffi.Struct(runtime) {")
@@ -330,11 +331,11 @@ class Generator(private val out: Printer,
     public fun makeFunSignature(function: Function, funcParams: Set<FunctionType> = setOf(), ifaceTypes: Set<Type> = setOf(), extPrefix: String = ""): String {
 
         val typeMapper = { (t: Type) ->
-            if (t is FunctionType && funcParams.contains(t)) makePrefixed(SimpleType(namer.funcProxyName(t.name)), extPrefix)
-            else if (ifaceTypes.contains(t)) makePrefixed(t, extPrefix)
+            if (t is FunctionType && t in funcParams) makePrefixed(SimpleType(namer.funcProxyName(t.name)), extPrefix)
+            else if (t in ifaceTypes) makePrefixed(t, extPrefix)
             // assuming those - externs
             // \todo - doublecheck
-            else if (t is RecordType && !ifaceTypes.contains(t)) JNROpaquePointer
+            else if (t is RecordType && t !in ifaceTypes) JNROpaquePointer
             else t }
 
         val returnType = parseType(function.getReturnType(), options, LexicalScope.General)
@@ -392,7 +393,7 @@ class Namer(translationUnit: TranslationUnit) {
     val name = translationUnit.getName()
 
     // TODO: all Kotlin keywords
-    val reservedWords = setOf("class", "object", "fun", "in", "as")
+    val reservedWords = setOf("class", "object", "fun", "in", "as", "null", "trait", "val")
     val invalidIdChars = setOf('<', '>', '*')
 
     private fun calculateProtocolNames(translationUnit: TranslationUnit) {
@@ -447,9 +448,9 @@ class Namer(translationUnit: TranslationUnit) {
     fun funcProxyName(name: String): String = escape("fn_$name")
 
     private fun escape(name: String): String {
-        val fname: String = name.filter { !invalidIdChars.contains(it) };
+        val fname: String = name.filter { it !in invalidIdChars };
         return when (fname) {
-            in reservedWords -> "`$fname`"
+            in KeywordStringsGenerated.KEYWORDS -> "`$fname`"
             else -> fname
         }
     }
