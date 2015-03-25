@@ -1,5 +1,6 @@
 option java_package = "org.jetbrains.kni.indexer";
 option java_generic_services = false;
+option optimize_for = SPEED;
 
 message Function {
     required string name = 1;
