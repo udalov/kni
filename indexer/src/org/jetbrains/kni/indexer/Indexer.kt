@@ -1,7 +1,10 @@
 package org.jetbrains.kni.indexer
 
+import com.google.protobuf.TextFormat
 import org.jetbrains.kni.indexer.NativeIndex.TranslationUnit
+import java.io.BufferedReader
 import java.io.File
+import java.io.InputStreamReader
 import java.util.ArrayList
 
 public enum class Language {
@@ -33,4 +36,23 @@ public fun buildNativeIndex(headerFile: File, options: IndexerOptions): Translat
 //    args.addAll(options.toParams())
     val bytes = IndexerNative.buildNativeIndex((options.toParams() + headerFile.getPath()).toArrayList().toArray(array<String>()))
     return TranslationUnit.parseFrom(bytes)
+}
+
+public fun buildNativeIndexCli(kniidxPath: String, headerFile: File, options: IndexerOptions, useBinary: Boolean = false): TranslationUnit {
+    val rt = Runtime.getRuntime()
+    val kniidx = if (kniidxPath.length() == 0) File("kniidx") else File(kniidxPath, "kniidx")
+    if (!kniidx.exists() || !kniidx.isFile() || !kniidx.canExecute())
+        throw Exception("Invalid kniidx executable: $kniidx")
+    val args = arrayListOf(kniidx.getPath(), headerFile.getPath())
+    args.addAll(options.toParams())
+    if (useBinary) args.add("---b")
+    val proc = rt.exec(args.copyToArray())
+    if (useBinary)
+        return TranslationUnit.parseFrom(proc.getInputStream())
+    else {
+        val out = BufferedReader(InputStreamReader(proc.getInputStream()))
+        val builder = TranslationUnit.newBuilder()
+        TextFormat.merge(out, builder)
+        return builder.build()
+    }
 }
