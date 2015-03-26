@@ -50,22 +50,8 @@ public abstract class CPlusPlusTest( idxOpts: IndexerOptions = IndexerOptions(La
                                      genOpts: GeneratorOptions = GeneratorOptions(InteropRuntime.JNR))
 : AbstractIntegrationTest(idxOpts, genOpts) {
 
-    override protected val kotlinLibs: List<File> by Delegates.lazy {
-        File("lib/jnr").listFiles().toArrayList()
-        /*
-        val targets =
-                listOf(
-                File("lib/jnr/jnr-ffi.jar"),
-                File("lib/jnr/jffi-1.2.8.jar"),
-                File("lib/jnr/jffi-1.2.8-native.jar"),
-                File("lib/asm-all-5.0.3.jar"),
-                File("lib/jnr-x86asm-1.0.2.jar")
-        )
-        for (target in targets) {
-            assert(target.exists()) { "$target is not found. Execute 'ant -f update_dependencies.xml' and 'ant dist' before running tests" }
-        }
-        targets
-        */
+    override val kotlinLibs: List<File> by Delegates.lazy {
+        File("lib").listFiles { it.getName().matches("(asm-.+\\.jar)|(jffi-.+\\.jar)|(jnr-.+\\.jar)") }?.toList() ?: listOf()
     }
 }
 

@@ -18,7 +18,9 @@ fun main(args: Array<String>) {
     val expres2 = fn2(42,"42")
 
     val st1 = native.iface_callbacks_hpp.cbwrapper(runtime)
+    [suppress("INVISIBLE_MEMBER", "INVISIBLE_REFERENCE")]
     st1.cb1.set(object : native.iface_callbacks_hpp.fn_Int_Int { override fun invoke(p1: Int) = fn1(p1) })
+    [suppress("INVISIBLE_MEMBER", "INVISIBLE_REFERENCE")]
     st1.cb2.set(object : native.iface_callbacks_hpp.fn_Int_String_Int { override fun invoke(p1: Int, p2: String) = fn2(p1, p2) })
 
     val res3 = iface.callwrapper(st1)

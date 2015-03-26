@@ -14,6 +14,11 @@ import org.junit.Test as test
 
 class LibCLangTests : CPlusPlusTest( idxOpts =  IndexerOptions(Language.CPP, debugDump = false, includePaths = listOf("lib"))) {
 
+    override val kotlinLibs: List<File> by Delegates.lazy {
+        super.kotlinLibs +
+        (File("lib").listFiles { it.name.contains("junit") }?.toList() ?: listOf())
+    }
+
     test fun JNRateLibCLang() {
         val tmpdir = Files.createTempDirectory("libclangtest").toFile()
         val header = File("lib/clang-c/Index.h").getAbsoluteFile()

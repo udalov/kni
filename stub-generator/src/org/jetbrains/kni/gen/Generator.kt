@@ -289,6 +289,10 @@ class Generator(private val out: Printer,
         out.push()
         for (field in struct.getFieldList()) {
             val t = typeMapper(parseType(field.getType(), options, LexicalScope.Record))
+            // workaround for KT-7051
+            // \todo remove then fixed
+            if (t is JNRStructFunctionType)
+                out.println("[suppress(\"INVISIBLE_MEMBER\", \"INVISIBLE_REFERENCE\")]")
             out.println("public var ${field.getName()}: ${t.getExpr(typeMapper)} = ${t.defaultVal}")
         }
         out.pop()

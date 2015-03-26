@@ -13,8 +13,8 @@ import org.junit.Test as test
 
 class LibWinApiTests : CPlusPlusTest( idxOpts =  IndexerOptions(Language.CPP, debugDump = false, includePaths = listOf("lib"))) {
 
-    override protected val kotlinLibs: List<File> by Delegates.lazy {
-        File("lib/jnr").listFiles().toArrayList() +
+    override val kotlinLibs: List<File> by Delegates.lazy {
+        super.kotlinLibs +
         (File("lib").listFiles { it.name.contains("junit") }?.toList() ?: listOf())
     }
 
