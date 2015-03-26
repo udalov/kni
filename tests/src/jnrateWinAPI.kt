@@ -11,9 +11,7 @@ import java.nio.file.Files
 import kotlin.properties.Delegates
 import org.junit.Test as test
 
-class LibWinApiTests : AbstractIntegrationTest(
-        IndexerOptions(Language.CPP, debugDump = false, includePaths = listOf("lib")),
-        GeneratorOptions(InteropRuntime.JNR)) {
+class LibWinApiTests : CPlusPlusTest( idxOpts =  IndexerOptions(Language.CPP, debugDump = false, includePaths = listOf("lib"))) {
 
     override protected val kotlinLibs: List<File> by Delegates.lazy {
         File("lib/jnr").listFiles().toArrayList() +

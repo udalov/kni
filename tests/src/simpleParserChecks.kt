@@ -87,6 +87,8 @@ public class SimpleCHeaderCheck : LastLogKeeper {
         File("lib/jnr").listFiles().toArrayList()
     }
 
+    // doesn't work due to KT-3441
+    // \todo reenable after fix or find a workaround
     // Rule public val onFailed : ErrorReporter = ErrorReporter(this)
 
     Theory public fun SimpleArgsFuncs(ForAll(sampleSize = 10) From(javaClass<SimpleCHeaderGenerator>()) cunit: CSimpleTransUnit) {

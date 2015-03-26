@@ -11,13 +11,18 @@ import org.jetbrains.kni.tests.*
 import org.junit.Assert
 import java.nio.file.Files
 
-public abstract class ObjCTest : AbstractIntegrationTest(IndexerOptions(Language.OBJC), GeneratorOptions(InteropRuntime.ObjC)) {
+public abstract class ObjCTest(idxOpts: IndexerOptions = IndexerOptions(Language.OBJC),
+                               genOpts: GeneratorOptions = GeneratorOptions(InteropRuntime.ObjC))
+: AbstractIntegrationTest(idxOpts, genOpts) {
 
     override protected val kotlinLibs: List<File> by Delegates.lazy {
         val target = File("dist/kni-objc-runtime.jar")
         assert(target.exists()) { "$target is not found. Execute 'ant dist' before running tests" }
         listOf(target)
     }
+}
+
+public abstract class ObjCGeneratedTest : ObjCTest() {
 
     protected fun doTest(source: String) {
         val header = File( source.replace(".kt", ".h")).getAbsoluteFile()
@@ -41,7 +46,9 @@ public abstract class ObjCTest : AbstractIntegrationTest(IndexerOptions(Language
 }
 
 
-public abstract class CPlusPlusTest : AbstractIntegrationTest(IndexerOptions(Language.CPP, debugDump = false), GeneratorOptions(InteropRuntime.JNR)) {
+public abstract class CPlusPlusTest( idxOpts: IndexerOptions = IndexerOptions(Language.CPP, debugDump = false),
+                                     genOpts: GeneratorOptions = GeneratorOptions(InteropRuntime.JNR))
+: AbstractIntegrationTest(idxOpts, genOpts) {
 
     override protected val kotlinLibs: List<File> by Delegates.lazy {
         File("lib/jnr").listFiles().toArrayList()
@@ -60,6 +67,9 @@ public abstract class CPlusPlusTest : AbstractIntegrationTest(IndexerOptions(Lan
         targets
         */
     }
+}
+
+public abstract class CPlusPlusGeneratedTest : CPlusPlusTest() {
 
     protected fun doTest(source: String) {
         val header = File( source.replace(".kt", ".hpp")).getAbsoluteFile()

@@ -53,7 +53,7 @@ object GenerateTests {
     }
 
     platformStatic fun main(args: Array<String>) {
-        generate("tests/testData/integration", "IntegrationTest", "ObjCTest")
-        generate("tests/testData/integration_cpp", "CPPIntegrationTest", "CPlusPlusTest")
+        generate("tests/testData/integration", "IntegrationTest", "ObjCGeneratedTest")
+        generate("tests/testData/integration_cpp", "CPPIntegrationTest", "CPlusPlusGeneratedTest")
     }
 }

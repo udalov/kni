@@ -12,15 +12,7 @@ import java.nio.file.Files
 import kotlin.properties.Delegates
 import org.junit.Test as test
 
-class CocoaDirectTests : AbstractIntegrationTest(
-        IndexerOptions(Language.OBJC, debugDump = false, includePaths = listOf("lib")),
-        GeneratorOptions(InteropRuntime.ObjC)) {
-
-    override protected val kotlinLibs: List<File> by Delegates.lazy {
-        val target = File("dist/kni-objc-runtime.jar")
-        assert(target.exists()) { "$target is not found. Execute 'ant dist' before running tests" }
-        listOf(target)
-    }
+class CocoaDirectTests : ObjCTest( idxOpts = IndexerOptions(Language.OBJC, debugDump = false, includePaths = listOf("lib"))) {
 
     test fun CocoaDirectTest() {
         val tmpdir = Files.createTempDirectory("cocoadirecttest").toFile()
