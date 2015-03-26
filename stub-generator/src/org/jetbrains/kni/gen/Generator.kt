@@ -158,7 +158,7 @@ class Generator(private val out: Printer,
                     out.print( makeFunSignature(it, hashSetOf(), ifaceTypes, extPrefix))
                     out.println(" = ")
                     out.push()
-                    out.print(namer.methodName(it.getName()))
+                    out.print(namer.cFunctionName(it))
                     it.getParameterList()
                             .mapIndexed { i, p -> mapParam(i, p) }
                             .joinTo(out, separator = ", ", prefix = "(", postfix = ")")
@@ -340,7 +340,7 @@ class Generator(private val out: Printer,
 
         val returnType = parseType(function.getReturnType(), options, LexicalScope.General)
 
-        return "fun $extPrefix${namer.methodName(function.getName())}" +
+        return "fun $extPrefix${if (options.runtime == InteropRuntime.ObjC) namer.objCMethodName(function) else namer.cFunctionName(function)}" +
             function.getParameterList()
                     .mapIndexed { i, p -> namer.parameterName(p.getName(), i) + ": " + typeMapper(parseType(p.getType(), options, LexicalScope.General)).getExpr(typeMapper) }
                     .joinToString(separator = ", ", prefix = "(", postfix = ")") +
@@ -433,11 +433,14 @@ class Namer(translationUnit: TranslationUnit) {
         return name.replace('+', '_')
     }
 
-    fun methodName(objcSelectorName: String): String {
+    fun cFunctionName(func: Function): String = escape(func.getName())
+
+    fun objCMethodName(func: Function): String {
         // Objective-C method names are usually of form 'methodName:withParam:andOtherParam:'
-        // Here we strip away everything but the first part
-        // TODO: handle methods with the same effective signature or invent something different
-        return escape(objcSelectorName.substringBefore(':'))
+        // The scheme should be preserved to avoid ambiguities
+        // Here we replace ':' with '_', which may lead to name conflicts as well
+        // \todo consider better (re)naming scheme
+        return escape(func.getName().replaceAll(":+$","").replace(':', '_'))
     }
 
     fun parameterName(name: String, idx: Int): String {
