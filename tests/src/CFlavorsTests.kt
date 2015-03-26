@@ -11,7 +11,7 @@ import org.jetbrains.kni.tests.*
 import org.junit.Assert
 import java.nio.file.Files
 
-public abstract class ObjCTest(idxOpts: IndexerOptions = IndexerOptions(Language.OBJC),
+public open class ObjCTest(idxOpts: IndexerOptions = IndexerOptions(Language.OBJC),
                                genOpts: GeneratorOptions = GeneratorOptions(InteropRuntime.ObjC))
 : AbstractIntegrationTest(idxOpts, genOpts) {
 
@@ -22,7 +22,7 @@ public abstract class ObjCTest(idxOpts: IndexerOptions = IndexerOptions(Language
     }
 }
 
-public abstract class ObjCGeneratedTest : ObjCTest() {
+public open class ObjCGeneratedTest : ObjCTest() {
 
     protected fun doTest(source: String) {
         val header = File( source.replace(".kt", ".h")).getAbsoluteFile()
@@ -46,7 +46,7 @@ public abstract class ObjCGeneratedTest : ObjCTest() {
 }
 
 
-public abstract class CPlusPlusTest( idxOpts: IndexerOptions = IndexerOptions(Language.CPP, debugDump = false),
+public open class CPlusPlusTest( idxOpts: IndexerOptions = IndexerOptions(Language.CPP, debugDump = false),
                                      genOpts: GeneratorOptions = GeneratorOptions(InteropRuntime.JNR))
 : AbstractIntegrationTest(idxOpts, genOpts) {
 
@@ -55,7 +55,7 @@ public abstract class CPlusPlusTest( idxOpts: IndexerOptions = IndexerOptions(La
     }
 }
 
-public abstract class CPlusPlusGeneratedTest : CPlusPlusTest() {
+public open class CPlusPlusGeneratedTest : CPlusPlusTest() {
 
     protected fun doTest(source: String) {
         val header = File( source.replace(".kt", ".hpp")).getAbsoluteFile()

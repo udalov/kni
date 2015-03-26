@@ -69,10 +69,9 @@ public class ErrorReporter(public val keeper: LastLogKeeper) : TestWatcher() {
 }
 
 RunWith(javaClass<Theories>())
-public class SimpleCHeaderCheck : LastLogKeeper {
+public class SimpleCHeaderCheck : LastLogKeeper, CPlusPlusTest() {
     var lastLogBuf: StringBuilder = StringBuilder()
     override val lastLog: String get() = lastLogBuf.toString()
-    val generatorOptions = GeneratorOptions(InteropRuntime.JNR)
 
     private val classpath: Collection<File> by Delegates.lazy {
         // System.getProperty("java.class.path").split(File.pathSeparator).map { File(it) }.toArrayList()
@@ -83,8 +82,7 @@ public class SimpleCHeaderCheck : LastLogKeeper {
                 || jar.getName().contains("junit") || jar.getName().contains("hamcrest"))
                 res.add(jar)
         //res.add(File("lib/kotlinc/lib/kotlin-runtime.jar"))
-        res +
-        File("lib/jnr").listFiles().toArrayList()
+        res + kotlinLibs
     }
 
     // doesn't work due to KT-3441
