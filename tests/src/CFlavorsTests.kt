@@ -40,7 +40,9 @@ public open class ObjCGeneratedTest : ObjCTest() {
         val mainClasses = File(tmpdir, "main")
         Assert.assertTrue( reportIfError( compileKotlin(kotlinSource, mainClasses, kotlinLibs + stubClasses)))
 
-        Assert.assertTrue( reportIfError( runKotlin(listOf("test.TestPackage"), listOf(mainClasses, stubClasses) + kotlinLibs, libpath = tmpdir)))
+        val result = runKotlin(listOf("test.TestPackage"), listOf(mainClasses, stubClasses) + kotlinLibs, libpath = tmpdir)
+        Assert.assertTrue( reportIfError(result))
+        Assert.assertEquals("OK", result.second.trim())
     }
 
 }
@@ -73,7 +75,9 @@ public open class CPlusPlusGeneratedTest : CPlusPlusTest() {
         val mainClasses = File(tmpdir, "main")
         Assert.assertTrue( reportIfError( compileKotlin(kotlinSource, mainClasses, kotlinLibs + stubClasses)))
 
-        Assert.assertTrue( reportIfError( runKotlin(listOf("test.TestPackage"), listOf(mainClasses, stubClasses) + kotlinLibs, libpath = tmpdir)))
+        val result = runKotlin(listOf("test.TestPackage"), listOf(mainClasses, stubClasses) + kotlinLibs, libpath = tmpdir)
+        Assert.assertTrue( reportIfError(result))
+        Assert.assertEquals("OK", result.second.trim())
     }
 
 }

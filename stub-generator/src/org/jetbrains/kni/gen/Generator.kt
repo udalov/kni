@@ -37,7 +37,7 @@ public class GeneratorOptions(
 ) {}
 
 public fun generateStub(translationUnit: TranslationUnit,
-                        dylib: File,
+                        nativeLib: File,
                         outputFile: File,
                         indexingOptions: IndexerOptions,
                         generatorOptions: GeneratorOptions
@@ -51,7 +51,7 @@ public fun generateStub(translationUnit: TranslationUnit,
     out.println()
 
     val namer = Namer(translationUnit)
-    val generator = Generator(out, namer, dylib, generatorOptions)
+    val generator = Generator(out, namer, nativeLib, generatorOptions)
 
     when (indexingOptions.language) {
         OBJC -> generator.genObjCUnit(translationUnit)
@@ -66,7 +66,7 @@ public fun generateStub(translationUnit: TranslationUnit,
 
 class Generator(private val out: Printer,
                 private val namer: Namer,
-                private val dylib: File,
+                private val nativeLib: File,
                 private val options: GeneratorOptions) {
 
     public fun genObjCUnit(translationUnit: TranslationUnit) {
@@ -262,7 +262,7 @@ class Generator(private val out: Printer,
         out.push()
 
         // TODO: only generate this into class objects of root classes
-        out.println("{ loadLibrary(\"${dylib.getPath()}\") }")
+        out.println("{ loadLibrary(\"${nativeLib.getPath()}\") }")
 
         out.pop()
         out.println("}")

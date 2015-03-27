@@ -1,8 +1,9 @@
 
 package test
 
-import objc.NSApp
+import objc.*
 
 fun main(args: Array<String>) {
-    println(if (NSApp.isRunning()) "running!" else "error")
+    val app = NSApplication.sharedApplication() as NSApplication
+    print(if (app.isRunning()) "Strange" else "OK")
 }
