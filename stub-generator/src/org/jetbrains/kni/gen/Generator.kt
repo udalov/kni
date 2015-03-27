@@ -358,9 +358,18 @@ class Generator(private val out: Printer,
 
         val returnType = parseType(function.getReturnType(), options, LexicalScope.General)
 
+        val paramNames = hashSetOf<String>()
+
+        // in ObjC it is possible to have parameters with the same name
+        // \todo find out whether it is possible to name params by appropriate selector part
+        fun makeParamName(p: Function.Parameter, idx: Int) : String {
+            var name = namer.parameterName(p.getName(), idx)
+            return if (paramNames.add(name)) name else "${name}_$idx"
+        }
+
         return "fun $extPrefix${if (options.runtime == InteropRuntime.ObjC) namer.objCMethodName(function) else namer.cFunctionName(function)}" +
             function.getParameterList()
-                    .mapIndexed { i, p -> namer.parameterName(p.getName(), i) + ": " + typeMapper(parseType(p.getType(), options, LexicalScope.General)).getExpr(typeMapper) }
+                    .mapIndexed { i, p -> makeParamName(p, i) + ": " + typeMapper(parseType(p.getType(), options, LexicalScope.General)).getExpr(typeMapper) }
                     .joinToString(separator = ", ", prefix = "(", postfix = ")") +
             ": ${typeMapper(returnType).getExpr()}"
     }
