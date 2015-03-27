@@ -8,6 +8,7 @@ import org.jetbrains.kni.indexer.IndexerOptions
 import org.jetbrains.kni.indexer.Language.*
 import org.jetbrains.kotlin.renderer.KeywordStringsGenerated
 import java.util.ArrayList
+import java.util.HashSet
 
 public enum class InteropRuntime {
     ObjC
@@ -167,18 +168,26 @@ class Generator(private val out: Printer,
                 }
     }
 
-    fun genClass(klass: ObjCClass, classes: Map<String, ObjCClass>) {
+    // the method id which is used to detect necessity of "override" keyword according to kotlin's rules
+    private fun getFunctionUniqueOverrideId(func: Function) =
+        func.getName() +
+        func.getParameterList()
+                .map { parseType(it.getType(), options, LexicalScope.General).name }
+                .joinToString(",","(",")")
 
-        fun getAllBaseMethodsSignatures(klass: ObjCClass): Collection<String> {
-            if (klass.hasBaseClass()) {
-                val baseClass = classes.get(klass.getBaseClass())
-                if (baseClass != null)
-                    return baseClass.getMethodList().filter { it.getFunction().getName() != "finalize" && !it.getClassMethod() }
-                                                    .map { makeFunSignature(it.getFunction()) } +
-                           getAllBaseMethodsSignatures(baseClass)
-            }
-            return listOf()
+    private fun getAllBaseMethodsOverrideIds(klass: ObjCClass, classes: Map<String, ObjCClass>, classMethods: Boolean): Collection<String> {
+        if (klass.hasBaseClass()) {
+            val baseClass = classes.get(klass.getBaseClass())
+            if (baseClass != null)
+                return baseClass.getMethodList()
+                               .filter { it.getFunction().getName() != "finalize" && (classMethods xor !it.getClassMethod()) }
+                               .map { getFunctionUniqueOverrideId(it.getFunction()) } +
+                       getAllBaseMethodsOverrideIds(baseClass, classes, classMethods)
         }
+        return listOf()
+    }
+
+    fun genClass(klass: ObjCClass, classes: Map<String, ObjCClass>) {
 
         out.print("open class ${klass.getName()}(pointer: Long)")
 
@@ -202,17 +211,17 @@ class Generator(private val out: Printer,
         // TODO: unhardcode
         val methods = klass.getMethodList().filter { it.getFunction().getName() != "finalize" }
 
-        val baseMethodsSignatures = getAllBaseMethodsSignatures(klass).toHashSet()
+        val baseMethodsOverrideIds = getAllBaseMethodsOverrideIds(klass, classes, false).toSortedSet()
 
         for (method in methods.filter { !it.getClassMethod() }) {
-            val sig = makeFunSignature(method.getFunction(), hashSetOf(), hashSetOf())
+            val overrideId = getFunctionUniqueOverrideId(method.getFunction())
             genObjCFunction(method.getFunction(),
-                            qualifier = if (sig in baseMethodsSignatures) OverrideQualifier.`override` else OverrideQualifier.`open`,
-                            signature = sig)
+                            qualifier = if (overrideId in baseMethodsOverrideIds) OverrideQualifier.`override` else OverrideQualifier.`open`,
+                            signature = makeFunSignature(method.getFunction(), hashSetOf(), hashSetOf()))
             out.println()
         }
 
-        genMetaClass(klass, methods)
+        genMetaClass(klass, methods, classes)
         out.println()
         genClassObject(klass)
 
@@ -223,7 +232,8 @@ class Generator(private val out: Printer,
         out.println("}")
     }
 
-    private fun genMetaClass(klass: ObjCClass, methods: List<ObjCMethod>) {
+    private fun genMetaClass(klass: ObjCClass, methods: List<ObjCMethod>, classes: Map<String, ObjCClass>) {
+        val baseMethodsOverrideIds = getAllBaseMethodsOverrideIds(klass, classes, true).toHashSet()
         val baseList =
                 (if (klass.hasBaseClass())
                     listOf(klass.getBaseClass() + ".metaclass")
@@ -235,7 +245,11 @@ class Generator(private val out: Printer,
         var first = true
         for (method in methods.filter { it.getClassMethod() }) {
             if (first) first = false else out.println()
-            genObjCFunction(method.getFunction())
+            val overrideId = getFunctionUniqueOverrideId(method.getFunction())
+            genObjCFunction(method.getFunction(),
+                            qualifier = if (overrideId in baseMethodsOverrideIds) OverrideQualifier.`override` else OverrideQualifier.`open`,
+                            signature = makeFunSignature(method.getFunction(), hashSetOf(), hashSetOf())
+                            )
         }
 
         out.pop()
