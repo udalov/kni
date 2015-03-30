@@ -45,7 +45,7 @@ public fun generateStub(translationUnit: TranslationUnit,
     val result = StringBuilder()
     val out = Printer(result)
 
-    out.println("// This file is auto-generated. DO NOT EDIT!")
+    out.println("// This file is auto-generated from \"${translationUnit.getName()}\"")
     out.println()
     out.println("[file: suppress(\"UNCHECKED_CAST\")]")
     out.println()
@@ -74,6 +74,8 @@ class Generator(private val out: Printer,
         out.println()
         out.println("import kni.objc.*")
         out.println()
+        genInteropConfig()
+        out.println()
         for (protocol in translationUnit.getProtocolList()) {
             genProtocol(protocol)
             out.println()
@@ -99,6 +101,8 @@ class Generator(private val out: Printer,
         out.println()
         out.println("import jnr.ffi.types.*")
         out.println("import jnr.ffi.Pointer")
+        out.println()
+        genInteropConfig()
         out.println()
         val funcParams =
                 (translationUnit.getFunctionList()
@@ -126,6 +130,14 @@ class Generator(private val out: Printer,
         // generate extension methods that accept directly kotlin lambdas
         genCFunctionExts(translationUnit, funcParams, (structs.map { it as Type } + funcParams).toHashSet(), "${namer.cFunctionsInterfaceName()}.")
         out.println("\npublic fun get_${namer.cFunctionsInterfaceName()}(libName: String): ${namer.cFunctionsInterfaceName()} = jnr.ffi.LibraryLoader.create(javaClass<${namer.cFunctionsInterfaceName()}>()).load(libName)\n")
+    }
+
+    private fun genInteropConfig() {
+        out.println("object interopConfig {")
+        out.push()
+        out.println("public var nativeLibraryPath: String = \"${nativeLib.getPath()}\"")
+        out.pop()
+        out.println("}")
     }
 
     private fun genCFunctionExts(translationUnit: TranslationUnit, funcParams: Set<FunctionType>, ifaceTypes: Set<Type>, extPrefix: String) {
@@ -189,7 +201,7 @@ class Generator(private val out: Printer,
 
     fun genClass(klass: ObjCClass, classes: Map<String, ObjCClass>) {
 
-        out.print("open class ${klass.getName()}(pointer: Long)")
+        out.print("public open class ${klass.getName()}(pointer: Long)")
 
         val baseClassName =
                 if (klass.hasBaseClass()) klass.getBaseClass()
@@ -258,11 +270,11 @@ class Generator(private val out: Printer,
 
     private fun genClassObject(klass: ObjCClass) {
         // TODO (!): there may be other hierarchy roots!
-        out.println("class object : NSObject(Native.objc_getClass(\"${klass.getName()}\")), metaclass, ObjCClass {")
+        out.println("companion object : NSObject(Native.objc_getClass(\"${klass.getName()}\")), metaclass, ObjCClass {")
         out.push()
 
         // TODO: only generate this into class objects of root classes
-        out.println("{ loadLibrary(\"${nativeLib.getPath()}\") }")
+        out.println("init { loadLibrary(interopConfig.nativeLibraryPath) }")
 
         out.pop()
         out.println("}")
@@ -316,7 +328,7 @@ class Generator(private val out: Printer,
 
     private fun genObjCFunction(function: Function, qualifier: OverrideQualifier = OverrideQualifier.none, signature: String? = null) {
         when (qualifier) {
-            OverrideQualifier.`open` -> out.print("open ")
+            OverrideQualifier.`open` -> out.print("public open ")
             OverrideQualifier.`override` -> out.print("override ")
         }
         out.print(signature ?: makeFunSignature(function, hashSetOf(), hashSetOf()))
