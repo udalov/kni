@@ -31,6 +31,8 @@ message ObjCClass {
     repeated string category = 4;
     repeated ObjCMethod method = 5;
     repeated ObjCProperty property = 6;
+    optional string container = 7;
+    optional string location_file = 8;
 }
 
 message ObjCProtocol {
@@ -38,6 +40,8 @@ message ObjCProtocol {
     repeated string base_protocol = 2;
     repeated ObjCMethod method = 3;
     repeated ObjCProperty property = 4;
+    optional string container = 7;
+    optional string location_file = 8;
 }
 
 message ObjCCategory {
@@ -45,6 +49,8 @@ message ObjCCategory {
     repeated string base_protocol = 2;
     repeated ObjCMethod method = 3;
     repeated ObjCProperty property = 4;
+    optional string container = 7;
+    optional string location_file = 8;
 }
 
 message CField {

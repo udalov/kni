@@ -127,13 +127,15 @@ void protobuf_AssignDesc_NativeIndex_2eproto() {
       ::google::protobuf::MessageFactory::generated_factory(),
       sizeof(ObjCProperty));
   ObjCClass_descriptor_ = file->message_type(3);
-  static const int ObjCClass_offsets_[6] = {
+  static const int ObjCClass_offsets_[8] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(ObjCClass, name_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(ObjCClass, base_class_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(ObjCClass, protocol_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(ObjCClass, category_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(ObjCClass, method_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(ObjCClass, property_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(ObjCClass, container_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(ObjCClass, location_file_),
   };
   ObjCClass_reflection_ =
     new ::google::protobuf::internal::GeneratedMessageReflection(
@@ -147,11 +149,13 @@ void protobuf_AssignDesc_NativeIndex_2eproto() {
       ::google::protobuf::MessageFactory::generated_factory(),
       sizeof(ObjCClass));
   ObjCProtocol_descriptor_ = file->message_type(4);
-  static const int ObjCProtocol_offsets_[4] = {
+  static const int ObjCProtocol_offsets_[6] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(ObjCProtocol, name_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(ObjCProtocol, base_protocol_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(ObjCProtocol, method_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(ObjCProtocol, property_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(ObjCProtocol, container_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(ObjCProtocol, location_file_),
   };
   ObjCProtocol_reflection_ =
     new ::google::protobuf::internal::GeneratedMessageReflection(
@@ -165,11 +169,13 @@ void protobuf_AssignDesc_NativeIndex_2eproto() {
       ::google::protobuf::MessageFactory::generated_factory(),
       sizeof(ObjCProtocol));
   ObjCCategory_descriptor_ = file->message_type(5);
-  static const int ObjCCategory_offsets_[4] = {
+  static const int ObjCCategory_offsets_[6] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(ObjCCategory, name_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(ObjCCategory, base_protocol_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(ObjCCategory, method_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(ObjCCategory, property_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(ObjCCategory, container_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(ObjCCategory, location_file_),
   };
   ObjCCategory_reflection_ =
     new ::google::protobuf::internal::GeneratedMessageReflection(
@@ -330,27 +336,30 @@ void protobuf_AddDesc_NativeIndex_2eproto() {
     "\014\n\004name\030\001 \002(\t\022\014\n\004type\030\002 \002(\t\"\?\n\nObjCMetho"
     "d\022\033\n\010function\030\001 \002(\0132\t.Function\022\024\n\014class_"
     "method\030\002 \002(\010\"*\n\014ObjCProperty\022\014\n\004name\030\001 \002"
-    "(\t\022\014\n\004type\030\002 \002(\t\"\217\001\n\tObjCClass\022\014\n\004name\030\001"
+    "(\t\022\014\n\004type\030\002 \002(\t\"\271\001\n\tObjCClass\022\014\n\004name\030\001"
     " \002(\t\022\022\n\nbase_class\030\002 \001(\t\022\020\n\010protocol\030\003 \003"
     "(\t\022\020\n\010category\030\004 \003(\t\022\033\n\006method\030\005 \003(\0132\013.O"
     "bjCMethod\022\037\n\010property\030\006 \003(\0132\r.ObjCProper"
-    "ty\"q\n\014ObjCProtocol\022\014\n\004name\030\001 \002(\t\022\025\n\rbase"
-    "_protocol\030\002 \003(\t\022\033\n\006method\030\003 \003(\0132\013.ObjCMe"
-    "thod\022\037\n\010property\030\004 \003(\0132\r.ObjCProperty\"q\n"
-    "\014ObjCCategory\022\014\n\004name\030\001 \002(\t\022\025\n\rbase_prot"
-    "ocol\030\002 \003(\t\022\033\n\006method\030\003 \003(\0132\013.ObjCMethod\022"
-    "\037\n\010property\030\004 \003(\0132\r.ObjCProperty\"$\n\006CFie"
-    "ld\022\014\n\004name\030\001 \002(\t\022\014\n\004type\030\002 \002(\t\"/\n\007CStruc"
-    "t\022\014\n\004name\030\001 \002(\t\022\026\n\005field\030\002 \003(\0132\007.CField\""
-    "_\n\nDiagnostic\022\020\n\010severity\030\001 \002(\r\022\014\n\004line\030"
-    "\002 \002(\r\022\016\n\006column\030\003 \002(\r\022\017\n\007message\030\004 \002(\t\022\020"
-    "\n\010category\030\005 \001(\t\"\324\001\n\017TranslationUnit\022\014\n\004"
-    "name\030\001 \002(\t\022\031\n\005class\030\002 \003(\0132\n.ObjCClass\022\037\n"
-    "\010protocol\030\003 \003(\0132\r.ObjCProtocol\022\037\n\010catego"
-    "ry\030\004 \003(\0132\r.ObjCCategory\022\033\n\010function\030\005 \003("
-    "\0132\t.Function\022\030\n\006struct\030\006 \003(\0132\010.CStruct\022\037"
-    "\n\ndiagnostic\030d \003(\0132\013.DiagnosticB \n\031org.j"
-    "etbrains.kni.indexerH\001\210\001\000", 1065);
+    "ty\022\021\n\tcontainer\030\007 \001(\t\022\025\n\rlocation_file\030\010"
+    " \001(\t\"\233\001\n\014ObjCProtocol\022\014\n\004name\030\001 \002(\t\022\025\n\rb"
+    "ase_protocol\030\002 \003(\t\022\033\n\006method\030\003 \003(\0132\013.Obj"
+    "CMethod\022\037\n\010property\030\004 \003(\0132\r.ObjCProperty"
+    "\022\021\n\tcontainer\030\007 \001(\t\022\025\n\rlocation_file\030\010 \001"
+    "(\t\"\233\001\n\014ObjCCategory\022\014\n\004name\030\001 \002(\t\022\025\n\rbas"
+    "e_protocol\030\002 \003(\t\022\033\n\006method\030\003 \003(\0132\013.ObjCM"
+    "ethod\022\037\n\010property\030\004 \003(\0132\r.ObjCProperty\022\021"
+    "\n\tcontainer\030\007 \001(\t\022\025\n\rlocation_file\030\010 \001(\t"
+    "\"$\n\006CField\022\014\n\004name\030\001 \002(\t\022\014\n\004type\030\002 \002(\t\"/"
+    "\n\007CStruct\022\014\n\004name\030\001 \002(\t\022\026\n\005field\030\002 \003(\0132\007"
+    ".CField\"_\n\nDiagnostic\022\020\n\010severity\030\001 \002(\r\022"
+    "\014\n\004line\030\002 \002(\r\022\016\n\006column\030\003 \002(\r\022\017\n\007message"
+    "\030\004 \002(\t\022\020\n\010category\030\005 \001(\t\"\324\001\n\017Translation"
+    "Unit\022\014\n\004name\030\001 \002(\t\022\031\n\005class\030\002 \003(\0132\n.ObjC"
+    "Class\022\037\n\010protocol\030\003 \003(\0132\r.ObjCProtocol\022\037"
+    "\n\010category\030\004 \003(\0132\r.ObjCCategory\022\033\n\010funct"
+    "ion\030\005 \003(\0132\t.Function\022\030\n\006struct\030\006 \003(\0132\010.C"
+    "Struct\022\037\n\ndiagnostic\030d \003(\0132\013.DiagnosticB"
+    " \n\031org.jetbrains.kni.indexerH\001\210\001\000", 1193);
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedFile(
     "NativeIndex.proto", &protobuf_RegisterTypes);
   Function::default_instance_ = new Function();
@@ -1619,6 +1628,8 @@ const int ObjCClass::kProtocolFieldNumber;
 const int ObjCClass::kCategoryFieldNumber;
 const int ObjCClass::kMethodFieldNumber;
 const int ObjCClass::kPropertyFieldNumber;
+const int ObjCClass::kContainerFieldNumber;
+const int ObjCClass::kLocationFileFieldNumber;
 #endif  // !_MSC_VER
 
 ObjCClass::ObjCClass()
@@ -1642,6 +1653,8 @@ void ObjCClass::SharedCtor() {
   _cached_size_ = 0;
   name_ = const_cast< ::std::string*>(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
   base_class_ = const_cast< ::std::string*>(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+  container_ = const_cast< ::std::string*>(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+  location_file_ = const_cast< ::std::string*>(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
 }
 
@@ -1656,6 +1669,12 @@ void ObjCClass::SharedDtor() {
   }
   if (base_class_ != &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
     delete base_class_;
+  }
+  if (container_ != &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
+    delete container_;
+  }
+  if (location_file_ != &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
+    delete location_file_;
   }
   if (this != default_instance_) {
   }
@@ -1683,7 +1702,7 @@ ObjCClass* ObjCClass::New() const {
 }
 
 void ObjCClass::Clear() {
-  if (_has_bits_[0 / 32] & 3) {
+  if (_has_bits_[0 / 32] & 195) {
     if (has_name()) {
       if (name_ != &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
         name_->clear();
@@ -1692,6 +1711,16 @@ void ObjCClass::Clear() {
     if (has_base_class()) {
       if (base_class_ != &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
         base_class_->clear();
+      }
+    }
+    if (has_container()) {
+      if (container_ != &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
+        container_->clear();
+      }
+    }
+    if (has_location_file()) {
+      if (location_file_ != &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
+        location_file_->clear();
       }
     }
   }
@@ -1808,6 +1837,40 @@ bool ObjCClass::MergePartialFromCodedStream(
           goto handle_unusual;
         }
         if (input->ExpectTag(50)) goto parse_property;
+        if (input->ExpectTag(58)) goto parse_container;
+        break;
+      }
+
+      // optional string container = 7;
+      case 7: {
+        if (tag == 58) {
+         parse_container:
+          DO_(::google::protobuf::internal::WireFormatLite::ReadString(
+                input, this->mutable_container()));
+          ::google::protobuf::internal::WireFormat::VerifyUTF8StringNamedField(
+            this->container().data(), this->container().length(),
+            ::google::protobuf::internal::WireFormat::PARSE,
+            "container");
+        } else {
+          goto handle_unusual;
+        }
+        if (input->ExpectTag(66)) goto parse_location_file;
+        break;
+      }
+
+      // optional string location_file = 8;
+      case 8: {
+        if (tag == 66) {
+         parse_location_file:
+          DO_(::google::protobuf::internal::WireFormatLite::ReadString(
+                input, this->mutable_location_file()));
+          ::google::protobuf::internal::WireFormat::VerifyUTF8StringNamedField(
+            this->location_file().data(), this->location_file().length(),
+            ::google::protobuf::internal::WireFormat::PARSE,
+            "location_file");
+        } else {
+          goto handle_unusual;
+        }
         if (input->ExpectAtEnd()) goto success;
         break;
       }
@@ -1889,6 +1952,26 @@ void ObjCClass::SerializeWithCachedSizes(
       6, this->property(i), output);
   }
 
+  // optional string container = 7;
+  if (has_container()) {
+    ::google::protobuf::internal::WireFormat::VerifyUTF8StringNamedField(
+      this->container().data(), this->container().length(),
+      ::google::protobuf::internal::WireFormat::SERIALIZE,
+      "container");
+    ::google::protobuf::internal::WireFormatLite::WriteStringMaybeAliased(
+      7, this->container(), output);
+  }
+
+  // optional string location_file = 8;
+  if (has_location_file()) {
+    ::google::protobuf::internal::WireFormat::VerifyUTF8StringNamedField(
+      this->location_file().data(), this->location_file().length(),
+      ::google::protobuf::internal::WireFormat::SERIALIZE,
+      "location_file");
+    ::google::protobuf::internal::WireFormatLite::WriteStringMaybeAliased(
+      8, this->location_file(), output);
+  }
+
   if (!unknown_fields().empty()) {
     ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
         unknown_fields(), output);
@@ -1955,6 +2038,28 @@ void ObjCClass::SerializeWithCachedSizes(
         6, this->property(i), target);
   }
 
+  // optional string container = 7;
+  if (has_container()) {
+    ::google::protobuf::internal::WireFormat::VerifyUTF8StringNamedField(
+      this->container().data(), this->container().length(),
+      ::google::protobuf::internal::WireFormat::SERIALIZE,
+      "container");
+    target =
+      ::google::protobuf::internal::WireFormatLite::WriteStringToArray(
+        7, this->container(), target);
+  }
+
+  // optional string location_file = 8;
+  if (has_location_file()) {
+    ::google::protobuf::internal::WireFormat::VerifyUTF8StringNamedField(
+      this->location_file().data(), this->location_file().length(),
+      ::google::protobuf::internal::WireFormat::SERIALIZE,
+      "location_file");
+    target =
+      ::google::protobuf::internal::WireFormatLite::WriteStringToArray(
+        8, this->location_file(), target);
+  }
+
   if (!unknown_fields().empty()) {
     target = ::google::protobuf::internal::WireFormat::SerializeUnknownFieldsToArray(
         unknown_fields(), target);
@@ -1979,6 +2084,20 @@ int ObjCClass::ByteSize() const {
       total_size += 1 +
         ::google::protobuf::internal::WireFormatLite::StringSize(
           this->base_class());
+    }
+
+    // optional string container = 7;
+    if (has_container()) {
+      total_size += 1 +
+        ::google::protobuf::internal::WireFormatLite::StringSize(
+          this->container());
+    }
+
+    // optional string location_file = 8;
+    if (has_location_file()) {
+      total_size += 1 +
+        ::google::protobuf::internal::WireFormatLite::StringSize(
+          this->location_file());
     }
 
   }
@@ -2048,6 +2167,12 @@ void ObjCClass::MergeFrom(const ObjCClass& from) {
     if (from.has_base_class()) {
       set_base_class(from.base_class());
     }
+    if (from.has_container()) {
+      set_container(from.container());
+    }
+    if (from.has_location_file()) {
+      set_location_file(from.location_file());
+    }
   }
   mutable_unknown_fields()->MergeFrom(from.unknown_fields());
 }
@@ -2080,6 +2205,8 @@ void ObjCClass::Swap(ObjCClass* other) {
     category_.Swap(&other->category_);
     method_.Swap(&other->method_);
     property_.Swap(&other->property_);
+    std::swap(container_, other->container_);
+    std::swap(location_file_, other->location_file_);
     std::swap(_has_bits_[0], other->_has_bits_[0]);
     _unknown_fields_.Swap(&other->_unknown_fields_);
     std::swap(_cached_size_, other->_cached_size_);
@@ -2102,6 +2229,8 @@ const int ObjCProtocol::kNameFieldNumber;
 const int ObjCProtocol::kBaseProtocolFieldNumber;
 const int ObjCProtocol::kMethodFieldNumber;
 const int ObjCProtocol::kPropertyFieldNumber;
+const int ObjCProtocol::kContainerFieldNumber;
+const int ObjCProtocol::kLocationFileFieldNumber;
 #endif  // !_MSC_VER
 
 ObjCProtocol::ObjCProtocol()
@@ -2124,6 +2253,8 @@ void ObjCProtocol::SharedCtor() {
   ::google::protobuf::internal::GetEmptyString();
   _cached_size_ = 0;
   name_ = const_cast< ::std::string*>(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+  container_ = const_cast< ::std::string*>(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+  location_file_ = const_cast< ::std::string*>(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
 }
 
@@ -2135,6 +2266,12 @@ ObjCProtocol::~ObjCProtocol() {
 void ObjCProtocol::SharedDtor() {
   if (name_ != &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
     delete name_;
+  }
+  if (container_ != &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
+    delete container_;
+  }
+  if (location_file_ != &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
+    delete location_file_;
   }
   if (this != default_instance_) {
   }
@@ -2162,9 +2299,21 @@ ObjCProtocol* ObjCProtocol::New() const {
 }
 
 void ObjCProtocol::Clear() {
-  if (has_name()) {
-    if (name_ != &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
-      name_->clear();
+  if (_has_bits_[0 / 32] & 49) {
+    if (has_name()) {
+      if (name_ != &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
+        name_->clear();
+      }
+    }
+    if (has_container()) {
+      if (container_ != &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
+        container_->clear();
+      }
+    }
+    if (has_location_file()) {
+      if (location_file_ != &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
+        location_file_->clear();
+      }
     }
   }
   base_protocol_.Clear();
@@ -2243,6 +2392,40 @@ bool ObjCProtocol::MergePartialFromCodedStream(
           goto handle_unusual;
         }
         if (input->ExpectTag(34)) goto parse_property;
+        if (input->ExpectTag(58)) goto parse_container;
+        break;
+      }
+
+      // optional string container = 7;
+      case 7: {
+        if (tag == 58) {
+         parse_container:
+          DO_(::google::protobuf::internal::WireFormatLite::ReadString(
+                input, this->mutable_container()));
+          ::google::protobuf::internal::WireFormat::VerifyUTF8StringNamedField(
+            this->container().data(), this->container().length(),
+            ::google::protobuf::internal::WireFormat::PARSE,
+            "container");
+        } else {
+          goto handle_unusual;
+        }
+        if (input->ExpectTag(66)) goto parse_location_file;
+        break;
+      }
+
+      // optional string location_file = 8;
+      case 8: {
+        if (tag == 66) {
+         parse_location_file:
+          DO_(::google::protobuf::internal::WireFormatLite::ReadString(
+                input, this->mutable_location_file()));
+          ::google::protobuf::internal::WireFormat::VerifyUTF8StringNamedField(
+            this->location_file().data(), this->location_file().length(),
+            ::google::protobuf::internal::WireFormat::PARSE,
+            "location_file");
+        } else {
+          goto handle_unusual;
+        }
         if (input->ExpectAtEnd()) goto success;
         break;
       }
@@ -2304,6 +2487,26 @@ void ObjCProtocol::SerializeWithCachedSizes(
       4, this->property(i), output);
   }
 
+  // optional string container = 7;
+  if (has_container()) {
+    ::google::protobuf::internal::WireFormat::VerifyUTF8StringNamedField(
+      this->container().data(), this->container().length(),
+      ::google::protobuf::internal::WireFormat::SERIALIZE,
+      "container");
+    ::google::protobuf::internal::WireFormatLite::WriteStringMaybeAliased(
+      7, this->container(), output);
+  }
+
+  // optional string location_file = 8;
+  if (has_location_file()) {
+    ::google::protobuf::internal::WireFormat::VerifyUTF8StringNamedField(
+      this->location_file().data(), this->location_file().length(),
+      ::google::protobuf::internal::WireFormat::SERIALIZE,
+      "location_file");
+    ::google::protobuf::internal::WireFormatLite::WriteStringMaybeAliased(
+      8, this->location_file(), output);
+  }
+
   if (!unknown_fields().empty()) {
     ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
         unknown_fields(), output);
@@ -2349,6 +2552,28 @@ void ObjCProtocol::SerializeWithCachedSizes(
         4, this->property(i), target);
   }
 
+  // optional string container = 7;
+  if (has_container()) {
+    ::google::protobuf::internal::WireFormat::VerifyUTF8StringNamedField(
+      this->container().data(), this->container().length(),
+      ::google::protobuf::internal::WireFormat::SERIALIZE,
+      "container");
+    target =
+      ::google::protobuf::internal::WireFormatLite::WriteStringToArray(
+        7, this->container(), target);
+  }
+
+  // optional string location_file = 8;
+  if (has_location_file()) {
+    ::google::protobuf::internal::WireFormat::VerifyUTF8StringNamedField(
+      this->location_file().data(), this->location_file().length(),
+      ::google::protobuf::internal::WireFormat::SERIALIZE,
+      "location_file");
+    target =
+      ::google::protobuf::internal::WireFormatLite::WriteStringToArray(
+        8, this->location_file(), target);
+  }
+
   if (!unknown_fields().empty()) {
     target = ::google::protobuf::internal::WireFormat::SerializeUnknownFieldsToArray(
         unknown_fields(), target);
@@ -2366,6 +2591,20 @@ int ObjCProtocol::ByteSize() const {
       total_size += 1 +
         ::google::protobuf::internal::WireFormatLite::StringSize(
           this->name());
+    }
+
+    // optional string container = 7;
+    if (has_container()) {
+      total_size += 1 +
+        ::google::protobuf::internal::WireFormatLite::StringSize(
+          this->container());
+    }
+
+    // optional string location_file = 8;
+    if (has_location_file()) {
+      total_size += 1 +
+        ::google::protobuf::internal::WireFormatLite::StringSize(
+          this->location_file());
     }
 
   }
@@ -2424,6 +2663,12 @@ void ObjCProtocol::MergeFrom(const ObjCProtocol& from) {
     if (from.has_name()) {
       set_name(from.name());
     }
+    if (from.has_container()) {
+      set_container(from.container());
+    }
+    if (from.has_location_file()) {
+      set_location_file(from.location_file());
+    }
   }
   mutable_unknown_fields()->MergeFrom(from.unknown_fields());
 }
@@ -2454,6 +2699,8 @@ void ObjCProtocol::Swap(ObjCProtocol* other) {
     base_protocol_.Swap(&other->base_protocol_);
     method_.Swap(&other->method_);
     property_.Swap(&other->property_);
+    std::swap(container_, other->container_);
+    std::swap(location_file_, other->location_file_);
     std::swap(_has_bits_[0], other->_has_bits_[0]);
     _unknown_fields_.Swap(&other->_unknown_fields_);
     std::swap(_cached_size_, other->_cached_size_);
@@ -2476,6 +2723,8 @@ const int ObjCCategory::kNameFieldNumber;
 const int ObjCCategory::kBaseProtocolFieldNumber;
 const int ObjCCategory::kMethodFieldNumber;
 const int ObjCCategory::kPropertyFieldNumber;
+const int ObjCCategory::kContainerFieldNumber;
+const int ObjCCategory::kLocationFileFieldNumber;
 #endif  // !_MSC_VER
 
 ObjCCategory::ObjCCategory()
@@ -2498,6 +2747,8 @@ void ObjCCategory::SharedCtor() {
   ::google::protobuf::internal::GetEmptyString();
   _cached_size_ = 0;
   name_ = const_cast< ::std::string*>(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+  container_ = const_cast< ::std::string*>(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+  location_file_ = const_cast< ::std::string*>(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
 }
 
@@ -2509,6 +2760,12 @@ ObjCCategory::~ObjCCategory() {
 void ObjCCategory::SharedDtor() {
   if (name_ != &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
     delete name_;
+  }
+  if (container_ != &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
+    delete container_;
+  }
+  if (location_file_ != &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
+    delete location_file_;
   }
   if (this != default_instance_) {
   }
@@ -2536,9 +2793,21 @@ ObjCCategory* ObjCCategory::New() const {
 }
 
 void ObjCCategory::Clear() {
-  if (has_name()) {
-    if (name_ != &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
-      name_->clear();
+  if (_has_bits_[0 / 32] & 49) {
+    if (has_name()) {
+      if (name_ != &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
+        name_->clear();
+      }
+    }
+    if (has_container()) {
+      if (container_ != &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
+        container_->clear();
+      }
+    }
+    if (has_location_file()) {
+      if (location_file_ != &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
+        location_file_->clear();
+      }
     }
   }
   base_protocol_.Clear();
@@ -2617,6 +2886,40 @@ bool ObjCCategory::MergePartialFromCodedStream(
           goto handle_unusual;
         }
         if (input->ExpectTag(34)) goto parse_property;
+        if (input->ExpectTag(58)) goto parse_container;
+        break;
+      }
+
+      // optional string container = 7;
+      case 7: {
+        if (tag == 58) {
+         parse_container:
+          DO_(::google::protobuf::internal::WireFormatLite::ReadString(
+                input, this->mutable_container()));
+          ::google::protobuf::internal::WireFormat::VerifyUTF8StringNamedField(
+            this->container().data(), this->container().length(),
+            ::google::protobuf::internal::WireFormat::PARSE,
+            "container");
+        } else {
+          goto handle_unusual;
+        }
+        if (input->ExpectTag(66)) goto parse_location_file;
+        break;
+      }
+
+      // optional string location_file = 8;
+      case 8: {
+        if (tag == 66) {
+         parse_location_file:
+          DO_(::google::protobuf::internal::WireFormatLite::ReadString(
+                input, this->mutable_location_file()));
+          ::google::protobuf::internal::WireFormat::VerifyUTF8StringNamedField(
+            this->location_file().data(), this->location_file().length(),
+            ::google::protobuf::internal::WireFormat::PARSE,
+            "location_file");
+        } else {
+          goto handle_unusual;
+        }
         if (input->ExpectAtEnd()) goto success;
         break;
       }
@@ -2678,6 +2981,26 @@ void ObjCCategory::SerializeWithCachedSizes(
       4, this->property(i), output);
   }
 
+  // optional string container = 7;
+  if (has_container()) {
+    ::google::protobuf::internal::WireFormat::VerifyUTF8StringNamedField(
+      this->container().data(), this->container().length(),
+      ::google::protobuf::internal::WireFormat::SERIALIZE,
+      "container");
+    ::google::protobuf::internal::WireFormatLite::WriteStringMaybeAliased(
+      7, this->container(), output);
+  }
+
+  // optional string location_file = 8;
+  if (has_location_file()) {
+    ::google::protobuf::internal::WireFormat::VerifyUTF8StringNamedField(
+      this->location_file().data(), this->location_file().length(),
+      ::google::protobuf::internal::WireFormat::SERIALIZE,
+      "location_file");
+    ::google::protobuf::internal::WireFormatLite::WriteStringMaybeAliased(
+      8, this->location_file(), output);
+  }
+
   if (!unknown_fields().empty()) {
     ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
         unknown_fields(), output);
@@ -2723,6 +3046,28 @@ void ObjCCategory::SerializeWithCachedSizes(
         4, this->property(i), target);
   }
 
+  // optional string container = 7;
+  if (has_container()) {
+    ::google::protobuf::internal::WireFormat::VerifyUTF8StringNamedField(
+      this->container().data(), this->container().length(),
+      ::google::protobuf::internal::WireFormat::SERIALIZE,
+      "container");
+    target =
+      ::google::protobuf::internal::WireFormatLite::WriteStringToArray(
+        7, this->container(), target);
+  }
+
+  // optional string location_file = 8;
+  if (has_location_file()) {
+    ::google::protobuf::internal::WireFormat::VerifyUTF8StringNamedField(
+      this->location_file().data(), this->location_file().length(),
+      ::google::protobuf::internal::WireFormat::SERIALIZE,
+      "location_file");
+    target =
+      ::google::protobuf::internal::WireFormatLite::WriteStringToArray(
+        8, this->location_file(), target);
+  }
+
   if (!unknown_fields().empty()) {
     target = ::google::protobuf::internal::WireFormat::SerializeUnknownFieldsToArray(
         unknown_fields(), target);
@@ -2740,6 +3085,20 @@ int ObjCCategory::ByteSize() const {
       total_size += 1 +
         ::google::protobuf::internal::WireFormatLite::StringSize(
           this->name());
+    }
+
+    // optional string container = 7;
+    if (has_container()) {
+      total_size += 1 +
+        ::google::protobuf::internal::WireFormatLite::StringSize(
+          this->container());
+    }
+
+    // optional string location_file = 8;
+    if (has_location_file()) {
+      total_size += 1 +
+        ::google::protobuf::internal::WireFormatLite::StringSize(
+          this->location_file());
     }
 
   }
@@ -2798,6 +3157,12 @@ void ObjCCategory::MergeFrom(const ObjCCategory& from) {
     if (from.has_name()) {
       set_name(from.name());
     }
+    if (from.has_container()) {
+      set_container(from.container());
+    }
+    if (from.has_location_file()) {
+      set_location_file(from.location_file());
+    }
   }
   mutable_unknown_fields()->MergeFrom(from.unknown_fields());
 }
@@ -2828,6 +3193,8 @@ void ObjCCategory::Swap(ObjCCategory* other) {
     base_protocol_.Swap(&other->base_protocol_);
     method_.Swap(&other->method_);
     property_.Swap(&other->property_);
+    std::swap(container_, other->container_);
+    std::swap(location_file_, other->location_file_);
     std::swap(_has_bits_[0], other->_has_bits_[0]);
     _unknown_fields_.Swap(&other->_unknown_fields_);
     std::swap(_cached_size_, other->_cached_size_);

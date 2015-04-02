@@ -1,6 +1,6 @@
 #pragma once
 
-#include <string>
+#include <string.h>
 
 #include "clang-c/Index.h"
 
@@ -11,6 +11,11 @@ class AutoCXString {
         ~AutoCXString() { clang_disposeString(m_cxString); }
 
         const char* str() const { return clang_getCString(m_cxString); }
+
+        bool empty() const {
+            auto chars = str();
+            return !chars || strlen(chars) == 0;
+        }
 
     private:
         CXString m_cxString;

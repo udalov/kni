@@ -282,6 +282,8 @@ class {
     }
     class_method: true
   }
+  container: ""
+  location_file: "/usr/include/objc/NSObject.h"
 }
 class {
   name: "SomeClass"
@@ -293,6 +295,8 @@ class {
     }
     class_method: true
   }
+  container: ""
+  location_file: "testData/objc.h"
 }
 class {
   name: "NSArray"
@@ -550,6 +554,8 @@ protocol {
     name: "debugDescription"
     type: "LNSString;"
   }
+  container: ""
+  location_file: "/usr/include/objc/NSObject.h"
 }
 protocol {
   name: "NSCopying"
@@ -564,6 +570,8 @@ protocol {
     }
     class_method: false
   }
+  container: ""
+  location_file: "/System/Library/Frameworks/Foundation.framework/Headers/NSObject.h"
 }
 protocol {
   name: "NSMutableCopying"
@@ -578,6 +586,8 @@ protocol {
     }
     class_method: false
   }
+  container: ""
+  location_file: "/System/Library/Frameworks/Foundation.framework/Headers/NSObject.h"
 }
 protocol {
   name: "NSCoding"
@@ -603,6 +613,8 @@ protocol {
     }
     class_method: false
   }
+  container: ""
+  location_file: "/System/Library/Frameworks/Foundation.framework/Headers/NSObject.h"
 }
 protocol {
   name: "NSSecureCoding"
@@ -614,6 +626,8 @@ protocol {
     }
     class_method: true
   }
+  container: ""
+  location_file: "/System/Library/Frameworks/Foundation.framework/Headers/NSObject.h"
 }
 protocol {
   name: "NSDiscardableContent"
@@ -645,6 +659,8 @@ protocol {
     }
     class_method: false
   }
+  container: ""
+  location_file: "/System/Library/Frameworks/Foundation.framework/Headers/NSObject.h"
 }
 category {
   name: "NSObject+NSCoderMethods"
@@ -699,6 +715,8 @@ category {
     name: "classForCoder"
     type: "OC"
   }
+  container: ""
+  location_file: "/System/Library/Frameworks/Foundation.framework/Headers/NSObject.h"
 }
 category {
   name: "NSObject+NSDeprecatedMethods"
@@ -713,6 +731,8 @@ category {
     }
     class_method: true
   }
+  container: ""
+  location_file: "/System/Library/Frameworks/Foundation.framework/Headers/NSObject.h"
 }
 category {
   name: "NSObject+NSDiscardableContentProxy"
@@ -727,4 +747,6 @@ category {
     name: "autoContentAccessingProxy"
     type: "OI"
   }
+  container: ""
+  location_file: "/System/Library/Frameworks/Foundation.framework/Headers/NSObject.h"
 }

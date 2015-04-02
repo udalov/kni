@@ -179,6 +179,22 @@ std::string serializeType(const CXType& type) {
     return result;
 }
 
+template <class Target>
+void saveLocation(CXIdxDeclInfo const *info, Target *clazz) {
+    CXFile file;
+    clang_indexLoc_getFileLocation(info->loc, 0, &file, 0, 0, 0);
+    auto fname = AutoCXString(clang_getFileName(file));
+    if (!fname.empty())
+        clazz->set_location_file(fname.str());
+}
+
+template <class Target>
+void saveContainer(CXIdxDeclInfo const *info, Target *clazz) {
+    if (info->semanticContainer) {
+        AutoCXString container = clang_getCursorUSR(info->semanticContainer->cursor);
+        clazz->set_container(container.str());
+    }
+}
 
 void indexObjCClass(const CXIdxDeclInfo *info, OutputCollector *data) {
     auto containerDeclInfo = clang_index_getObjCContainerDeclInfo(info);
@@ -205,6 +221,8 @@ void indexObjCClass(const CXIdxDeclInfo *info, OutputCollector *data) {
         assertNotNull(base);
         clazz->set_base_class(base->name);
     }
+    saveContainer(info, clazz);
+    saveLocation(info, clazz);
 
     auto protocols = interfaceDeclInfo->protocols;
     assertNotNull(protocols);
@@ -224,6 +242,8 @@ void indexObjCCategory(const CXIdxDeclInfo *info, OutputCollector *data) {
     // TODO: this name is not unique for nameless categories, either drop them or fix this
     auto name = std::string(categoryDeclInfo->objcClass->name) + "+" + info->entityInfo->name;
     category->set_name(name);
+    saveContainer(info, category);
+    saveLocation(info, category);
 
     auto clazz = data->objc.loadClassByUSR(categoryDeclInfo->objcClass->USR);
     assertNotNull(clazz);
@@ -250,6 +270,8 @@ void indexObjCProtocol(const CXIdxDeclInfo *info, OutputCollector *data) {
 
     auto protocol = data->result().add_protocol();
     protocol->set_name(info->entityInfo->name);
+    saveContainer(info, protocol);
+    saveLocation(info, protocol);
 
     auto protocols = clang_index_getObjCProtocolRefListInfo(info);
     assertNotNull(protocols);

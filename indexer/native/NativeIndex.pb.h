@@ -581,12 +581,40 @@ class ObjCClass : public ::google::protobuf::Message {
   inline ::google::protobuf::RepeatedPtrField< ::ObjCProperty >*
       mutable_property();
 
+  // optional string container = 7;
+  inline bool has_container() const;
+  inline void clear_container();
+  static const int kContainerFieldNumber = 7;
+  inline const ::std::string& container() const;
+  inline void set_container(const ::std::string& value);
+  inline void set_container(const char* value);
+  inline void set_container(const char* value, size_t size);
+  inline ::std::string* mutable_container();
+  inline ::std::string* release_container();
+  inline void set_allocated_container(::std::string* container);
+
+  // optional string location_file = 8;
+  inline bool has_location_file() const;
+  inline void clear_location_file();
+  static const int kLocationFileFieldNumber = 8;
+  inline const ::std::string& location_file() const;
+  inline void set_location_file(const ::std::string& value);
+  inline void set_location_file(const char* value);
+  inline void set_location_file(const char* value, size_t size);
+  inline ::std::string* mutable_location_file();
+  inline ::std::string* release_location_file();
+  inline void set_allocated_location_file(::std::string* location_file);
+
   // @@protoc_insertion_point(class_scope:ObjCClass)
  private:
   inline void set_has_name();
   inline void clear_has_name();
   inline void set_has_base_class();
   inline void clear_has_base_class();
+  inline void set_has_container();
+  inline void clear_has_container();
+  inline void set_has_location_file();
+  inline void clear_has_location_file();
 
   ::google::protobuf::UnknownFieldSet _unknown_fields_;
 
@@ -598,6 +626,8 @@ class ObjCClass : public ::google::protobuf::Message {
   ::google::protobuf::RepeatedPtrField< ::std::string> category_;
   ::google::protobuf::RepeatedPtrField< ::ObjCMethod > method_;
   ::google::protobuf::RepeatedPtrField< ::ObjCProperty > property_;
+  ::std::string* container_;
+  ::std::string* location_file_;
   friend void  protobuf_AddDesc_NativeIndex_2eproto();
   friend void protobuf_AssignDesc_NativeIndex_2eproto();
   friend void protobuf_ShutdownFile_NativeIndex_2eproto();
@@ -712,10 +742,38 @@ class ObjCProtocol : public ::google::protobuf::Message {
   inline ::google::protobuf::RepeatedPtrField< ::ObjCProperty >*
       mutable_property();
 
+  // optional string container = 7;
+  inline bool has_container() const;
+  inline void clear_container();
+  static const int kContainerFieldNumber = 7;
+  inline const ::std::string& container() const;
+  inline void set_container(const ::std::string& value);
+  inline void set_container(const char* value);
+  inline void set_container(const char* value, size_t size);
+  inline ::std::string* mutable_container();
+  inline ::std::string* release_container();
+  inline void set_allocated_container(::std::string* container);
+
+  // optional string location_file = 8;
+  inline bool has_location_file() const;
+  inline void clear_location_file();
+  static const int kLocationFileFieldNumber = 8;
+  inline const ::std::string& location_file() const;
+  inline void set_location_file(const ::std::string& value);
+  inline void set_location_file(const char* value);
+  inline void set_location_file(const char* value, size_t size);
+  inline ::std::string* mutable_location_file();
+  inline ::std::string* release_location_file();
+  inline void set_allocated_location_file(::std::string* location_file);
+
   // @@protoc_insertion_point(class_scope:ObjCProtocol)
  private:
   inline void set_has_name();
   inline void clear_has_name();
+  inline void set_has_container();
+  inline void clear_has_container();
+  inline void set_has_location_file();
+  inline void clear_has_location_file();
 
   ::google::protobuf::UnknownFieldSet _unknown_fields_;
 
@@ -725,6 +783,8 @@ class ObjCProtocol : public ::google::protobuf::Message {
   ::google::protobuf::RepeatedPtrField< ::std::string> base_protocol_;
   ::google::protobuf::RepeatedPtrField< ::ObjCMethod > method_;
   ::google::protobuf::RepeatedPtrField< ::ObjCProperty > property_;
+  ::std::string* container_;
+  ::std::string* location_file_;
   friend void  protobuf_AddDesc_NativeIndex_2eproto();
   friend void protobuf_AssignDesc_NativeIndex_2eproto();
   friend void protobuf_ShutdownFile_NativeIndex_2eproto();
@@ -839,10 +899,38 @@ class ObjCCategory : public ::google::protobuf::Message {
   inline ::google::protobuf::RepeatedPtrField< ::ObjCProperty >*
       mutable_property();
 
+  // optional string container = 7;
+  inline bool has_container() const;
+  inline void clear_container();
+  static const int kContainerFieldNumber = 7;
+  inline const ::std::string& container() const;
+  inline void set_container(const ::std::string& value);
+  inline void set_container(const char* value);
+  inline void set_container(const char* value, size_t size);
+  inline ::std::string* mutable_container();
+  inline ::std::string* release_container();
+  inline void set_allocated_container(::std::string* container);
+
+  // optional string location_file = 8;
+  inline bool has_location_file() const;
+  inline void clear_location_file();
+  static const int kLocationFileFieldNumber = 8;
+  inline const ::std::string& location_file() const;
+  inline void set_location_file(const ::std::string& value);
+  inline void set_location_file(const char* value);
+  inline void set_location_file(const char* value, size_t size);
+  inline ::std::string* mutable_location_file();
+  inline ::std::string* release_location_file();
+  inline void set_allocated_location_file(::std::string* location_file);
+
   // @@protoc_insertion_point(class_scope:ObjCCategory)
  private:
   inline void set_has_name();
   inline void clear_has_name();
+  inline void set_has_container();
+  inline void clear_has_container();
+  inline void set_has_location_file();
+  inline void clear_has_location_file();
 
   ::google::protobuf::UnknownFieldSet _unknown_fields_;
 
@@ -852,6 +940,8 @@ class ObjCCategory : public ::google::protobuf::Message {
   ::google::protobuf::RepeatedPtrField< ::std::string> base_protocol_;
   ::google::protobuf::RepeatedPtrField< ::ObjCMethod > method_;
   ::google::protobuf::RepeatedPtrField< ::ObjCProperty > property_;
+  ::std::string* container_;
+  ::std::string* location_file_;
   friend void  protobuf_AddDesc_NativeIndex_2eproto();
   friend void protobuf_AssignDesc_NativeIndex_2eproto();
   friend void protobuf_ShutdownFile_NativeIndex_2eproto();
@@ -2240,6 +2330,158 @@ ObjCClass::mutable_property() {
   return &property_;
 }
 
+// optional string container = 7;
+inline bool ObjCClass::has_container() const {
+  return (_has_bits_[0] & 0x00000040u) != 0;
+}
+inline void ObjCClass::set_has_container() {
+  _has_bits_[0] |= 0x00000040u;
+}
+inline void ObjCClass::clear_has_container() {
+  _has_bits_[0] &= ~0x00000040u;
+}
+inline void ObjCClass::clear_container() {
+  if (container_ != &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
+    container_->clear();
+  }
+  clear_has_container();
+}
+inline const ::std::string& ObjCClass::container() const {
+  // @@protoc_insertion_point(field_get:ObjCClass.container)
+  return *container_;
+}
+inline void ObjCClass::set_container(const ::std::string& value) {
+  set_has_container();
+  if (container_ == &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
+    container_ = new ::std::string;
+  }
+  container_->assign(value);
+  // @@protoc_insertion_point(field_set:ObjCClass.container)
+}
+inline void ObjCClass::set_container(const char* value) {
+  set_has_container();
+  if (container_ == &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
+    container_ = new ::std::string;
+  }
+  container_->assign(value);
+  // @@protoc_insertion_point(field_set_char:ObjCClass.container)
+}
+inline void ObjCClass::set_container(const char* value, size_t size) {
+  set_has_container();
+  if (container_ == &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
+    container_ = new ::std::string;
+  }
+  container_->assign(reinterpret_cast<const char*>(value), size);
+  // @@protoc_insertion_point(field_set_pointer:ObjCClass.container)
+}
+inline ::std::string* ObjCClass::mutable_container() {
+  set_has_container();
+  if (container_ == &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
+    container_ = new ::std::string;
+  }
+  // @@protoc_insertion_point(field_mutable:ObjCClass.container)
+  return container_;
+}
+inline ::std::string* ObjCClass::release_container() {
+  clear_has_container();
+  if (container_ == &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
+    return NULL;
+  } else {
+    ::std::string* temp = container_;
+    container_ = const_cast< ::std::string*>(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+    return temp;
+  }
+}
+inline void ObjCClass::set_allocated_container(::std::string* container) {
+  if (container_ != &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
+    delete container_;
+  }
+  if (container) {
+    set_has_container();
+    container_ = container;
+  } else {
+    clear_has_container();
+    container_ = const_cast< ::std::string*>(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+  }
+  // @@protoc_insertion_point(field_set_allocated:ObjCClass.container)
+}
+
+// optional string location_file = 8;
+inline bool ObjCClass::has_location_file() const {
+  return (_has_bits_[0] & 0x00000080u) != 0;
+}
+inline void ObjCClass::set_has_location_file() {
+  _has_bits_[0] |= 0x00000080u;
+}
+inline void ObjCClass::clear_has_location_file() {
+  _has_bits_[0] &= ~0x00000080u;
+}
+inline void ObjCClass::clear_location_file() {
+  if (location_file_ != &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
+    location_file_->clear();
+  }
+  clear_has_location_file();
+}
+inline const ::std::string& ObjCClass::location_file() const {
+  // @@protoc_insertion_point(field_get:ObjCClass.location_file)
+  return *location_file_;
+}
+inline void ObjCClass::set_location_file(const ::std::string& value) {
+  set_has_location_file();
+  if (location_file_ == &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
+    location_file_ = new ::std::string;
+  }
+  location_file_->assign(value);
+  // @@protoc_insertion_point(field_set:ObjCClass.location_file)
+}
+inline void ObjCClass::set_location_file(const char* value) {
+  set_has_location_file();
+  if (location_file_ == &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
+    location_file_ = new ::std::string;
+  }
+  location_file_->assign(value);
+  // @@protoc_insertion_point(field_set_char:ObjCClass.location_file)
+}
+inline void ObjCClass::set_location_file(const char* value, size_t size) {
+  set_has_location_file();
+  if (location_file_ == &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
+    location_file_ = new ::std::string;
+  }
+  location_file_->assign(reinterpret_cast<const char*>(value), size);
+  // @@protoc_insertion_point(field_set_pointer:ObjCClass.location_file)
+}
+inline ::std::string* ObjCClass::mutable_location_file() {
+  set_has_location_file();
+  if (location_file_ == &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
+    location_file_ = new ::std::string;
+  }
+  // @@protoc_insertion_point(field_mutable:ObjCClass.location_file)
+  return location_file_;
+}
+inline ::std::string* ObjCClass::release_location_file() {
+  clear_has_location_file();
+  if (location_file_ == &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
+    return NULL;
+  } else {
+    ::std::string* temp = location_file_;
+    location_file_ = const_cast< ::std::string*>(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+    return temp;
+  }
+}
+inline void ObjCClass::set_allocated_location_file(::std::string* location_file) {
+  if (location_file_ != &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
+    delete location_file_;
+  }
+  if (location_file) {
+    set_has_location_file();
+    location_file_ = location_file;
+  } else {
+    clear_has_location_file();
+    location_file_ = const_cast< ::std::string*>(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+  }
+  // @@protoc_insertion_point(field_set_allocated:ObjCClass.location_file)
+}
+
 // -------------------------------------------------------------------
 
 // ObjCProtocol
@@ -2434,6 +2676,158 @@ ObjCProtocol::mutable_property() {
   return &property_;
 }
 
+// optional string container = 7;
+inline bool ObjCProtocol::has_container() const {
+  return (_has_bits_[0] & 0x00000010u) != 0;
+}
+inline void ObjCProtocol::set_has_container() {
+  _has_bits_[0] |= 0x00000010u;
+}
+inline void ObjCProtocol::clear_has_container() {
+  _has_bits_[0] &= ~0x00000010u;
+}
+inline void ObjCProtocol::clear_container() {
+  if (container_ != &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
+    container_->clear();
+  }
+  clear_has_container();
+}
+inline const ::std::string& ObjCProtocol::container() const {
+  // @@protoc_insertion_point(field_get:ObjCProtocol.container)
+  return *container_;
+}
+inline void ObjCProtocol::set_container(const ::std::string& value) {
+  set_has_container();
+  if (container_ == &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
+    container_ = new ::std::string;
+  }
+  container_->assign(value);
+  // @@protoc_insertion_point(field_set:ObjCProtocol.container)
+}
+inline void ObjCProtocol::set_container(const char* value) {
+  set_has_container();
+  if (container_ == &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
+    container_ = new ::std::string;
+  }
+  container_->assign(value);
+  // @@protoc_insertion_point(field_set_char:ObjCProtocol.container)
+}
+inline void ObjCProtocol::set_container(const char* value, size_t size) {
+  set_has_container();
+  if (container_ == &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
+    container_ = new ::std::string;
+  }
+  container_->assign(reinterpret_cast<const char*>(value), size);
+  // @@protoc_insertion_point(field_set_pointer:ObjCProtocol.container)
+}
+inline ::std::string* ObjCProtocol::mutable_container() {
+  set_has_container();
+  if (container_ == &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
+    container_ = new ::std::string;
+  }
+  // @@protoc_insertion_point(field_mutable:ObjCProtocol.container)
+  return container_;
+}
+inline ::std::string* ObjCProtocol::release_container() {
+  clear_has_container();
+  if (container_ == &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
+    return NULL;
+  } else {
+    ::std::string* temp = container_;
+    container_ = const_cast< ::std::string*>(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+    return temp;
+  }
+}
+inline void ObjCProtocol::set_allocated_container(::std::string* container) {
+  if (container_ != &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
+    delete container_;
+  }
+  if (container) {
+    set_has_container();
+    container_ = container;
+  } else {
+    clear_has_container();
+    container_ = const_cast< ::std::string*>(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+  }
+  // @@protoc_insertion_point(field_set_allocated:ObjCProtocol.container)
+}
+
+// optional string location_file = 8;
+inline bool ObjCProtocol::has_location_file() const {
+  return (_has_bits_[0] & 0x00000020u) != 0;
+}
+inline void ObjCProtocol::set_has_location_file() {
+  _has_bits_[0] |= 0x00000020u;
+}
+inline void ObjCProtocol::clear_has_location_file() {
+  _has_bits_[0] &= ~0x00000020u;
+}
+inline void ObjCProtocol::clear_location_file() {
+  if (location_file_ != &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
+    location_file_->clear();
+  }
+  clear_has_location_file();
+}
+inline const ::std::string& ObjCProtocol::location_file() const {
+  // @@protoc_insertion_point(field_get:ObjCProtocol.location_file)
+  return *location_file_;
+}
+inline void ObjCProtocol::set_location_file(const ::std::string& value) {
+  set_has_location_file();
+  if (location_file_ == &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
+    location_file_ = new ::std::string;
+  }
+  location_file_->assign(value);
+  // @@protoc_insertion_point(field_set:ObjCProtocol.location_file)
+}
+inline void ObjCProtocol::set_location_file(const char* value) {
+  set_has_location_file();
+  if (location_file_ == &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
+    location_file_ = new ::std::string;
+  }
+  location_file_->assign(value);
+  // @@protoc_insertion_point(field_set_char:ObjCProtocol.location_file)
+}
+inline void ObjCProtocol::set_location_file(const char* value, size_t size) {
+  set_has_location_file();
+  if (location_file_ == &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
+    location_file_ = new ::std::string;
+  }
+  location_file_->assign(reinterpret_cast<const char*>(value), size);
+  // @@protoc_insertion_point(field_set_pointer:ObjCProtocol.location_file)
+}
+inline ::std::string* ObjCProtocol::mutable_location_file() {
+  set_has_location_file();
+  if (location_file_ == &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
+    location_file_ = new ::std::string;
+  }
+  // @@protoc_insertion_point(field_mutable:ObjCProtocol.location_file)
+  return location_file_;
+}
+inline ::std::string* ObjCProtocol::release_location_file() {
+  clear_has_location_file();
+  if (location_file_ == &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
+    return NULL;
+  } else {
+    ::std::string* temp = location_file_;
+    location_file_ = const_cast< ::std::string*>(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+    return temp;
+  }
+}
+inline void ObjCProtocol::set_allocated_location_file(::std::string* location_file) {
+  if (location_file_ != &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
+    delete location_file_;
+  }
+  if (location_file) {
+    set_has_location_file();
+    location_file_ = location_file;
+  } else {
+    clear_has_location_file();
+    location_file_ = const_cast< ::std::string*>(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+  }
+  // @@protoc_insertion_point(field_set_allocated:ObjCProtocol.location_file)
+}
+
 // -------------------------------------------------------------------
 
 // ObjCCategory
@@ -2626,6 +3020,158 @@ inline ::google::protobuf::RepeatedPtrField< ::ObjCProperty >*
 ObjCCategory::mutable_property() {
   // @@protoc_insertion_point(field_mutable_list:ObjCCategory.property)
   return &property_;
+}
+
+// optional string container = 7;
+inline bool ObjCCategory::has_container() const {
+  return (_has_bits_[0] & 0x00000010u) != 0;
+}
+inline void ObjCCategory::set_has_container() {
+  _has_bits_[0] |= 0x00000010u;
+}
+inline void ObjCCategory::clear_has_container() {
+  _has_bits_[0] &= ~0x00000010u;
+}
+inline void ObjCCategory::clear_container() {
+  if (container_ != &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
+    container_->clear();
+  }
+  clear_has_container();
+}
+inline const ::std::string& ObjCCategory::container() const {
+  // @@protoc_insertion_point(field_get:ObjCCategory.container)
+  return *container_;
+}
+inline void ObjCCategory::set_container(const ::std::string& value) {
+  set_has_container();
+  if (container_ == &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
+    container_ = new ::std::string;
+  }
+  container_->assign(value);
+  // @@protoc_insertion_point(field_set:ObjCCategory.container)
+}
+inline void ObjCCategory::set_container(const char* value) {
+  set_has_container();
+  if (container_ == &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
+    container_ = new ::std::string;
+  }
+  container_->assign(value);
+  // @@protoc_insertion_point(field_set_char:ObjCCategory.container)
+}
+inline void ObjCCategory::set_container(const char* value, size_t size) {
+  set_has_container();
+  if (container_ == &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
+    container_ = new ::std::string;
+  }
+  container_->assign(reinterpret_cast<const char*>(value), size);
+  // @@protoc_insertion_point(field_set_pointer:ObjCCategory.container)
+}
+inline ::std::string* ObjCCategory::mutable_container() {
+  set_has_container();
+  if (container_ == &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
+    container_ = new ::std::string;
+  }
+  // @@protoc_insertion_point(field_mutable:ObjCCategory.container)
+  return container_;
+}
+inline ::std::string* ObjCCategory::release_container() {
+  clear_has_container();
+  if (container_ == &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
+    return NULL;
+  } else {
+    ::std::string* temp = container_;
+    container_ = const_cast< ::std::string*>(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+    return temp;
+  }
+}
+inline void ObjCCategory::set_allocated_container(::std::string* container) {
+  if (container_ != &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
+    delete container_;
+  }
+  if (container) {
+    set_has_container();
+    container_ = container;
+  } else {
+    clear_has_container();
+    container_ = const_cast< ::std::string*>(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+  }
+  // @@protoc_insertion_point(field_set_allocated:ObjCCategory.container)
+}
+
+// optional string location_file = 8;
+inline bool ObjCCategory::has_location_file() const {
+  return (_has_bits_[0] & 0x00000020u) != 0;
+}
+inline void ObjCCategory::set_has_location_file() {
+  _has_bits_[0] |= 0x00000020u;
+}
+inline void ObjCCategory::clear_has_location_file() {
+  _has_bits_[0] &= ~0x00000020u;
+}
+inline void ObjCCategory::clear_location_file() {
+  if (location_file_ != &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
+    location_file_->clear();
+  }
+  clear_has_location_file();
+}
+inline const ::std::string& ObjCCategory::location_file() const {
+  // @@protoc_insertion_point(field_get:ObjCCategory.location_file)
+  return *location_file_;
+}
+inline void ObjCCategory::set_location_file(const ::std::string& value) {
+  set_has_location_file();
+  if (location_file_ == &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
+    location_file_ = new ::std::string;
+  }
+  location_file_->assign(value);
+  // @@protoc_insertion_point(field_set:ObjCCategory.location_file)
+}
+inline void ObjCCategory::set_location_file(const char* value) {
+  set_has_location_file();
+  if (location_file_ == &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
+    location_file_ = new ::std::string;
+  }
+  location_file_->assign(value);
+  // @@protoc_insertion_point(field_set_char:ObjCCategory.location_file)
+}
+inline void ObjCCategory::set_location_file(const char* value, size_t size) {
+  set_has_location_file();
+  if (location_file_ == &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
+    location_file_ = new ::std::string;
+  }
+  location_file_->assign(reinterpret_cast<const char*>(value), size);
+  // @@protoc_insertion_point(field_set_pointer:ObjCCategory.location_file)
+}
+inline ::std::string* ObjCCategory::mutable_location_file() {
+  set_has_location_file();
+  if (location_file_ == &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
+    location_file_ = new ::std::string;
+  }
+  // @@protoc_insertion_point(field_mutable:ObjCCategory.location_file)
+  return location_file_;
+}
+inline ::std::string* ObjCCategory::release_location_file() {
+  clear_has_location_file();
+  if (location_file_ == &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
+    return NULL;
+  } else {
+    ::std::string* temp = location_file_;
+    location_file_ = const_cast< ::std::string*>(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+    return temp;
+  }
+}
+inline void ObjCCategory::set_allocated_location_file(::std::string* location_file) {
+  if (location_file_ != &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
+    delete location_file_;
+  }
+  if (location_file) {
+    set_has_location_file();
+    location_file_ = location_file;
+  } else {
+    clear_has_location_file();
+    location_file_ = const_cast< ::std::string*>(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+  }
+  // @@protoc_insertion_point(field_set_allocated:ObjCCategory.location_file)
 }
 
 // -------------------------------------------------------------------

@@ -3102,6 +3102,34 @@ public final class NativeIndex {
      */
     org.jetbrains.kni.indexer.NativeIndex.ObjCPropertyOrBuilder getPropertyOrBuilder(
         int index);
+
+    /**
+     * <code>optional string container = 7;</code>
+     */
+    boolean hasContainer();
+    /**
+     * <code>optional string container = 7;</code>
+     */
+    java.lang.String getContainer();
+    /**
+     * <code>optional string container = 7;</code>
+     */
+    com.google.protobuf.ByteString
+        getContainerBytes();
+
+    /**
+     * <code>optional string location_file = 8;</code>
+     */
+    boolean hasLocationFile();
+    /**
+     * <code>optional string location_file = 8;</code>
+     */
+    java.lang.String getLocationFile();
+    /**
+     * <code>optional string location_file = 8;</code>
+     */
+    com.google.protobuf.ByteString
+        getLocationFileBytes();
   }
   /**
    * Protobuf type {@code ObjCClass}
@@ -3199,6 +3227,18 @@ public final class NativeIndex {
                 mutable_bitField0_ |= 0x00000020;
               }
               property_.add(input.readMessage(org.jetbrains.kni.indexer.NativeIndex.ObjCProperty.PARSER, extensionRegistry));
+              break;
+            }
+            case 58: {
+              com.google.protobuf.ByteString bs = input.readBytes();
+              bitField0_ |= 0x00000004;
+              container_ = bs;
+              break;
+            }
+            case 66: {
+              com.google.protobuf.ByteString bs = input.readBytes();
+              bitField0_ |= 0x00000008;
+              locationFile_ = bs;
               break;
             }
           }
@@ -3465,6 +3505,90 @@ public final class NativeIndex {
       return property_.get(index);
     }
 
+    public static final int CONTAINER_FIELD_NUMBER = 7;
+    private java.lang.Object container_;
+    /**
+     * <code>optional string container = 7;</code>
+     */
+    public boolean hasContainer() {
+      return ((bitField0_ & 0x00000004) == 0x00000004);
+    }
+    /**
+     * <code>optional string container = 7;</code>
+     */
+    public java.lang.String getContainer() {
+      java.lang.Object ref = container_;
+      if (ref instanceof java.lang.String) {
+        return (java.lang.String) ref;
+      } else {
+        com.google.protobuf.ByteString bs = 
+            (com.google.protobuf.ByteString) ref;
+        java.lang.String s = bs.toStringUtf8();
+        if (bs.isValidUtf8()) {
+          container_ = s;
+        }
+        return s;
+      }
+    }
+    /**
+     * <code>optional string container = 7;</code>
+     */
+    public com.google.protobuf.ByteString
+        getContainerBytes() {
+      java.lang.Object ref = container_;
+      if (ref instanceof java.lang.String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
+        container_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
+    }
+
+    public static final int LOCATION_FILE_FIELD_NUMBER = 8;
+    private java.lang.Object locationFile_;
+    /**
+     * <code>optional string location_file = 8;</code>
+     */
+    public boolean hasLocationFile() {
+      return ((bitField0_ & 0x00000008) == 0x00000008);
+    }
+    /**
+     * <code>optional string location_file = 8;</code>
+     */
+    public java.lang.String getLocationFile() {
+      java.lang.Object ref = locationFile_;
+      if (ref instanceof java.lang.String) {
+        return (java.lang.String) ref;
+      } else {
+        com.google.protobuf.ByteString bs = 
+            (com.google.protobuf.ByteString) ref;
+        java.lang.String s = bs.toStringUtf8();
+        if (bs.isValidUtf8()) {
+          locationFile_ = s;
+        }
+        return s;
+      }
+    }
+    /**
+     * <code>optional string location_file = 8;</code>
+     */
+    public com.google.protobuf.ByteString
+        getLocationFileBytes() {
+      java.lang.Object ref = locationFile_;
+      if (ref instanceof java.lang.String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
+        locationFile_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
+    }
+
     private void initFields() {
       name_ = "";
       baseClass_ = "";
@@ -3472,6 +3596,8 @@ public final class NativeIndex {
       category_ = com.google.protobuf.LazyStringArrayList.EMPTY;
       method_ = java.util.Collections.emptyList();
       property_ = java.util.Collections.emptyList();
+      container_ = "";
+      locationFile_ = "";
     }
     private byte memoizedIsInitialized = -1;
     public final boolean isInitialized() {
@@ -3520,6 +3646,12 @@ public final class NativeIndex {
       for (int i = 0; i < property_.size(); i++) {
         output.writeMessage(6, property_.get(i));
       }
+      if (((bitField0_ & 0x00000004) == 0x00000004)) {
+        output.writeBytes(7, getContainerBytes());
+      }
+      if (((bitField0_ & 0x00000008) == 0x00000008)) {
+        output.writeBytes(8, getLocationFileBytes());
+      }
       getUnknownFields().writeTo(output);
     }
 
@@ -3562,6 +3694,14 @@ public final class NativeIndex {
       for (int i = 0; i < property_.size(); i++) {
         size += com.google.protobuf.CodedOutputStream
           .computeMessageSize(6, property_.get(i));
+      }
+      if (((bitField0_ & 0x00000004) == 0x00000004)) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeBytesSize(7, getContainerBytes());
+      }
+      if (((bitField0_ & 0x00000008) == 0x00000008)) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeBytesSize(8, getLocationFileBytes());
       }
       size += getUnknownFields().getSerializedSize();
       memoizedSerializedSize = size;
@@ -3702,6 +3842,10 @@ public final class NativeIndex {
         } else {
           propertyBuilder_.clear();
         }
+        container_ = "";
+        bitField0_ = (bitField0_ & ~0x00000040);
+        locationFile_ = "";
+        bitField0_ = (bitField0_ & ~0x00000080);
         return this;
       }
 
@@ -3766,6 +3910,14 @@ public final class NativeIndex {
         } else {
           result.property_ = propertyBuilder_.build();
         }
+        if (((from_bitField0_ & 0x00000040) == 0x00000040)) {
+          to_bitField0_ |= 0x00000004;
+        }
+        result.container_ = container_;
+        if (((from_bitField0_ & 0x00000080) == 0x00000080)) {
+          to_bitField0_ |= 0x00000008;
+        }
+        result.locationFile_ = locationFile_;
         result.bitField0_ = to_bitField0_;
         onBuilt();
         return result;
@@ -3863,6 +4015,16 @@ public final class NativeIndex {
               propertyBuilder_.addAllMessages(other.property_);
             }
           }
+        }
+        if (other.hasContainer()) {
+          bitField0_ |= 0x00000040;
+          container_ = other.container_;
+          onChanged();
+        }
+        if (other.hasLocationFile()) {
+          bitField0_ |= 0x00000080;
+          locationFile_ = other.locationFile_;
+          onChanged();
         }
         this.mergeUnknownFields(other.getUnknownFields());
         return this;
@@ -4725,6 +4887,158 @@ public final class NativeIndex {
         return propertyBuilder_;
       }
 
+      private java.lang.Object container_ = "";
+      /**
+       * <code>optional string container = 7;</code>
+       */
+      public boolean hasContainer() {
+        return ((bitField0_ & 0x00000040) == 0x00000040);
+      }
+      /**
+       * <code>optional string container = 7;</code>
+       */
+      public java.lang.String getContainer() {
+        java.lang.Object ref = container_;
+        if (!(ref instanceof java.lang.String)) {
+          com.google.protobuf.ByteString bs =
+              (com.google.protobuf.ByteString) ref;
+          java.lang.String s = bs.toStringUtf8();
+          if (bs.isValidUtf8()) {
+            container_ = s;
+          }
+          return s;
+        } else {
+          return (java.lang.String) ref;
+        }
+      }
+      /**
+       * <code>optional string container = 7;</code>
+       */
+      public com.google.protobuf.ByteString
+          getContainerBytes() {
+        java.lang.Object ref = container_;
+        if (ref instanceof String) {
+          com.google.protobuf.ByteString b = 
+              com.google.protobuf.ByteString.copyFromUtf8(
+                  (java.lang.String) ref);
+          container_ = b;
+          return b;
+        } else {
+          return (com.google.protobuf.ByteString) ref;
+        }
+      }
+      /**
+       * <code>optional string container = 7;</code>
+       */
+      public Builder setContainer(
+          java.lang.String value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000040;
+        container_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>optional string container = 7;</code>
+       */
+      public Builder clearContainer() {
+        bitField0_ = (bitField0_ & ~0x00000040);
+        container_ = getDefaultInstance().getContainer();
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>optional string container = 7;</code>
+       */
+      public Builder setContainerBytes(
+          com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000040;
+        container_ = value;
+        onChanged();
+        return this;
+      }
+
+      private java.lang.Object locationFile_ = "";
+      /**
+       * <code>optional string location_file = 8;</code>
+       */
+      public boolean hasLocationFile() {
+        return ((bitField0_ & 0x00000080) == 0x00000080);
+      }
+      /**
+       * <code>optional string location_file = 8;</code>
+       */
+      public java.lang.String getLocationFile() {
+        java.lang.Object ref = locationFile_;
+        if (!(ref instanceof java.lang.String)) {
+          com.google.protobuf.ByteString bs =
+              (com.google.protobuf.ByteString) ref;
+          java.lang.String s = bs.toStringUtf8();
+          if (bs.isValidUtf8()) {
+            locationFile_ = s;
+          }
+          return s;
+        } else {
+          return (java.lang.String) ref;
+        }
+      }
+      /**
+       * <code>optional string location_file = 8;</code>
+       */
+      public com.google.protobuf.ByteString
+          getLocationFileBytes() {
+        java.lang.Object ref = locationFile_;
+        if (ref instanceof String) {
+          com.google.protobuf.ByteString b = 
+              com.google.protobuf.ByteString.copyFromUtf8(
+                  (java.lang.String) ref);
+          locationFile_ = b;
+          return b;
+        } else {
+          return (com.google.protobuf.ByteString) ref;
+        }
+      }
+      /**
+       * <code>optional string location_file = 8;</code>
+       */
+      public Builder setLocationFile(
+          java.lang.String value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000080;
+        locationFile_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>optional string location_file = 8;</code>
+       */
+      public Builder clearLocationFile() {
+        bitField0_ = (bitField0_ & ~0x00000080);
+        locationFile_ = getDefaultInstance().getLocationFile();
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>optional string location_file = 8;</code>
+       */
+      public Builder setLocationFileBytes(
+          com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000080;
+        locationFile_ = value;
+        onChanged();
+        return this;
+      }
+
       // @@protoc_insertion_point(builder_scope:ObjCClass)
     }
 
@@ -4820,6 +5134,34 @@ public final class NativeIndex {
      */
     org.jetbrains.kni.indexer.NativeIndex.ObjCPropertyOrBuilder getPropertyOrBuilder(
         int index);
+
+    /**
+     * <code>optional string container = 7;</code>
+     */
+    boolean hasContainer();
+    /**
+     * <code>optional string container = 7;</code>
+     */
+    java.lang.String getContainer();
+    /**
+     * <code>optional string container = 7;</code>
+     */
+    com.google.protobuf.ByteString
+        getContainerBytes();
+
+    /**
+     * <code>optional string location_file = 8;</code>
+     */
+    boolean hasLocationFile();
+    /**
+     * <code>optional string location_file = 8;</code>
+     */
+    java.lang.String getLocationFile();
+    /**
+     * <code>optional string location_file = 8;</code>
+     */
+    com.google.protobuf.ByteString
+        getLocationFileBytes();
   }
   /**
    * Protobuf type {@code ObjCProtocol}
@@ -4902,6 +5244,18 @@ public final class NativeIndex {
                 mutable_bitField0_ |= 0x00000008;
               }
               property_.add(input.readMessage(org.jetbrains.kni.indexer.NativeIndex.ObjCProperty.PARSER, extensionRegistry));
+              break;
+            }
+            case 58: {
+              com.google.protobuf.ByteString bs = input.readBytes();
+              bitField0_ |= 0x00000002;
+              container_ = bs;
+              break;
+            }
+            case 66: {
+              com.google.protobuf.ByteString bs = input.readBytes();
+              bitField0_ |= 0x00000004;
+              locationFile_ = bs;
               break;
             }
           }
@@ -5094,11 +5448,97 @@ public final class NativeIndex {
       return property_.get(index);
     }
 
+    public static final int CONTAINER_FIELD_NUMBER = 7;
+    private java.lang.Object container_;
+    /**
+     * <code>optional string container = 7;</code>
+     */
+    public boolean hasContainer() {
+      return ((bitField0_ & 0x00000002) == 0x00000002);
+    }
+    /**
+     * <code>optional string container = 7;</code>
+     */
+    public java.lang.String getContainer() {
+      java.lang.Object ref = container_;
+      if (ref instanceof java.lang.String) {
+        return (java.lang.String) ref;
+      } else {
+        com.google.protobuf.ByteString bs = 
+            (com.google.protobuf.ByteString) ref;
+        java.lang.String s = bs.toStringUtf8();
+        if (bs.isValidUtf8()) {
+          container_ = s;
+        }
+        return s;
+      }
+    }
+    /**
+     * <code>optional string container = 7;</code>
+     */
+    public com.google.protobuf.ByteString
+        getContainerBytes() {
+      java.lang.Object ref = container_;
+      if (ref instanceof java.lang.String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
+        container_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
+    }
+
+    public static final int LOCATION_FILE_FIELD_NUMBER = 8;
+    private java.lang.Object locationFile_;
+    /**
+     * <code>optional string location_file = 8;</code>
+     */
+    public boolean hasLocationFile() {
+      return ((bitField0_ & 0x00000004) == 0x00000004);
+    }
+    /**
+     * <code>optional string location_file = 8;</code>
+     */
+    public java.lang.String getLocationFile() {
+      java.lang.Object ref = locationFile_;
+      if (ref instanceof java.lang.String) {
+        return (java.lang.String) ref;
+      } else {
+        com.google.protobuf.ByteString bs = 
+            (com.google.protobuf.ByteString) ref;
+        java.lang.String s = bs.toStringUtf8();
+        if (bs.isValidUtf8()) {
+          locationFile_ = s;
+        }
+        return s;
+      }
+    }
+    /**
+     * <code>optional string location_file = 8;</code>
+     */
+    public com.google.protobuf.ByteString
+        getLocationFileBytes() {
+      java.lang.Object ref = locationFile_;
+      if (ref instanceof java.lang.String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
+        locationFile_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
+    }
+
     private void initFields() {
       name_ = "";
       baseProtocol_ = com.google.protobuf.LazyStringArrayList.EMPTY;
       method_ = java.util.Collections.emptyList();
       property_ = java.util.Collections.emptyList();
+      container_ = "";
+      locationFile_ = "";
     }
     private byte memoizedIsInitialized = -1;
     public final boolean isInitialized() {
@@ -5141,6 +5581,12 @@ public final class NativeIndex {
       for (int i = 0; i < property_.size(); i++) {
         output.writeMessage(4, property_.get(i));
       }
+      if (((bitField0_ & 0x00000002) == 0x00000002)) {
+        output.writeBytes(7, getContainerBytes());
+      }
+      if (((bitField0_ & 0x00000004) == 0x00000004)) {
+        output.writeBytes(8, getLocationFileBytes());
+      }
       getUnknownFields().writeTo(output);
     }
 
@@ -5170,6 +5616,14 @@ public final class NativeIndex {
       for (int i = 0; i < property_.size(); i++) {
         size += com.google.protobuf.CodedOutputStream
           .computeMessageSize(4, property_.get(i));
+      }
+      if (((bitField0_ & 0x00000002) == 0x00000002)) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeBytesSize(7, getContainerBytes());
+      }
+      if (((bitField0_ & 0x00000004) == 0x00000004)) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeBytesSize(8, getLocationFileBytes());
       }
       size += getUnknownFields().getSerializedSize();
       memoizedSerializedSize = size;
@@ -5306,6 +5760,10 @@ public final class NativeIndex {
         } else {
           propertyBuilder_.clear();
         }
+        container_ = "";
+        bitField0_ = (bitField0_ & ~0x00000010);
+        locationFile_ = "";
+        bitField0_ = (bitField0_ & ~0x00000020);
         return this;
       }
 
@@ -5361,6 +5819,14 @@ public final class NativeIndex {
         } else {
           result.property_ = propertyBuilder_.build();
         }
+        if (((from_bitField0_ & 0x00000010) == 0x00000010)) {
+          to_bitField0_ |= 0x00000002;
+        }
+        result.container_ = container_;
+        if (((from_bitField0_ & 0x00000020) == 0x00000020)) {
+          to_bitField0_ |= 0x00000004;
+        }
+        result.locationFile_ = locationFile_;
         result.bitField0_ = to_bitField0_;
         onBuilt();
         return result;
@@ -5443,6 +5909,16 @@ public final class NativeIndex {
               propertyBuilder_.addAllMessages(other.property_);
             }
           }
+        }
+        if (other.hasContainer()) {
+          bitField0_ |= 0x00000010;
+          container_ = other.container_;
+          onChanged();
+        }
+        if (other.hasLocationFile()) {
+          bitField0_ |= 0x00000020;
+          locationFile_ = other.locationFile_;
+          onChanged();
         }
         this.mergeUnknownFields(other.getUnknownFields());
         return this;
@@ -6136,6 +6612,158 @@ public final class NativeIndex {
         return propertyBuilder_;
       }
 
+      private java.lang.Object container_ = "";
+      /**
+       * <code>optional string container = 7;</code>
+       */
+      public boolean hasContainer() {
+        return ((bitField0_ & 0x00000010) == 0x00000010);
+      }
+      /**
+       * <code>optional string container = 7;</code>
+       */
+      public java.lang.String getContainer() {
+        java.lang.Object ref = container_;
+        if (!(ref instanceof java.lang.String)) {
+          com.google.protobuf.ByteString bs =
+              (com.google.protobuf.ByteString) ref;
+          java.lang.String s = bs.toStringUtf8();
+          if (bs.isValidUtf8()) {
+            container_ = s;
+          }
+          return s;
+        } else {
+          return (java.lang.String) ref;
+        }
+      }
+      /**
+       * <code>optional string container = 7;</code>
+       */
+      public com.google.protobuf.ByteString
+          getContainerBytes() {
+        java.lang.Object ref = container_;
+        if (ref instanceof String) {
+          com.google.protobuf.ByteString b = 
+              com.google.protobuf.ByteString.copyFromUtf8(
+                  (java.lang.String) ref);
+          container_ = b;
+          return b;
+        } else {
+          return (com.google.protobuf.ByteString) ref;
+        }
+      }
+      /**
+       * <code>optional string container = 7;</code>
+       */
+      public Builder setContainer(
+          java.lang.String value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000010;
+        container_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>optional string container = 7;</code>
+       */
+      public Builder clearContainer() {
+        bitField0_ = (bitField0_ & ~0x00000010);
+        container_ = getDefaultInstance().getContainer();
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>optional string container = 7;</code>
+       */
+      public Builder setContainerBytes(
+          com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000010;
+        container_ = value;
+        onChanged();
+        return this;
+      }
+
+      private java.lang.Object locationFile_ = "";
+      /**
+       * <code>optional string location_file = 8;</code>
+       */
+      public boolean hasLocationFile() {
+        return ((bitField0_ & 0x00000020) == 0x00000020);
+      }
+      /**
+       * <code>optional string location_file = 8;</code>
+       */
+      public java.lang.String getLocationFile() {
+        java.lang.Object ref = locationFile_;
+        if (!(ref instanceof java.lang.String)) {
+          com.google.protobuf.ByteString bs =
+              (com.google.protobuf.ByteString) ref;
+          java.lang.String s = bs.toStringUtf8();
+          if (bs.isValidUtf8()) {
+            locationFile_ = s;
+          }
+          return s;
+        } else {
+          return (java.lang.String) ref;
+        }
+      }
+      /**
+       * <code>optional string location_file = 8;</code>
+       */
+      public com.google.protobuf.ByteString
+          getLocationFileBytes() {
+        java.lang.Object ref = locationFile_;
+        if (ref instanceof String) {
+          com.google.protobuf.ByteString b = 
+              com.google.protobuf.ByteString.copyFromUtf8(
+                  (java.lang.String) ref);
+          locationFile_ = b;
+          return b;
+        } else {
+          return (com.google.protobuf.ByteString) ref;
+        }
+      }
+      /**
+       * <code>optional string location_file = 8;</code>
+       */
+      public Builder setLocationFile(
+          java.lang.String value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000020;
+        locationFile_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>optional string location_file = 8;</code>
+       */
+      public Builder clearLocationFile() {
+        bitField0_ = (bitField0_ & ~0x00000020);
+        locationFile_ = getDefaultInstance().getLocationFile();
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>optional string location_file = 8;</code>
+       */
+      public Builder setLocationFileBytes(
+          com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000020;
+        locationFile_ = value;
+        onChanged();
+        return this;
+      }
+
       // @@protoc_insertion_point(builder_scope:ObjCProtocol)
     }
 
@@ -6231,6 +6859,34 @@ public final class NativeIndex {
      */
     org.jetbrains.kni.indexer.NativeIndex.ObjCPropertyOrBuilder getPropertyOrBuilder(
         int index);
+
+    /**
+     * <code>optional string container = 7;</code>
+     */
+    boolean hasContainer();
+    /**
+     * <code>optional string container = 7;</code>
+     */
+    java.lang.String getContainer();
+    /**
+     * <code>optional string container = 7;</code>
+     */
+    com.google.protobuf.ByteString
+        getContainerBytes();
+
+    /**
+     * <code>optional string location_file = 8;</code>
+     */
+    boolean hasLocationFile();
+    /**
+     * <code>optional string location_file = 8;</code>
+     */
+    java.lang.String getLocationFile();
+    /**
+     * <code>optional string location_file = 8;</code>
+     */
+    com.google.protobuf.ByteString
+        getLocationFileBytes();
   }
   /**
    * Protobuf type {@code ObjCCategory}
@@ -6313,6 +6969,18 @@ public final class NativeIndex {
                 mutable_bitField0_ |= 0x00000008;
               }
               property_.add(input.readMessage(org.jetbrains.kni.indexer.NativeIndex.ObjCProperty.PARSER, extensionRegistry));
+              break;
+            }
+            case 58: {
+              com.google.protobuf.ByteString bs = input.readBytes();
+              bitField0_ |= 0x00000002;
+              container_ = bs;
+              break;
+            }
+            case 66: {
+              com.google.protobuf.ByteString bs = input.readBytes();
+              bitField0_ |= 0x00000004;
+              locationFile_ = bs;
               break;
             }
           }
@@ -6505,11 +7173,97 @@ public final class NativeIndex {
       return property_.get(index);
     }
 
+    public static final int CONTAINER_FIELD_NUMBER = 7;
+    private java.lang.Object container_;
+    /**
+     * <code>optional string container = 7;</code>
+     */
+    public boolean hasContainer() {
+      return ((bitField0_ & 0x00000002) == 0x00000002);
+    }
+    /**
+     * <code>optional string container = 7;</code>
+     */
+    public java.lang.String getContainer() {
+      java.lang.Object ref = container_;
+      if (ref instanceof java.lang.String) {
+        return (java.lang.String) ref;
+      } else {
+        com.google.protobuf.ByteString bs = 
+            (com.google.protobuf.ByteString) ref;
+        java.lang.String s = bs.toStringUtf8();
+        if (bs.isValidUtf8()) {
+          container_ = s;
+        }
+        return s;
+      }
+    }
+    /**
+     * <code>optional string container = 7;</code>
+     */
+    public com.google.protobuf.ByteString
+        getContainerBytes() {
+      java.lang.Object ref = container_;
+      if (ref instanceof java.lang.String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
+        container_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
+    }
+
+    public static final int LOCATION_FILE_FIELD_NUMBER = 8;
+    private java.lang.Object locationFile_;
+    /**
+     * <code>optional string location_file = 8;</code>
+     */
+    public boolean hasLocationFile() {
+      return ((bitField0_ & 0x00000004) == 0x00000004);
+    }
+    /**
+     * <code>optional string location_file = 8;</code>
+     */
+    public java.lang.String getLocationFile() {
+      java.lang.Object ref = locationFile_;
+      if (ref instanceof java.lang.String) {
+        return (java.lang.String) ref;
+      } else {
+        com.google.protobuf.ByteString bs = 
+            (com.google.protobuf.ByteString) ref;
+        java.lang.String s = bs.toStringUtf8();
+        if (bs.isValidUtf8()) {
+          locationFile_ = s;
+        }
+        return s;
+      }
+    }
+    /**
+     * <code>optional string location_file = 8;</code>
+     */
+    public com.google.protobuf.ByteString
+        getLocationFileBytes() {
+      java.lang.Object ref = locationFile_;
+      if (ref instanceof java.lang.String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
+        locationFile_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
+    }
+
     private void initFields() {
       name_ = "";
       baseProtocol_ = com.google.protobuf.LazyStringArrayList.EMPTY;
       method_ = java.util.Collections.emptyList();
       property_ = java.util.Collections.emptyList();
+      container_ = "";
+      locationFile_ = "";
     }
     private byte memoizedIsInitialized = -1;
     public final boolean isInitialized() {
@@ -6552,6 +7306,12 @@ public final class NativeIndex {
       for (int i = 0; i < property_.size(); i++) {
         output.writeMessage(4, property_.get(i));
       }
+      if (((bitField0_ & 0x00000002) == 0x00000002)) {
+        output.writeBytes(7, getContainerBytes());
+      }
+      if (((bitField0_ & 0x00000004) == 0x00000004)) {
+        output.writeBytes(8, getLocationFileBytes());
+      }
       getUnknownFields().writeTo(output);
     }
 
@@ -6581,6 +7341,14 @@ public final class NativeIndex {
       for (int i = 0; i < property_.size(); i++) {
         size += com.google.protobuf.CodedOutputStream
           .computeMessageSize(4, property_.get(i));
+      }
+      if (((bitField0_ & 0x00000002) == 0x00000002)) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeBytesSize(7, getContainerBytes());
+      }
+      if (((bitField0_ & 0x00000004) == 0x00000004)) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeBytesSize(8, getLocationFileBytes());
       }
       size += getUnknownFields().getSerializedSize();
       memoizedSerializedSize = size;
@@ -6717,6 +7485,10 @@ public final class NativeIndex {
         } else {
           propertyBuilder_.clear();
         }
+        container_ = "";
+        bitField0_ = (bitField0_ & ~0x00000010);
+        locationFile_ = "";
+        bitField0_ = (bitField0_ & ~0x00000020);
         return this;
       }
 
@@ -6772,6 +7544,14 @@ public final class NativeIndex {
         } else {
           result.property_ = propertyBuilder_.build();
         }
+        if (((from_bitField0_ & 0x00000010) == 0x00000010)) {
+          to_bitField0_ |= 0x00000002;
+        }
+        result.container_ = container_;
+        if (((from_bitField0_ & 0x00000020) == 0x00000020)) {
+          to_bitField0_ |= 0x00000004;
+        }
+        result.locationFile_ = locationFile_;
         result.bitField0_ = to_bitField0_;
         onBuilt();
         return result;
@@ -6854,6 +7634,16 @@ public final class NativeIndex {
               propertyBuilder_.addAllMessages(other.property_);
             }
           }
+        }
+        if (other.hasContainer()) {
+          bitField0_ |= 0x00000010;
+          container_ = other.container_;
+          onChanged();
+        }
+        if (other.hasLocationFile()) {
+          bitField0_ |= 0x00000020;
+          locationFile_ = other.locationFile_;
+          onChanged();
         }
         this.mergeUnknownFields(other.getUnknownFields());
         return this;
@@ -7545,6 +8335,158 @@ public final class NativeIndex {
           property_ = null;
         }
         return propertyBuilder_;
+      }
+
+      private java.lang.Object container_ = "";
+      /**
+       * <code>optional string container = 7;</code>
+       */
+      public boolean hasContainer() {
+        return ((bitField0_ & 0x00000010) == 0x00000010);
+      }
+      /**
+       * <code>optional string container = 7;</code>
+       */
+      public java.lang.String getContainer() {
+        java.lang.Object ref = container_;
+        if (!(ref instanceof java.lang.String)) {
+          com.google.protobuf.ByteString bs =
+              (com.google.protobuf.ByteString) ref;
+          java.lang.String s = bs.toStringUtf8();
+          if (bs.isValidUtf8()) {
+            container_ = s;
+          }
+          return s;
+        } else {
+          return (java.lang.String) ref;
+        }
+      }
+      /**
+       * <code>optional string container = 7;</code>
+       */
+      public com.google.protobuf.ByteString
+          getContainerBytes() {
+        java.lang.Object ref = container_;
+        if (ref instanceof String) {
+          com.google.protobuf.ByteString b = 
+              com.google.protobuf.ByteString.copyFromUtf8(
+                  (java.lang.String) ref);
+          container_ = b;
+          return b;
+        } else {
+          return (com.google.protobuf.ByteString) ref;
+        }
+      }
+      /**
+       * <code>optional string container = 7;</code>
+       */
+      public Builder setContainer(
+          java.lang.String value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000010;
+        container_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>optional string container = 7;</code>
+       */
+      public Builder clearContainer() {
+        bitField0_ = (bitField0_ & ~0x00000010);
+        container_ = getDefaultInstance().getContainer();
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>optional string container = 7;</code>
+       */
+      public Builder setContainerBytes(
+          com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000010;
+        container_ = value;
+        onChanged();
+        return this;
+      }
+
+      private java.lang.Object locationFile_ = "";
+      /**
+       * <code>optional string location_file = 8;</code>
+       */
+      public boolean hasLocationFile() {
+        return ((bitField0_ & 0x00000020) == 0x00000020);
+      }
+      /**
+       * <code>optional string location_file = 8;</code>
+       */
+      public java.lang.String getLocationFile() {
+        java.lang.Object ref = locationFile_;
+        if (!(ref instanceof java.lang.String)) {
+          com.google.protobuf.ByteString bs =
+              (com.google.protobuf.ByteString) ref;
+          java.lang.String s = bs.toStringUtf8();
+          if (bs.isValidUtf8()) {
+            locationFile_ = s;
+          }
+          return s;
+        } else {
+          return (java.lang.String) ref;
+        }
+      }
+      /**
+       * <code>optional string location_file = 8;</code>
+       */
+      public com.google.protobuf.ByteString
+          getLocationFileBytes() {
+        java.lang.Object ref = locationFile_;
+        if (ref instanceof String) {
+          com.google.protobuf.ByteString b = 
+              com.google.protobuf.ByteString.copyFromUtf8(
+                  (java.lang.String) ref);
+          locationFile_ = b;
+          return b;
+        } else {
+          return (com.google.protobuf.ByteString) ref;
+        }
+      }
+      /**
+       * <code>optional string location_file = 8;</code>
+       */
+      public Builder setLocationFile(
+          java.lang.String value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000020;
+        locationFile_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>optional string location_file = 8;</code>
+       */
+      public Builder clearLocationFile() {
+        bitField0_ = (bitField0_ & ~0x00000020);
+        locationFile_ = getDefaultInstance().getLocationFile();
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>optional string location_file = 8;</code>
+       */
+      public Builder setLocationFileBytes(
+          com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000020;
+        locationFile_ = value;
+        onChanged();
+        return this;
       }
 
       // @@protoc_insertion_point(builder_scope:ObjCCategory)
@@ -12748,27 +13690,30 @@ public final class NativeIndex {
       "\014\n\004name\030\001 \002(\t\022\014\n\004type\030\002 \002(\t\"?\n\nObjCMetho" +
       "d\022\033\n\010function\030\001 \002(\0132\t.Function\022\024\n\014class_" +
       "method\030\002 \002(\010\"*\n\014ObjCProperty\022\014\n\004name\030\001 \002" +
-      "(\t\022\014\n\004type\030\002 \002(\t\"\217\001\n\tObjCClass\022\014\n\004name\030\001" +
+      "(\t\022\014\n\004type\030\002 \002(\t\"\271\001\n\tObjCClass\022\014\n\004name\030\001" +
       " \002(\t\022\022\n\nbase_class\030\002 \001(\t\022\020\n\010protocol\030\003 \003" +
       "(\t\022\020\n\010category\030\004 \003(\t\022\033\n\006method\030\005 \003(\0132\013.O" +
       "bjCMethod\022\037\n\010property\030\006 \003(\0132\r.ObjCProper",
-      "ty\"q\n\014ObjCProtocol\022\014\n\004name\030\001 \002(\t\022\025\n\rbase" +
-      "_protocol\030\002 \003(\t\022\033\n\006method\030\003 \003(\0132\013.ObjCMe" +
-      "thod\022\037\n\010property\030\004 \003(\0132\r.ObjCProperty\"q\n" +
-      "\014ObjCCategory\022\014\n\004name\030\001 \002(\t\022\025\n\rbase_prot" +
-      "ocol\030\002 \003(\t\022\033\n\006method\030\003 \003(\0132\013.ObjCMethod\022" +
-      "\037\n\010property\030\004 \003(\0132\r.ObjCProperty\"$\n\006CFie" +
-      "ld\022\014\n\004name\030\001 \002(\t\022\014\n\004type\030\002 \002(\t\"/\n\007CStruc" +
-      "t\022\014\n\004name\030\001 \002(\t\022\026\n\005field\030\002 \003(\0132\007.CField\"" +
-      "_\n\nDiagnostic\022\020\n\010severity\030\001 \002(\r\022\014\n\004line\030" +
-      "\002 \002(\r\022\016\n\006column\030\003 \002(\r\022\017\n\007message\030\004 \002(\t\022\020",
-      "\n\010category\030\005 \001(\t\"\324\001\n\017TranslationUnit\022\014\n\004" +
-      "name\030\001 \002(\t\022\031\n\005class\030\002 \003(\0132\n.ObjCClass\022\037\n" +
-      "\010protocol\030\003 \003(\0132\r.ObjCProtocol\022\037\n\010catego" +
-      "ry\030\004 \003(\0132\r.ObjCCategory\022\033\n\010function\030\005 \003(" +
-      "\0132\t.Function\022\030\n\006struct\030\006 \003(\0132\010.CStruct\022\037" +
-      "\n\ndiagnostic\030d \003(\0132\013.DiagnosticB \n\031org.j" +
-      "etbrains.kni.indexerH\001\210\001\000"
+      "ty\022\021\n\tcontainer\030\007 \001(\t\022\025\n\rlocation_file\030\010" +
+      " \001(\t\"\233\001\n\014ObjCProtocol\022\014\n\004name\030\001 \002(\t\022\025\n\rb" +
+      "ase_protocol\030\002 \003(\t\022\033\n\006method\030\003 \003(\0132\013.Obj" +
+      "CMethod\022\037\n\010property\030\004 \003(\0132\r.ObjCProperty" +
+      "\022\021\n\tcontainer\030\007 \001(\t\022\025\n\rlocation_file\030\010 \001" +
+      "(\t\"\233\001\n\014ObjCCategory\022\014\n\004name\030\001 \002(\t\022\025\n\rbas" +
+      "e_protocol\030\002 \003(\t\022\033\n\006method\030\003 \003(\0132\013.ObjCM" +
+      "ethod\022\037\n\010property\030\004 \003(\0132\r.ObjCProperty\022\021" +
+      "\n\tcontainer\030\007 \001(\t\022\025\n\rlocation_file\030\010 \001(\t" +
+      "\"$\n\006CField\022\014\n\004name\030\001 \002(\t\022\014\n\004type\030\002 \002(\t\"/",
+      "\n\007CStruct\022\014\n\004name\030\001 \002(\t\022\026\n\005field\030\002 \003(\0132\007" +
+      ".CField\"_\n\nDiagnostic\022\020\n\010severity\030\001 \002(\r\022" +
+      "\014\n\004line\030\002 \002(\r\022\016\n\006column\030\003 \002(\r\022\017\n\007message" +
+      "\030\004 \002(\t\022\020\n\010category\030\005 \001(\t\"\324\001\n\017Translation" +
+      "Unit\022\014\n\004name\030\001 \002(\t\022\031\n\005class\030\002 \003(\0132\n.ObjC" +
+      "Class\022\037\n\010protocol\030\003 \003(\0132\r.ObjCProtocol\022\037" +
+      "\n\010category\030\004 \003(\0132\r.ObjCCategory\022\033\n\010funct" +
+      "ion\030\005 \003(\0132\t.Function\022\030\n\006struct\030\006 \003(\0132\010.C" +
+      "Struct\022\037\n\ndiagnostic\030d \003(\0132\013.DiagnosticB" +
+      " \n\031org.jetbrains.kni.indexerH\001\210\001\000"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
         new com.google.protobuf.Descriptors.FileDescriptor.    InternalDescriptorAssigner() {
@@ -12811,19 +13756,19 @@ public final class NativeIndex {
     internal_static_ObjCClass_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessage.FieldAccessorTable(
         internal_static_ObjCClass_descriptor,
-        new java.lang.String[] { "Name", "BaseClass", "Protocol", "Category", "Method", "Property", });
+        new java.lang.String[] { "Name", "BaseClass", "Protocol", "Category", "Method", "Property", "Container", "LocationFile", });
     internal_static_ObjCProtocol_descriptor =
       getDescriptor().getMessageTypes().get(4);
     internal_static_ObjCProtocol_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessage.FieldAccessorTable(
         internal_static_ObjCProtocol_descriptor,
-        new java.lang.String[] { "Name", "BaseProtocol", "Method", "Property", });
+        new java.lang.String[] { "Name", "BaseProtocol", "Method", "Property", "Container", "LocationFile", });
     internal_static_ObjCCategory_descriptor =
       getDescriptor().getMessageTypes().get(5);
     internal_static_ObjCCategory_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessage.FieldAccessorTable(
         internal_static_ObjCCategory_descriptor,
-        new java.lang.String[] { "Name", "BaseProtocol", "Method", "Property", });
+        new java.lang.String[] { "Name", "BaseProtocol", "Method", "Property", "Container", "LocationFile", });
     internal_static_CField_descriptor =
       getDescriptor().getMessageTypes().get(6);
     internal_static_CField_fieldAccessorTable = new
