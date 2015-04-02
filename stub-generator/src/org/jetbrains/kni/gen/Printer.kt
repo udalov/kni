@@ -1,27 +1,34 @@
 package org.jetbrains.kni.gen
 
+val indentString = "\t"
+val dedentString = "\b"
+val emptyString = ""
+
 class Printer(private val out: Appendable): Appendable {
     private var indent = ""
     private var lineStart = true
 
-    fun push() { indent += INDENT }
-    fun pop() { indent = indent.substring(INDENT.length()) }
+    fun push(): Printer { indent += INDENT; return this }
+    fun pop(): Printer { indent = indent.substring(INDENT.length()); return this }
 
-    fun print(o: Any?) {
+    fun print(o: Any?): Printer {
         if (lineStart) out.append(indent)
         out.append(o.toString())
         lineStart = false
+        return this
     }
 
-    fun println() {
+    fun println(): Printer {
         out.appendln()
         lineStart = true
+        return this
     }
 
-    fun println(o: Any?) {
-        print(o)
-        println()
-    }
+    fun ln(): Printer = println()
+
+    fun println(o: Any?): Printer = print(o).ln()
+
+    fun pushoneln(o: Any?): Printer = push().println(o).pop()
 
     class object {
         val INDENT = "    "
@@ -41,4 +48,17 @@ class Printer(private val out: Appendable): Appendable {
         print(c)
         return this
     }
+
+    fun print(text: Iterable<String>): Printer {
+        text.forEach { when(it) {
+            indentString -> push()
+            dedentString -> pop()
+            emptyString -> println()
+            else -> println(it)
+        } }
+        return this
+    }
 }
+
+
+fun Printer.plusAssign(o: Any?): Printer = this.print(o)

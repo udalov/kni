@@ -50,7 +50,7 @@ abstract class AbstractIntegrationTest(val indexerOptions: IndexerOptions, val g
         assert(!hasErrors)
 
         // println("Generating stub to $stubSource")
-        generateStub(translationUnit, nativeLib, stubSource, indexerOptions, generatorOptions)
+        generateStub(translationUnit, nativeLib, stubSource, generatorOptions)
         val stubClasses = File(tempDir, "stub")
         // println("Compiling stub $stubSource")
         Assert.assertTrue( reportIfError( compileKotlin(stubSource, stubClasses, kotlinLibs)))

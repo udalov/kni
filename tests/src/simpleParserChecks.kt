@@ -110,7 +110,7 @@ public class SimpleCHeaderCheck : LastLogKeeper, CPlusPlusTest() {
 
         val kotlinStub = File(tmpdir, "${cunit.name}.kt")
         val stubClasses = File(tmpdir, "stub")
-        generateStub(translationUnit, dylib, kotlinStub, indexerOptions, generatorOptions)
+        generateStub(translationUnit, dylib, kotlinStub, generatorOptions)
         assertTrue( check( compileKotlin(kotlinStub, stubClasses, classpath)))
 
         val testSource = File(tmpdir, "test.kt")
