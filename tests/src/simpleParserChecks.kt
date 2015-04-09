@@ -111,12 +111,12 @@ public class SimpleCHeaderCheck : LastLogKeeper, CPlusPlusTest() {
         val kotlinStub = File(tmpdir, "${cunit.name}.kt")
         val stubClasses = File(tmpdir, "stub")
         generateStub(translationUnit, dylib, kotlinStub, generatorOptions)
-        assertTrue( check( compileKotlin(kotlinStub, stubClasses, classpath)))
+        assertTrue( check( compileKotlin(listOf(kotlinStub), stubClasses, classpath)))
 
         val testSource = File(tmpdir, "test.kt")
         val testClasses = File(tmpdir, "test")
         testSource.writeText(testGen(cunit))
-        assertTrue( check( compileKotlin(testSource, testClasses, classpath + stubClasses)))
+        assertTrue( check( compileKotlin(listOf(testSource), testClasses, classpath + stubClasses)))
 
         assertTrue( check( runKotlin(arrayListOf("org.junit.runner.JUnitCore", "test.NativeTest"),
                                      listOf(testClasses, stubClasses) + classpath, libpath = tmpdir)))

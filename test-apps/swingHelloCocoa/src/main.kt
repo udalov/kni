@@ -1,6 +1,7 @@
 
 package swingHelloCocoa
 
+import kni.objc.ObjCObject
 import javax.swing.JFrame
 import javax.swing.JScrollPane
 import javax.swing.JTextArea
@@ -30,10 +31,11 @@ fun main(args : Array<String>) {
     println("cocoa app taken")
     println("cocoa app is running == ${cocoaApp.isRunning()}")
     val iconImg = cocoaApp.applicationIconImage().copy() as NSImage
+    NSImage.alloc()
     iconImg.lockFocus()
     val rot = NSAffineTransform.transform()
     rot.rotateByDegrees(90.0)
-
+    rot.
     iconImg.unlockFocus()
     cocoaApp.setApplicationIconImage(iconImg)
     println("icon set")

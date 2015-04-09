@@ -41,7 +41,7 @@ public fun generateStub(translationUnit: TranslationUnit,
                         outputFile: File,
                         generatorOptions: GeneratorOptions,
                         basePackageName: String = ""
-): File {
+): Iterable<File> {
 
     val namer = Namer(translationUnit, outputFile,
                       if (basePackageName.length() != 0) basePackageName
@@ -60,8 +60,6 @@ public fun generateStub(translationUnit: TranslationUnit,
     }
 
     generator.generate(translationUnit)
-    generator.closeOutputs()
-
-    return outputFile
+    return generator.closeOutputs()
 }
 

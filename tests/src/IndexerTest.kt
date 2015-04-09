@@ -25,6 +25,8 @@ class IndexerTest {
 """, expected = """name: "%SOURCE_PATH%"
 class {
   name: "A"
+  container: ""
+  location_file: "%SOURCE_PATH%"
 }
 """
         )
@@ -45,12 +47,18 @@ class {
   name: "A"
   category: "A+"
   category: "A+Cat"
+  container: ""
+  location_file: "%SOURCE_PATH%"
 }
 category {
   name: "A+"
+  container: ""
+  location_file: "%SOURCE_PATH%"
 }
 category {
   name: "A+Cat"
+  container: ""
+  location_file: "%SOURCE_PATH%"
 }
 """
         )

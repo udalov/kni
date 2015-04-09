@@ -55,7 +55,7 @@ class ObjCGenerator( targetPath: String, namer: Namer, nativeLib: File, options:
         for (method in category.getMethodList().filter { !it.getClassMethod() && it.getFunction().getName() !in skipMethodsNames }) {
             genObjCFunction(out,
                             method.getFunction(),
-                            qualifier = OverrideQualifier.none,
+                            qualifier = OverrideQualifier.open,
                             signature = makeFunSignature(method.getFunction(), hashSetOf(), hashSetOf()))
             out.println()
         }
@@ -71,7 +71,7 @@ class ObjCGenerator( targetPath: String, namer: Namer, nativeLib: File, options:
                 if (first) first = false else out.println()
                 genObjCFunction(out,
                                 method.getFunction(),
-                                qualifier = OverrideQualifier.none,
+                                qualifier = OverrideQualifier.open,
                                 signature = makeFunSignature(method.getFunction(), hashSetOf(), hashSetOf()))
             }
 

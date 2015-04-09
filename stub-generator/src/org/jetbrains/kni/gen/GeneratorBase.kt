@@ -14,7 +14,8 @@ abstract class GeneratorBase(
                     val options: GeneratorOptions) {
 
     data class FilePrinter(targetPath: String, file_name: String) {
-        val fileWriter: FileWriter = FileWriter( File(targetPath, file_name))
+        val file: File = File(targetPath, file_name)
+        val fileWriter: FileWriter = FileWriter(file)
         val printer: Printer = Printer(fileWriter)
     }
 
@@ -27,9 +28,11 @@ abstract class GeneratorBase(
                 fp
             }).printer
 
-    fun closeOutputs() {
+    fun closeOutputs() : Collection<File> {
         outputs.forEach { it.getValue().fileWriter.close() }
+        val res = outputs.map { it.getValue().file }.toArrayList()
         outputs.clear()
+        return res
     }
 
     open fun startFile(out: Printer, sourceFile: String) {
@@ -159,7 +162,8 @@ class Namer(translationUnit: NativeIndex.TranslationUnit, outputFile: File, val 
 
     fun targetFileName(source_file: String): String =
         // \todo consider separating same names from different source dirs (for now it is not too important though)
-        if (!multifile || source_file == name) mainOutputFile else File(source_file).getName().substringBeforeLast(".") + ".kt"
+        if (!multifile || source_file.length() == 0|| source_file == name) mainOutputFile
+        else File(source_file).getName().substringBeforeLast(".") + ".kt"
 
     fun packageName(sourceFile: String): String = if (basePackageName.length() == 0) shortName else basePackageName
 }

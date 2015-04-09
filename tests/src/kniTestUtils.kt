@@ -39,14 +39,15 @@ public fun compileObjC(source: File, target: File): Pair<Boolean, String> =
     runProcess(arrayListOf("clang", "-ObjC", "-dynamiclib", "-framework", "Foundation", source.getAbsolutePath(), "-o", target.getAbsolutePath()))
 
 
-public fun compileKotlin(file: File, destination: File, classpath: Collection<File>): Pair<Boolean, String> {
+public fun compileKotlin(files: Iterable<File>, destination: File, classpath: Collection<File>): Pair<Boolean, String> {
     val kotlinc = File("lib/kotlinc/bin/kotlinc")
     val kotlincompiler = File("lib/kotlinc/lib/kotlin-compiler.jar")
     val javaBin = Paths.get(System.getProperty("java.home"), "bin", "java")
     return runProcess(
-            arrayListOf(javaBin.toString(), "-d64", "-jar", kotlincompiler.getAbsolutePath(), escape4cli(file.getAbsolutePath()),
+            arrayListOf(javaBin.toString(), "-d64", "-jar", kotlincompiler.getAbsolutePath(),
                         "-d", destination.getAbsolutePath(), "-cp",
-                        classpath.map { escape4cli(it.getAbsolutePath()) }.joinToString(File.pathSeparator)))
+                        classpath.map { escape4cli(it.getAbsolutePath()) }.joinToString(File.pathSeparator)) +
+            files.map { escape4cli(it.getAbsolutePath()) } )
 }
 
 public fun runKotlin(commandLine: Iterable<String>, classpath: Iterable<File>, libpath: File? = null): Pair<Boolean, String> {

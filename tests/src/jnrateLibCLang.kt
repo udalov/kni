@@ -28,7 +28,7 @@ class LibCLangTests : CPlusPlusTest( idxOpts =  IndexerOptions(Language.CPP, deb
         val stubClasses = makeStub(header, dylib, kotlinSource, tmpdir, true)
 
         val mainClasses = File(tmpdir, "main")
-        Assert.assertTrue( reportIfError( compileKotlin(kotlinSource, mainClasses, kotlinLibs + stubClasses)))
+        Assert.assertTrue( reportIfError( compileKotlin(listOf(kotlinSource), mainClasses, kotlinLibs + stubClasses)))
 
         // val result = runKotlin(mainClasses, stubClasses, libpath = tmpdir)
         // Assert.assertEquals("OK", result)

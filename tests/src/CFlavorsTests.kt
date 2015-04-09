@@ -35,10 +35,10 @@ public open class ObjCGeneratedTest : ObjCTest() {
 
         assert( reportIfError( compileObjC(implementation, dylib)))
 
-        val stubClasses = makeStub(header, dylib, kotlinSource, tmpdir, dumpIdx = true)
+        val stubClasses = makeStub(header, dylib, null, tmpdir, dumpIdx = true)
 
         val mainClasses = File(tmpdir, "main")
-        Assert.assertTrue( reportIfError( compileKotlin(kotlinSource, mainClasses, kotlinLibs + stubClasses)))
+        Assert.assertTrue( reportIfError( compileKotlin(listOf(kotlinSource), mainClasses, kotlinLibs + stubClasses)))
 
         val result = runKotlin(listOf("test.TestPackage"), listOf(mainClasses, stubClasses) + kotlinLibs, libpath = tmpdir)
         Assert.assertTrue( reportIfError(result))
@@ -70,10 +70,10 @@ public open class CPlusPlusGeneratedTest : CPlusPlusTest() {
 
         Assert.assertTrue( reportIfError( compileNativeC(implementation, dylib)))
 
-        val stubClasses = makeStub(header, dylib, kotlinSource, tmpdir, true)
+        val stubClasses = makeStub(header, dylib, null, tmpdir, true)
 
         val mainClasses = File(tmpdir, "main")
-        Assert.assertTrue( reportIfError( compileKotlin(kotlinSource, mainClasses, kotlinLibs + stubClasses)))
+        Assert.assertTrue( reportIfError( compileKotlin(listOf(kotlinSource), mainClasses, kotlinLibs + stubClasses)))
 
         val result = runKotlin(listOf("test.TestPackage"), listOf(mainClasses, stubClasses) + kotlinLibs, libpath = tmpdir)
         Assert.assertTrue( reportIfError(result))

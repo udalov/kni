@@ -28,17 +28,26 @@ abstract class AbstractIntegrationTest(val indexerOptions: IndexerOptions, val g
 
     protected fun makeStub(cHeader: File,
                            nativeLib: File,
-                           target: File,
-                           tempDir: File,
+                           target: File?,
+                           tempDir: File?,
                            dumpIdx: Boolean = false,
                            cliIface: Boolean = false)
             : File {
 
-        val stubSource = File(tempDir, target.getPath().substringAfterLast(File.separator))
+        val stubTempDir : File = when {
+            tempDir != null -> tempDir
+            target != null && target.isDirectory() -> target
+            else -> Files.createTempDirectory("test").toFile()
+        }
+        val stubTarget : File = when {
+            target == null -> stubTempDir
+            target.isDirectory() -> target
+            else -> File(stubTempDir, target.getPath().substringAfterLast(File.separator))
+        }
         val translationUnit = if (cliIface) buildNativeIndexCli("indexer/native/out",cHeader, indexerOptions)
                               else buildNativeIndex(cHeader, indexerOptions)
         if (dumpIdx) {
-            val srcIndex = File(tempDir, "idx")
+            val srcIndex = File(stubTempDir, "idx")
             srcIndex.writeText(translationUnit.toString())
         }
         var hasErrors = false
@@ -50,10 +59,10 @@ abstract class AbstractIntegrationTest(val indexerOptions: IndexerOptions, val g
         assert(!hasErrors)
 
         // println("Generating stub to $stubSource")
-        generateStub(translationUnit, nativeLib, stubSource, generatorOptions)
-        val stubClasses = File(tempDir, "stub")
+        val stubGeneratedSources = generateStub(translationUnit, nativeLib, stubTarget, generatorOptions)
+        val stubClasses = File(stubTempDir, "stub")
         // println("Compiling stub $stubSource")
-        Assert.assertTrue( reportIfError( compileKotlin(stubSource, stubClasses, kotlinLibs)))
+        Assert.assertTrue( reportIfError( compileKotlin(listOf(stubTarget), stubClasses, kotlinLibs)))
         return stubClasses
     }
 

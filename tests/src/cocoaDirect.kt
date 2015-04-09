@@ -20,10 +20,10 @@ class CocoaDirectTests : ObjCTest( idxOpts = IndexerOptions(Language.OBJC, debug
         val kotlinSource = File("tests/testData/cocoaDirect/cocoaDirectTest.kt").getAbsoluteFile()
         val dylib = File("/System/Library/Frameworks//AppKit.framework/Versions/C/Resources/BridgeSupport/AppKit.dylib")
 
-        val stubClasses = makeStub(header, dylib, kotlinSource, tmpdir, dumpIdx = true, cliIface = true)
+        val stubClasses = makeStub(header, dylib, null, tmpdir, dumpIdx = true, cliIface = true)
 
         val mainClasses = File(tmpdir, "main")
-        Assert.assertTrue( reportIfError( compileKotlin(kotlinSource, mainClasses, kotlinLibs + stubClasses)))
+        Assert.assertTrue( reportIfError( compileKotlin(listOf(kotlinSource), mainClasses, kotlinLibs + stubClasses)))
 
         val result = runKotlin(listOf("test.TestPackage"), listOf(mainClasses, stubClasses) + kotlinLibs, libpath = tmpdir)
         Assert.assertTrue( reportIfError(result))

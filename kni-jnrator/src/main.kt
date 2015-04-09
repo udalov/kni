@@ -14,5 +14,5 @@ fun main(args: Array<String>) {
     val tu = buildNativeIndex(File(file), indexerOptions)
     val srcIndex = File("out/kni-jnr-stub.idx")
     srcIndex.writeText(tu.toString())
-    generateStub(tu, File("libKNITest.dylib"), File("out/kni-jnr-stub.kt"), indexerOptions, GeneratorOptions(InteropRuntime.JNR))
+    generateStub(tu, File("libKNITest.dylib"), File("out/kni-jnr-stub.kt"), GeneratorOptions(InteropRuntime.JNR))
 }
