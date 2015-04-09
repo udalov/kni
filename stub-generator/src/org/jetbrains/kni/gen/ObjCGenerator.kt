@@ -3,6 +3,7 @@ package org.jetbrains.kni.gen
 
 import org.jetbrains.kni.indexer.NativeIndex
 import java.io.File
+import java.util.HashMap
 
 
 class ObjCGenerator( targetPath: String, namer: Namer, nativeLib: File, options: GeneratorOptions)
@@ -27,8 +28,12 @@ class ObjCGenerator( targetPath: String, namer: Namer, nativeLib: File, options:
         val classes = hashMapOf<String, NativeIndex.ObjCClass>()
         translationUnit.getClass_List().forEach { classes.put(it.getName(), it) }
 
+        // preparing list of all categories methods signatures for finding overrides
+        val categories = hashMapOf<String, NativeIndex.ObjCCategory>()
+        translationUnit.getCategoryList().forEach { categories.put(it.getName(), it) }
+
         for (klass in translationUnit.getClass_List()) {
-            genClass(klass, classes)
+            genClass(klass, classes, categories)
         }
 
         for (category in translationUnit.getCategoryList()) {
@@ -85,7 +90,7 @@ class ObjCGenerator( targetPath: String, namer: Namer, nativeLib: File, options:
            .ln()
     }
 
-    fun genClass(klass: NativeIndex.ObjCClass, classes: Map<String, NativeIndex.ObjCClass>) {
+    fun genClass(klass: NativeIndex.ObjCClass, allClasses: Map<String, NativeIndex.ObjCClass>, allCategories: HashMap<String, NativeIndex.ObjCCategory>) {
         val out = getOutput(klass.getLocationFile())
 
         out.print("public open class ${klass.getName()}(pointer: Long)")
@@ -108,7 +113,7 @@ class ObjCGenerator( targetPath: String, namer: Namer, nativeLib: File, options:
 
         val methods = klass.getMethodList().filter { it.getFunction().getName() !in skipMethodsNames }
 
-        val baseMethodsOverrideIds = getAllBaseMethodsOverrideIds(klass, classes, false).toSortedSet()
+        val baseMethodsOverrideIds = getAllBaseMethodsOverrideIds(klass, allClasses, allCategories, false).toSortedSet()
 
         for (method in methods.filter { !it.getClassMethod() }) {
             val overrideId = getFunctionUniqueOverrideId(method.getFunction())
@@ -119,7 +124,7 @@ class ObjCGenerator( targetPath: String, namer: Namer, nativeLib: File, options:
             out.println()
         }
 
-        genMetaClass(out, klass, methods, classes)
+        genMetaClass(out, klass, methods, allClasses, allCategories)
         out.println()
         genClassObject(out, klass)
 
@@ -137,16 +142,26 @@ class ObjCGenerator( targetPath: String, namer: Namer, nativeLib: File, options:
                     .map { parseType(it.getType(), options, LexicalScope.General).name }
                     .joinToString(",","(",")")
 
-    private fun getAllBaseMethodsOverrideIds(klass: NativeIndex.ObjCClass, classes: Map<String, NativeIndex.ObjCClass>, classMethods: Boolean): Collection<String> {
+    private fun getAllBaseMethodsOverrideIds(klass: NativeIndex.ObjCClass, allClasses: Map<String, NativeIndex.ObjCClass>,
+                                             allCategories: HashMap<String, NativeIndex.ObjCCategory>, classMethods: Boolean): Collection<String> {
+        val res = arrayListOf<String>()
         if (klass.hasBaseClass()) {
-            val baseClass = classes.get(klass.getBaseClass())
-            if (baseClass != null)
-                return baseClass.getMethodList()
-                               .filter { it.getFunction().getName() != "finalize" && (classMethods xor !it.getClassMethod()) }
-                               .map { getFunctionUniqueOverrideId(it.getFunction()) } +
-                       getAllBaseMethodsOverrideIds(baseClass, classes, classMethods)
+            val baseClass = allClasses.get(klass.getBaseClass())
+            if (baseClass != null) {
+                res.addAll(baseClass.getMethodList()
+                                    .filter { it.getFunction().getName() !in  skipMethodsNames && (classMethods xor !it.getClassMethod()) }
+                                    .map { getFunctionUniqueOverrideId(it.getFunction()) })
+                res.addAll(getAllBaseMethodsOverrideIds(baseClass, allClasses, allCategories, classMethods))
+            }
         }
-        return listOf()
+        for (catName in klass.getCategoryList()) {
+            val cat = allCategories.get(catName)
+            if (cat != null)
+                res.addAll(cat.getMethodList()
+                              .filter { it.getFunction().getName() !in  skipMethodsNames && (classMethods xor !it.getClassMethod()) }
+                              .map { getFunctionUniqueOverrideId(it.getFunction()) })
+        }
+        return res
     }
 
     private fun genObjCFunction(out: Printer, function: NativeIndex.Function, qualifier: OverrideQualifier = OverrideQualifier.none, signature: String? = null) {
@@ -200,8 +215,9 @@ class ObjCGenerator( targetPath: String, namer: Namer, nativeLib: File, options:
         }
     }
 
-    private fun genMetaClass(out: Printer, klass: NativeIndex.ObjCClass, methods: List<NativeIndex.ObjCMethod>, classes: Map<String, NativeIndex.ObjCClass>) {
-        val baseMethodsOverrideIds = getAllBaseMethodsOverrideIds(klass, classes, true).toHashSet()
+    private fun genMetaClass(out: Printer, klass: NativeIndex.ObjCClass, methods: List<NativeIndex.ObjCMethod>,
+                             allClasses: Map<String, NativeIndex.ObjCClass>, allCategories: HashMap<String, NativeIndex.ObjCCategory>) {
+        val baseMethodsOverrideIds = getAllBaseMethodsOverrideIds(klass, allClasses, allCategories, true).toHashSet()
         val baseList =
                 (if (klass.hasBaseClass())
                     listOf(klass.getBaseClass() + ".metaclass")
