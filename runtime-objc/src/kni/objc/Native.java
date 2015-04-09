@@ -49,7 +49,7 @@ public class Native {
 
     public static native Object objc_msgSend(
             String returnType,
-            ObjCObject receiver,
+            IObjCObject receiver,
             String selectorName,
             Object... args
     );

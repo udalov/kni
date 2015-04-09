@@ -1,6 +1,10 @@
 package kni.objc
 
-public abstract class ObjCObject protected(private val pointer: Long) {
+public trait IObjCObject {
+    protected val pointer: Long
+}
+
+public abstract class ObjCObject protected(override val pointer: Long) : IObjCObject {
     class object {
         public val NIL: Nil = Nil.INSTANCE
     }

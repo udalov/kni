@@ -8,6 +8,9 @@ import java.io.File
 class ObjCGenerator( targetPath: String, namer: Namer, nativeLib: File, options: GeneratorOptions)
     : GeneratorBase(targetPath, namer, nativeLib, options) {
 
+    // -[NSObject finalize] conflicts with java.lang.Object.finalize
+    val skipMethodsNames = hashSetOf("finalize")
+
     override fun startFile(out: Printer, sourceFile: String) {
         super.startFile(out, sourceFile)
         out.println("import kni.objc.*").ln()
@@ -46,8 +49,40 @@ class ObjCGenerator( targetPath: String, namer: Namer, nativeLib: File, options:
 
     fun genCategory(category: NativeIndex.ObjCCategory) {
         val out = getOutput(category.getLocationFile())
-        out.println("trait ${namer.categoryName(category.getName())}")
-        // TODO: methods
+        out.println("trait ${namer.categoryName(category.getName())} : IObjCObject {")
+           .push()
+
+        for (method in category.getMethodList().filter { !it.getClassMethod() && it.getFunction().getName() !in skipMethodsNames }) {
+            genObjCFunction(out,
+                            method.getFunction(),
+                            qualifier = OverrideQualifier.none,
+                            signature = makeFunSignature(method.getFunction(), hashSetOf(), hashSetOf()))
+            out.println()
+        }
+
+        out.print("trait metaclass : IObjCObject")
+        val catMetaMethods = category.getMethodList().filter { it.getClassMethod() && it.getFunction().getName() !in skipMethodsNames }
+        if (catMetaMethods.any()) {
+            out.println(" {")
+               .push()
+
+            var first = true
+            for (method in catMetaMethods) {
+                if (first) first = false else out.println()
+                genObjCFunction(out,
+                                method.getFunction(),
+                                qualifier = OverrideQualifier.none,
+                                signature = makeFunSignature(method.getFunction(), hashSetOf(), hashSetOf()))
+            }
+
+            out.pop()
+               .println("}")
+        }
+        else out.println()
+
+        out.pop()
+           .println("}")
+           .ln()
     }
 
     fun genClass(klass: NativeIndex.ObjCClass, classes: Map<String, NativeIndex.ObjCClass>) {
@@ -71,9 +106,7 @@ class ObjCGenerator( targetPath: String, namer: Namer, nativeLib: File, options:
 
         out.push()
 
-        // -[NSObject finalize] conflicts with java.lang.Object.finalize
-        // TODO: unhardcode
-        val methods = klass.getMethodList().filter { it.getFunction().getName() != "finalize" }
+        val methods = klass.getMethodList().filter { it.getFunction().getName() !in skipMethodsNames }
 
         val baseMethodsOverrideIds = getAllBaseMethodsOverrideIds(klass, classes, false).toSortedSet()
 
@@ -172,8 +205,9 @@ class ObjCGenerator( targetPath: String, namer: Namer, nativeLib: File, options:
         val baseList =
                 (if (klass.hasBaseClass())
                     listOf(klass.getBaseClass() + ".metaclass")
-                else listOf("ObjCObject")) +
-                klass.getProtocolList().map { namer.protocolName(it) + ".metaclass" }
+                else listOf("IObjCObject")) +
+                klass.getProtocolList().map { namer.protocolName(it) + ".metaclass" } +
+                klass.getCategoryList().map { namer.categoryName(it) + ".metaclass"}
         out.println("trait metaclass : ${baseList.join(", ")} {")
         out.push()
 

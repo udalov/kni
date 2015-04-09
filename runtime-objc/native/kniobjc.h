@@ -58,7 +58,7 @@ JNIEXPORT jlong JNICALL Java_kni_objc_Native_objc_1getClass
 /*
  * Class:     kni_objc_Native
  * Method:    objc_msgSend
- * Signature: (Ljava/lang/String;Lkni/objc/ObjCObject;Ljava/lang/String;[Ljava/lang/Object;)Ljava/lang/Object;
+ * Signature: (Ljava/lang/String;Lkni/objc/IObjCObject;Ljava/lang/String;[Ljava/lang/Object;)Ljava/lang/Object;
  */
 JNIEXPORT jobject JNICALL Java_kni_objc_Native_objc_1msgSend
   (JNIEnv *, jclass, jstring, jobject, jstring, jobjectArray);
