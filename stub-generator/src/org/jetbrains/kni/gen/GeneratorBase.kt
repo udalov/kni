@@ -22,7 +22,7 @@ abstract class GeneratorBase(
     val outputs: HashMap<String, FilePrinter> = hashMapOf()
 
     fun getOutput(sourceFile: String): Printer =
-            outputs.getOrPut(namer.targetFileName(sourceFile), {
+            outputs.getOrPut(namer.targetFileName(sourceFile).toLowerCase(), {
                 val fp = FilePrinter(targetPath, namer.targetFileName(sourceFile))
                 startFile(fp.printer, sourceFile)
                 fp
@@ -45,7 +45,6 @@ abstract class GeneratorBase(
         out.println("object interopConfig {")
            .pushoneln("public var nativeLibraryPath: String = \"${nativeLib.getPath()}\"")
            .println("}")
-           .ln()
     }
 
     fun genPackage(out: Printer, sourceFile: String) {
@@ -82,6 +81,7 @@ abstract class GeneratorBase(
 
     open fun generate(translationUnit: NativeIndex.TranslationUnit) {
         val out = getOutput(translationUnit.getName())
+        out.println()
         genInteropConfig(out)
     }
 }

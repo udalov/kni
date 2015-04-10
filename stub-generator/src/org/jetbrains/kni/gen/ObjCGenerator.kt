@@ -43,17 +43,18 @@ class ObjCGenerator( targetPath: String, namer: Namer, nativeLib: File, options:
 
     fun genProtocol(protocol: NativeIndex.ObjCProtocol) {
         val out = getOutput(protocol.getLocationFile())
+        out.println()
         out.println("trait ${namer.protocolName(protocol.getName())} {")
            .push()
             // TODO: methods
            .println("trait metaclass")
            .pop()
            .println("}")
-           .ln()
     }
 
     fun genCategory(category: NativeIndex.ObjCCategory) {
         val out = getOutput(category.getLocationFile())
+        out.println()
         out.println("trait ${namer.categoryName(category.getName())} : IObjCObject {")
            .push()
 
@@ -87,28 +88,23 @@ class ObjCGenerator( targetPath: String, namer: Namer, nativeLib: File, options:
 
         out.pop()
            .println("}")
-           .ln()
     }
 
     fun genClass(klass: NativeIndex.ObjCClass, allClasses: Map<String, NativeIndex.ObjCClass>, allCategories: HashMap<String, NativeIndex.ObjCCategory>) {
         val out = getOutput(klass.getLocationFile())
-
-        out.print("public open class ${klass.getName()}(pointer: Long)")
+        out.println()
 
         val baseClassName =
                 if (klass.hasBaseClass()) klass.getBaseClass()
                 else "ObjCObject"
         val protocols = klass.getProtocolList()
         val categories = klass.getCategoryList()
-
         val baseList =
                 listOf("$baseClassName(pointer)") +
                 protocols.map { namer.protocolName(it) } +
                 categories.map { namer.categoryName(it) }
 
-        baseList.joinTo(out, separator = ", ", prefix = " : ")
-        out.println(" {")
-
+        out.println("public open class ${klass.getName()}(pointer: Long) ${baseList.joinToString(separator = ", ", prefix = ": ")} {")
         out.push()
 
         val methods = klass.getMethodList().filter { it.getFunction().getName() !in skipMethodsNames }
@@ -124,7 +120,7 @@ class ObjCGenerator( targetPath: String, namer: Namer, nativeLib: File, options:
 
         out.pop()
 
-        out.println("}").ln()
+        out.println("}")
     }
 
     private fun genMethods(out: Printer,
@@ -162,7 +158,6 @@ class ObjCGenerator( targetPath: String, namer: Namer, nativeLib: File, options:
                 alreadyAdded = false
             }
 
-        out.println("// forced overrides")
         for (method in manyBaseMethodsImplementations) {
             genObjCFunction(out, method.getFunction(), OverrideQualifier.override,
                             signature = makeFunSignature(method.getFunction(), hashSetOf(), hashSetOf()))
@@ -202,35 +197,23 @@ class ObjCGenerator( targetPath: String, namer: Namer, nativeLib: File, options:
     }
 
     private fun genObjCFunction(out: Printer, function: NativeIndex.Function, qualifier: OverrideQualifier = OverrideQualifier.none, signature: String? = null) {
-        when (qualifier) {
-            OverrideQualifier.open -> out.print("public open ")
-            OverrideQualifier.override -> out.print("override ")
-        }
-        out.print(signature ?: makeFunSignature(function, hashSetOf(), hashSetOf()))
+
         val returnType = parseType(function.getReturnType(), options, LexicalScope.General)
-        out.println(" {")
+        val isUnit = (returnType == UnitType)
+        out.println("${
+            when (qualifier) {
+                OverrideQualifier.open -> "public open "
+                OverrideQualifier.override -> "override "
+                else -> ""
+            }}${signature ?: makeFunSignature(function, hashSetOf(), hashSetOf())}${
+            if (isUnit) " {" else " ="}")
 
-        out.push()
-        if (returnType != UnitType) {
-            out.print("return ")
-        }
-        out.print("Native.objc_msgSend(\"${returnTypeReflectString(returnType)}\", this, \"${function.getName()}\"")
-        function.getParameterList()
-                .mapIndexed { i, p -> namer.parameterName( p.getName(), i) }
-                .let {
-                    if (it.isNotEmpty()) {
-                        out.print(", ")
-                        it.joinTo(out, separator = ", ")
-                    }
-                }
-        out.print(")")
-        if (returnType != UnitType && returnType.getExpr() != "Any") {
-            out.print(" as ${returnType.getExpr()}")
-        }
-        out.println()
-        out.pop()
-
-        out.println("}")
+        val params = function.getParameterList()
+                             .mapIndexed { i, p -> namer.parameterName( p.getName(), i) }
+        out.pushoneln("Native.objc_msgSend(\"${returnTypeReflectString(returnType)}\", this, \"${function.getName()}\"${
+            if (params.any()) params.joinToString(", ", prefix = ", ") else ""
+            })${if (returnType != UnitType && returnType.getExpr() != "Any") " as ${returnType.getExpr()}" else ""}")
+        if (isUnit) out.println("}")
     }
 
     private fun returnTypeReflectString(type: Type): String {
@@ -261,7 +244,7 @@ class ObjCGenerator( targetPath: String, namer: Namer, nativeLib: File, options:
                     listOf(klass.getBaseClass() + ".metaclass")
                 else listOf("IObjCObject")) +
                 klass.getProtocolList().map { namer.protocolName(it) + ".metaclass" } +
-                klass.getCategoryList().map { namer.categoryName(it) + ".metaclass"}
+                klass.getCategoryList().map { namer.categoryName(it) + ".metaclass" }
 
         out.println("trait metaclass : ${baseList.join(", ")} {")
         out.push()
@@ -275,12 +258,8 @@ class ObjCGenerator( targetPath: String, namer: Namer, nativeLib: File, options:
     private fun genClassObject(out: Printer, klass: NativeIndex.ObjCClass) {
         // TODO (!): there may be other hierarchy roots!
         out.println("companion object : NSObject(Native.objc_getClass(\"${klass.getName()}\")), metaclass, ObjCClass {")
-        out.push()
-
         // TODO: only generate this into class objects of root classes
-        out.println("init { loadLibrary(interopConfig.nativeLibraryPath) }")
-
-        out.pop()
-        out.println("}")
+           .pushoneln("init { loadLibrary(interopConfig.nativeLibraryPath) }")
+           .println("}")
     }
 }

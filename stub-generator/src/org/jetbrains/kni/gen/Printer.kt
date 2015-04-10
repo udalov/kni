@@ -1,9 +1,5 @@
 package org.jetbrains.kni.gen
 
-val indentString = "\t"
-val dedentString = "\b"
-val emptyString = ""
-
 class Printer(private val out: Appendable): Appendable {
     private var indent = ""
     private var lineStart = true
@@ -46,16 +42,6 @@ class Printer(private val out: Appendable): Appendable {
 
     override fun append(c: Char): Appendable {
         print(c)
-        return this
-    }
-
-    fun print(text: Iterable<String>): Printer {
-        text.forEach { when(it) {
-            indentString -> push()
-            dedentString -> pop()
-            emptyString -> println()
-            else -> println(it)
-        } }
         return this
     }
 }

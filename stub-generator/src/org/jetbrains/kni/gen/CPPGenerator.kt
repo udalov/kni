@@ -112,10 +112,10 @@ class CPPGenerator( targetPath: String, namer: Namer, nativeLib: File, options: 
         fun mapParam(idx: Int, p: NativeIndex.Function.Parameter): String {
             val type = parseType(p.getType(), options, LexicalScope.General)
             val name = namer.parameterName(p.getName(), idx)
-            if (type is FunctionType && type in funcParams)
-                return "object : ${namer.cFunctionsInterfaceName()}.${namer.funcProxyName(type.name)} { override ${proxyInvokeSignature(type, typeMapper)} = $name(${funcTypeParamsList(type, false, {it})})}"
+            return if (type is FunctionType && type in funcParams)
+                "object : ${namer.cFunctionsInterfaceName()}.${namer.funcProxyName(type.name)} { override ${proxyInvokeSignature(type, typeMapper)} = $name(${funcTypeParamsList(type, false, { it })})}"
             else
-                return name
+                name
         }
 
         translationUnit.getFunctionList()
@@ -125,16 +125,11 @@ class CPPGenerator( targetPath: String, namer: Namer, nativeLib: File, options: 
                             .any { it is FunctionType && it in funcParams }
                 }
                 .forEach {
-                    out.print("public ")
-                    out.print( makeFunSignature(it, hashSetOf(), ifaceTypes, extPrefix))
-                    out.println(" = ")
-                    out.push()
-                    out.print(namer.cFunctionName(it))
-                    it.getParameterList()
-                            .mapIndexed { i, p -> mapParam(i, p) }
-                            .joinTo(out, separator = ", ", prefix = "(", postfix = ")")
-                    out.pop()
-                    out.println()
+                    out.println("public ${makeFunSignature(it, hashSetOf(), ifaceTypes, extPrefix)} = ")
+                       .pushoneln("${namer.cFunctionName(it)}${it.getParameterList()
+                                                                 .mapIndexed { i, p -> mapParam(i, p) }
+                                                                 .joinToString(separator = ", ", prefix = "(", postfix = ")")}")
+                       .ln()
                 }
     }
 }
