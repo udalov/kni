@@ -113,18 +113,10 @@ class ObjCGenerator( targetPath: String, namer: Namer, nativeLib: File, options:
 
         val methods = klass.getMethodList().filter { it.getFunction().getName() !in skipMethodsNames }
 
-        val baseMethodsOverrideIds = getAllBaseMethodsOverrideIds(klass, allClasses, allCategories, false).toSortedSet()
+        val baseMethods = getAllBaseMethods(klass, allClasses, allCategories)
+        genMethods(out, methods.filter { !it.getClassMethod() }, baseMethods.filter { !it.second.getClassMethod() })
 
-        for (method in methods.filter { !it.getClassMethod() }) {
-            val overrideId = getFunctionUniqueOverrideId(method.getFunction())
-            genObjCFunction(out,
-                            method.getFunction(),
-                            qualifier = if (overrideId in baseMethodsOverrideIds) OverrideQualifier.override else OverrideQualifier.open,
-                            signature = makeFunSignature(method.getFunction(), hashSetOf(), hashSetOf()))
-            out.println()
-        }
-
-        genMetaClass(out, klass, methods, allClasses, allCategories)
+        genMetaClass(out, klass, methods.filter { it.getClassMethod() }, baseMethods.filter { it.second.getClassMethod() })
         out.println()
         genClassObject(out, klass)
 
@@ -135,31 +127,76 @@ class ObjCGenerator( targetPath: String, namer: Namer, nativeLib: File, options:
         out.println("}").ln()
     }
 
+    private fun genMethods(out: Printer,
+                           methods: List<NativeIndex.ObjCMethod>,
+                           baseMethods: Collection<Pair<String, NativeIndex.ObjCMethod>>) {
+
+        val baseMethodsIds = baseMethods.map { it.first }.toHashSet()
+        val classMethodsIds = hashSetOf<String>()
+
+        for (method in methods) {
+            val overrideId = getFunctionUniqueOverrideId(method.getFunction())
+            classMethodsIds.add(overrideId)
+            genObjCFunction(out,
+                            method.getFunction(),
+                            qualifier = if (overrideId in baseMethodsIds) OverrideQualifier.override else OverrideQualifier.open,
+                            signature = makeFunSignature(method.getFunction(), hashSetOf(), hashSetOf()))
+            out.println()
+        }
+
+        val baseMethodsMap = hashMapOf<String, NativeIndex.ObjCMethod>()
+        baseMethodsMap.putAll(baseMethods)
+
+        val manyBaseMethodsImplementations = arrayListOf<NativeIndex.ObjCMethod>()
+        var curMethodId: String? = null
+        var alreadyAdded = false
+        for (methodId in baseMethods.map { it.first }.filter { it !in classMethodsIds }.sort())
+            if (methodId == curMethodId) {
+                if (!alreadyAdded) {
+                    manyBaseMethodsImplementations.add(baseMethodsMap.get(methodId))
+                    alreadyAdded = true
+                }
+            }
+            else {
+                curMethodId = methodId
+                alreadyAdded = false
+            }
+
+        out.println("// forced overrides")
+        for (method in manyBaseMethodsImplementations) {
+            genObjCFunction(out, method.getFunction(), OverrideQualifier.override,
+                            signature = makeFunSignature(method.getFunction(), hashSetOf(), hashSetOf()))
+            out.println()
+        }
+    }
+
     // the method id which is used to detect necessity of "override" keyword according to kotlin's rules
     private fun getFunctionUniqueOverrideId(func: NativeIndex.Function) =
             func.getName() +
             func.getParameterList()
-                    .map { parseType(it.getType(), options, LexicalScope.General).name }
-                    .joinToString(",","(",")")
+                .map { parseType(it.getType(), options, LexicalScope.General).name }
+                .joinToString(",","(",")")
 
-    private fun getAllBaseMethodsOverrideIds(klass: NativeIndex.ObjCClass, allClasses: Map<String, NativeIndex.ObjCClass>,
-                                             allCategories: HashMap<String, NativeIndex.ObjCCategory>, classMethods: Boolean): Collection<String> {
-        val res = arrayListOf<String>()
+    private fun getAllBaseMethods(klass: NativeIndex.ObjCClass, allClasses: Map<String, NativeIndex.ObjCClass>,
+                                  allCategories: HashMap<String, NativeIndex.ObjCCategory>)
+            : Collection<Pair<String, NativeIndex.ObjCMethod>> {
+
+        val res = arrayListOf<Pair<String, NativeIndex.ObjCMethod>>()
         if (klass.hasBaseClass()) {
             val baseClass = allClasses.get(klass.getBaseClass())
             if (baseClass != null) {
                 res.addAll(baseClass.getMethodList()
-                                    .filter { it.getFunction().getName() !in  skipMethodsNames && (classMethods xor !it.getClassMethod()) }
-                                    .map { getFunctionUniqueOverrideId(it.getFunction()) })
-                res.addAll(getAllBaseMethodsOverrideIds(baseClass, allClasses, allCategories, classMethods))
+                                    .filter { it.getFunction().getName() !in  skipMethodsNames }
+                                    .map { Pair(getFunctionUniqueOverrideId(it.getFunction()), it) })
+                res.addAll(getAllBaseMethods(baseClass, allClasses, allCategories))
             }
         }
         for (catName in klass.getCategoryList()) {
             val cat = allCategories.get(catName)
             if (cat != null)
                 res.addAll(cat.getMethodList()
-                              .filter { it.getFunction().getName() !in  skipMethodsNames && (classMethods xor !it.getClassMethod()) }
-                              .map { getFunctionUniqueOverrideId(it.getFunction()) })
+                              .filter { it.getFunction().getName() !in  skipMethodsNames }
+                              .map { Pair(getFunctionUniqueOverrideId(it.getFunction()), it) })
         }
         return res
     }
@@ -215,28 +252,21 @@ class ObjCGenerator( targetPath: String, namer: Namer, nativeLib: File, options:
         }
     }
 
-    private fun genMetaClass(out: Printer, klass: NativeIndex.ObjCClass, methods: List<NativeIndex.ObjCMethod>,
-                             allClasses: Map<String, NativeIndex.ObjCClass>, allCategories: HashMap<String, NativeIndex.ObjCCategory>) {
-        val baseMethodsOverrideIds = getAllBaseMethodsOverrideIds(klass, allClasses, allCategories, true).toHashSet()
+    private fun genMetaClass(out: Printer,
+                             klass: NativeIndex.ObjCClass,
+                             methods: List<NativeIndex.ObjCMethod>,
+                             baseMethods: Collection<Pair<String, NativeIndex.ObjCMethod>>) {
         val baseList =
                 (if (klass.hasBaseClass())
                     listOf(klass.getBaseClass() + ".metaclass")
                 else listOf("IObjCObject")) +
                 klass.getProtocolList().map { namer.protocolName(it) + ".metaclass" } +
                 klass.getCategoryList().map { namer.categoryName(it) + ".metaclass"}
+
         out.println("trait metaclass : ${baseList.join(", ")} {")
         out.push()
 
-        var first = true
-        for (method in methods.filter { it.getClassMethod() }) {
-            if (first) first = false else out.println()
-            val overrideId = getFunctionUniqueOverrideId(method.getFunction())
-            genObjCFunction(out,
-                            method.getFunction(),
-                            qualifier = if (overrideId in baseMethodsOverrideIds) OverrideQualifier.override else OverrideQualifier.open,
-                            signature = makeFunSignature(method.getFunction(), hashSetOf(), hashSetOf())
-            )
-        }
+        genMethods(out, methods, baseMethods)
 
         out.pop()
         out.println("}")
