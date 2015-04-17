@@ -16,6 +16,7 @@ public data class IndexerOptions(
         public val language: Language,
         public val verbose: Boolean = false,
         public val debugDump: Boolean = false,
+        public val debugDumpTarget: File? = null,
         public val includePaths: Collection<String> = listOf(),
         public val args: Collection<String> = listOf()) {
 
@@ -24,7 +25,9 @@ public data class IndexerOptions(
         if (language == Language.OBJC) res.add("-ObjC")
         if (language == Language.CPP) res.addAll(listOf("-c++", "--std=c++11", "-fPIC", "-stdlib=libstdc++"))
         if (verbose) res.add("---v")
-        if (debugDump) res.add("---d")
+        if (debugDump) if (debugDumpTarget == null) res.add("---d")
+                       else if (debugDumpTarget.toString().contains(" ")) res.add("\"---d=$debugDumpTarget\"")
+                            else res.add("---d=$debugDumpTarget")
         res.addAll(includePaths.map { "-I$it" })
         res.addAll(args)
         return res.filterNotNull()
