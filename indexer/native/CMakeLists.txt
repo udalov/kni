@@ -69,13 +69,22 @@ set(INDEXER_SOURCE_FILES
     OutputCollector.h)
 
 add_library(KNIIndexer SHARED ${INDEXER_SOURCE_FILES})
-target_link_libraries(KNIIndexer clang ${PROTOBUF_LIBRARY})
+target_link_libraries(KNIIndexer clang
+                                 ${Boost_FILESYSTEM_LIBRARY}
+                                 ${Boost_SYSTEM_LIBRARY}
+                                 ${PROTOBUF_LIBRARY})
 
 add_executable(kniidx ${INDEXER_SOURCE_FILES} kniidx.cc)
-target_link_libraries(kniidx ${libclang_lib} ${PROTOBUF_LIBRARY})
+target_link_libraries(kniidx ${libclang_lib}
+                             ${Boost_FILESYSTEM_LIBRARY}
+                             ${Boost_SYSTEM_LIBRARY}
+                             ${PROTOBUF_LIBRARY})
 
 add_executable(tests ${INDEXER_SOURCE_FILES} ${TESTS_SOURCE_FILES})
-target_link_libraries(tests ${libclang_lib} ${PROTOBUF_LIBRARY})
+target_link_libraries(tests ${libclang_lib}
+                            ${Boost_FILESYSTEM_LIBRARY}
+                            ${Boost_SYSTEM_LIBRARY}
+                            ${PROTOBUF_LIBRARY})
 
 add_executable(boost_tests ${INDEXER_SOURCE_FILES} ${BOOST_TESTS_SOURCE_FILES})
 target_link_libraries(boost_tests ${Boost_FILESYSTEM_LIBRARY}

@@ -3,6 +3,10 @@
 #include <vector>
 #include <sstream>
 #include <iostream>
+#include <boost/algorithm/string/trim.hpp>
+#include <boost/filesystem/path.hpp>
+#include <boost/filesystem/operations.hpp>
+#include <boost/filesystem/fstream.hpp>
 #include <boost/xpressive/xpressive_static.hpp>
 
 #include "clang-c/Index.h"
@@ -480,15 +484,30 @@ void runPostIndexTasks(const std::shared_ptr<OutputCollector> & data) {
 std::shared_ptr<OutputCollector> doIndex(const std::vector<std::string>& args) {
     GOOGLE_PROTOBUF_VERIFY_VERSION;
 
+    namespace fs=boost::filesystem;
+
     std::vector<const char *> cxArgs;
-    std::string name;
+    fs::path name;
     bool verbose = false;
     bool debugDump = false;
+    boost::filesystem::path dumpPath;
     ProcessingMode::type mode = ProcessingMode::unknown;
     // \todo consider more advanced parsing
     for (auto const& arg: args) {
         // checking for args to indexer, that should be filtered out
-        if (arg == "---d") debugDump = true;
+        if (arg.substr(0, 4) == "---d") {
+            debugDump = true;
+            using namespace boost::xpressive;
+            static sregex dump_rex = as_xpr("---d=") >> (s1 = *_);
+            smatch what;
+            if (regex_match(arg, what, dump_rex)) {
+                dumpPath = fs::path(what[1]);
+                if (!fs::exists(dumpPath)) {
+                    std::cerr << "Error: dump target path '" << dumpPath << "' doesn't exist " << std::endl;
+                    dumpPath.clear();
+                }
+            }
+        }
         else if (arg == "---v") verbose = true;
         else {
             // other argumens are passed to libclang
@@ -515,7 +534,7 @@ std::shared_ptr<OutputCollector> doIndex(const std::vector<std::string>& args) {
     }
     auto data = std::shared_ptr<OutputCollector>(new OutputCollector(mode));
 
-    data->result().set_name(name);
+    data->result().set_name(name.filename().string());
     
     getPrimitiveTypesMap(mode);
 
@@ -532,9 +551,11 @@ std::shared_ptr<OutputCollector> doIndex(const std::vector<std::string>& args) {
     runPostIndexTasks(data);
 
     if (debugDump) {
+        if (dumpPath.empty()) dumpPath = name.parent_path();
+        if (fs::is_directory(dumpPath)) dumpPath /= name.filename().replace_extension("dump");
         if (verbose)
-            std::cerr << "Dumping parsing results to '" << name << ".dump'" << std::endl;
-        std::ofstream os(name + ".dump");
+            std::cerr << "Dumping parsing results to '" << dumpPath << "'" << std::endl;
+        fs::ofstream os(dumpPath);
         os << data->debugString() << std::endl;
         os.close();
     }
