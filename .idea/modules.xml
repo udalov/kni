@@ -2,9 +2,11 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
+      <module fileurl="file://$PROJECT_DIR$/lib-stubs/cocoa/cocoa.iml" filepath="$PROJECT_DIR$/lib-stubs/cocoa/cocoa.iml" />
+      <module fileurl="file://$PROJECT_DIR$/lib-stubs/cocoa-single/cocoa-single.iml" filepath="$PROJECT_DIR$/lib-stubs/cocoa-single/cocoa-single.iml" />
       <module fileurl="file://$PROJECT_DIR$/indexer/indexer.iml" filepath="$PROJECT_DIR$/indexer/indexer.iml" />
       <module fileurl="file://$PROJECT_DIR$/kni.iml" filepath="$PROJECT_DIR$/kni.iml" />
-      <module fileurl="file://$PROJECT_DIR$/kni-jnrator/kni-jnrator.iml" filepath="$PROJECT_DIR$/kni-jnrator/kni-jnrator.iml" />
+      <module fileurl="file://$PROJECT_DIR$/knirator/knirator.iml" filepath="$PROJECT_DIR$/knirator/knirator.iml" />
       <module fileurl="file://$PROJECT_DIR$/runtime-objc/runtime-objc.iml" filepath="$PROJECT_DIR$/runtime-objc/runtime-objc.iml" />
       <module fileurl="file://$PROJECT_DIR$/stub-generator/stub-generator.iml" filepath="$PROJECT_DIR$/stub-generator/stub-generator.iml" />
       <module fileurl="file://$PROJECT_DIR$/test-apps/swingHelloCocoa/swingHelloCocoa.iml" filepath="$PROJECT_DIR$/test-apps/swingHelloCocoa/swingHelloCocoa.iml" />

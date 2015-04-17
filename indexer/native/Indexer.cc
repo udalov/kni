@@ -241,25 +241,29 @@ void indexObjCCategory(const CXIdxDeclInfo *info, OutputCollector *data) {
     assertTrue(info->isDefinition);
     auto categoryDeclInfo = clang_index_getObjCCategoryDeclInfo(info);
     assertNotNull(categoryDeclInfo);
-    
-    auto category = data->result().add_category();
-    // TODO: this name is not unique for nameless categories, either drop them or fix this
-    auto name = std::string(categoryDeclInfo->objcClass->name) + "+" + info->entityInfo->name;
-    category->set_name(name);
-    saveContainer(info, category);
-    saveLocation(info, category);
 
-    auto clazz = data->objc.loadClassByUSR(categoryDeclInfo->objcClass->USR);
-    assertNotNull(clazz);
-    clazz->add_category(name);
-    
-    auto protocols = categoryDeclInfo->protocols;
-    assertNotNull(protocols);
-    for (auto protocolName : extractProtocolNames(protocols)) {
-        category->add_base_protocol(protocolName);
+    // ignoring unnamed categories since they seem irrelevant for interop
+    // \todo consider passing them to generator and decide about unnamed categories there
+    std::string catName = info->entityInfo->name;
+    if (!catName.empty()) {
+        auto category = data->result().add_category();
+        auto name = std::string(categoryDeclInfo->objcClass->name) + "+" + catName;
+        category->set_name(name);
+        saveContainer(info, category);
+        saveLocation(info, category);
+
+        auto clazz = data->objc.loadClassByUSR(categoryDeclInfo->objcClass->USR);
+        assertNotNull(clazz);
+        clazz->add_category(name);
+
+        auto protocols = categoryDeclInfo->protocols;
+        assertNotNull(protocols);
+        for (auto protocolName : extractProtocolNames(protocols)) {
+            category->add_base_protocol(protocolName);
+        }
+
+        data->objc.saveCategoryByUSR(info->entityInfo->USR, category);
     }
-
-    data->objc.saveCategoryByUSR(info->entityInfo->USR, category);
 }
 
 void indexObjCProtocol(const CXIdxDeclInfo *info, OutputCollector *data) {
