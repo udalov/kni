@@ -14130,6 +14130,7 @@ class {
   name: "NSProcessInfo"
   base_class: "NSObject"
   category: "NSProcessInfo+"
+  category: "NSProcessInfo+"
   method {
     function {
       name: "processInfo"
@@ -14308,6 +14309,13 @@ class {
         name: "automaticTerminationSupportEnabled"
         type: "Z"
       }
+    }
+    class_method: false
+  }
+  method {
+    function {
+      name: "thermalState"
+      return_type: "X(Enum.enum NSProcessInfoThermalState)"
     }
     class_method: false
   }
@@ -35976,6 +35984,27 @@ class {
   }
   method {
     function {
+      name: "stage"
+      return_type: "I"
+    }
+    class_method: false
+  }
+  method {
+    function {
+      name: "stageTransition"
+      return_type: "D"
+    }
+    class_method: false
+  }
+  method {
+    function {
+      name: "associatedEventsMask"
+      return_type: "X(Enum.enum NSEventMask)"
+    }
+    class_method: false
+  }
+  method {
+    function {
       name: "isSwipeTrackingFromScrollEventsEnabled"
       return_type: "Z"
     }
@@ -36493,6 +36522,18 @@ class {
     name: "phase"
     type: "X(Enum.enum NSEventPhase)"
   }
+  property {
+    name: "stage"
+    type: "I"
+  }
+  property {
+    name: "stageTransition"
+    type: "D"
+  }
+  property {
+    name: "associatedEventsMask"
+    type: "X(Enum.enum NSEventMask)"
+  }
   container: ""
   location_file: "/System/Library/Frameworks/AppKit.framework/Headers/NSEvent.h"
 }
@@ -36908,6 +36949,17 @@ class {
   method {
     function {
       name: "quickLookWithEvent:"
+      return_type: "V"
+      parameter {
+        name: "event"
+        type: "LNSEvent;"
+      }
+    }
+    class_method: false
+  }
+  method {
+    function {
+      name: "pressureChangeWithEvent:"
       return_type: "V"
       parameter {
         name: "event"
@@ -45578,6 +45630,42 @@ class {
     }
     class_method: false
   }
+  method {
+    function {
+      name: "isSpringLoaded"
+      return_type: "Z"
+    }
+    class_method: false
+  }
+  method {
+    function {
+      name: "setSpringLoaded:"
+      return_type: "V"
+      parameter {
+        name: "springLoaded"
+        type: "Z"
+      }
+    }
+    class_method: false
+  }
+  method {
+    function {
+      name: "maxAcceleratorLevel"
+      return_type: "I"
+    }
+    class_method: false
+  }
+  method {
+    function {
+      name: "setMaxAcceleratorLevel:"
+      return_type: "V"
+      parameter {
+        name: "maxAcceleratorLevel"
+        type: "I"
+      }
+    }
+    class_method: false
+  }
   property {
     name: "title"
     type: "LNSString;"
@@ -45617,6 +45705,14 @@ class {
   property {
     name: "keyEquivalentModifierMask"
     type: "UI"
+  }
+  property {
+    name: "springLoaded"
+    type: "Z"
+  }
+  property {
+    name: "maxAcceleratorLevel"
+    type: "I"
   }
   container: ""
   location_file: "/System/Library/Frameworks/AppKit.framework/Headers/NSButton.h"
@@ -63743,6 +63839,7 @@ class {
 class {
   name: "NSPressGestureRecognizer"
   base_class: "NSGestureRecognizer"
+  protocol: "NSCoding"
   method {
     function {
       name: "buttonMask"
@@ -71732,6 +71829,49 @@ class {
     }
     class_method: false
   }
+  method {
+    function {
+      name: "isSpringLoaded"
+      return_type: "Z"
+    }
+    class_method: false
+  }
+  method {
+    function {
+      name: "setSpringLoaded:"
+      return_type: "V"
+      parameter {
+        name: "springLoaded"
+        type: "Z"
+      }
+    }
+    class_method: false
+  }
+  method {
+    function {
+      name: "trackingMode"
+      return_type: "X(Enum.enum NSSegmentSwitchTracking)"
+    }
+    class_method: false
+  }
+  method {
+    function {
+      name: "setTrackingMode:"
+      return_type: "V"
+      parameter {
+        name: "trackingMode"
+        type: "X(Enum.enum NSSegmentSwitchTracking)"
+      }
+    }
+    class_method: false
+  }
+  method {
+    function {
+      name: "doubleValueForSelectedSegment"
+      return_type: "D"
+    }
+    class_method: false
+  }
   property {
     name: "segmentCount"
     type: "I"
@@ -71743,6 +71883,14 @@ class {
   property {
     name: "segmentStyle"
     type: "X(Enum.enum NSSegmentStyle)"
+  }
+  property {
+    name: "springLoaded"
+    type: "Z"
+  }
+  property {
+    name: "trackingMode"
+    type: "X(Enum.enum NSSegmentSwitchTracking)"
   }
   container: ""
   location_file: "/System/Library/Frameworks/AppKit.framework/Headers/NSSegmentedControl.h"
@@ -121742,6 +121890,15 @@ category {
   location_file: "/System/Library/Frameworks/Foundation.framework/Headers/NSProcessInfo.h"
 }
 category {
+  name: "NSProcessInfo+"
+  property {
+    name: "thermalState"
+    type: "X(Enum.enum NSProcessInfoThermalState)"
+  }
+  container: ""
+  location_file: "/System/Library/Frameworks/Foundation.framework/Headers/NSProcessInfo.h"
+}
+category {
   name: "NSTextCheckingResult+NSTextCheckingResultOptional"
   method {
     function {
@@ -132862,6 +133019,17 @@ category {
   method {
     function {
       name: "rotateWithEvent:"
+      return_type: "V"
+      parameter {
+        name: "event"
+        type: "LNSEvent;"
+      }
+    }
+    class_method: false
+  }
+  method {
+    function {
+      name: "pressureChangeWithEvent:"
       return_type: "V"
       parameter {
         name: "event"
