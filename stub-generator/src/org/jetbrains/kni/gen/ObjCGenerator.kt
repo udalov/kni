@@ -29,16 +29,16 @@ class ObjCGenerator( targetPath: String, namer: Namer, nativeLib: File, options:
         translationUnit.getClass_List().forEach { classes.put(it.getName(), it) }
 
         // preparing list of all categories methods signatures for finding overrides
-        val categories = hashMapOf<String, NativeIndex.ObjCCategory>()
-        translationUnit.getCategoryList().forEach { categories.put(it.getName(), it) }
+        val validCategories = translationUnit.getCategoryList()
+                .filter { !it.getName().endsWith('+') } // skipping private categories
+        val categoriesMap = hashMapOf<String, NativeIndex.ObjCCategory>()
+        validCategories.forEach { categoriesMap.put(it.getName(), it) }
 
         for (klass in translationUnit.getClass_List()) {
-            genClass(klass, classes, categories)
+            genClass(klass, classes, categoriesMap)
         }
 
-        for (category in translationUnit.getCategoryList()) {
-            genCategory(category)
-        }
+        validCategories.map { genCategory(it) }
     }
 
     fun genProtocol(protocol: NativeIndex.ObjCProtocol) {
@@ -98,7 +98,7 @@ class ObjCGenerator( targetPath: String, namer: Namer, nativeLib: File, options:
                 if (klass.hasBaseClass()) klass.getBaseClass()
                 else "ObjCObject"
         val protocols = klass.getProtocolList()
-        val categories = klass.getCategoryList()
+        val categories = klass.getCategoryList().filter { allCategories.containsKey(it) }
         val baseList =
                 listOf("$baseClassName(pointer)") +
                 protocols.map { namer.protocolName(it) } +
@@ -112,7 +112,7 @@ class ObjCGenerator( targetPath: String, namer: Namer, nativeLib: File, options:
         val baseMethods = getAllBaseMethods(klass, allClasses, allCategories)
         genMethods(out, methods.filter { !it.getClassMethod() }, baseMethods.filter { !it.second.getClassMethod() })
 
-        genMetaClass(out, klass, methods.filter { it.getClassMethod() }, baseMethods.filter { it.second.getClassMethod() })
+        genMetaClass(out, klass, allCategories, methods.filter { it.getClassMethod() }, baseMethods.filter { it.second.getClassMethod() })
         out.println()
         genClassObject(out, klass)
 
@@ -237,6 +237,7 @@ class ObjCGenerator( targetPath: String, namer: Namer, nativeLib: File, options:
 
     private fun genMetaClass(out: Printer,
                              klass: NativeIndex.ObjCClass,
+                             allCategories: HashMap<String, NativeIndex.ObjCCategory>,
                              methods: List<NativeIndex.ObjCMethod>,
                              baseMethods: Collection<Pair<String, NativeIndex.ObjCMethod>>) {
         val baseList =
@@ -244,7 +245,7 @@ class ObjCGenerator( targetPath: String, namer: Namer, nativeLib: File, options:
                     listOf(klass.getBaseClass() + ".metaclass")
                 else listOf("IObjCObject")) +
                 klass.getProtocolList().map { namer.protocolName(it) + ".metaclass" } +
-                klass.getCategoryList().map { namer.categoryName(it) + ".metaclass" }
+                klass.getCategoryList().filter { allCategories.containsKey(it) }.map { namer.categoryName(it) + ".metaclass" }
 
         out.println("trait metaclass : ${baseList.join(", ")} {")
         out.push()
