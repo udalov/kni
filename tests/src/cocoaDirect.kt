@@ -20,6 +20,7 @@ class CocoaDirectTests : ObjCTest( idxOpts = IndexerOptions(Language.OBJC, debug
         val kotlinSource = File("tests/testData/cocoaDirect/cocoaDirectTest.kt").getAbsoluteFile()
         val dylib = File("/System/Library/Frameworks//AppKit.framework/Versions/C/Resources/BridgeSupport/AppKit.dylib")
 
+        println("Generating stub to $tmpdir")
         val stubClasses = makeStub(header, dylib, null, tmpdir, dumpIdx = true, cliIface = true)
 
         val mainClasses = File(tmpdir, "main")
