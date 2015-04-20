@@ -2,6 +2,7 @@
 package swingHelloCocoa
 
 import kni.objc.ObjCObject
+import kni.objc.Pointer
 import javax.swing.JFrame
 import javax.swing.JScrollPane
 import javax.swing.JTextArea
@@ -34,7 +35,12 @@ fun main(args : Array<String>) {
     iconImg.lockFocus()
     val rot = NSAffineTransform.transform()
     rot.rotateByDegrees(90.0)
+    rot.concat()
     iconImg.unlockFocus()
     cocoaApp.setApplicationIconImage(iconImg)
     println("icon set")
+    val label = (NSString.alloc() as NSString).initWithCString_encoding(Pointer.pointerToString("abc"), 1 /*NSASCIIStringEncoding*/) as NSString
+    val title = cocoaApp.dockTile()
+    title.setBadgeLabel(label)
+    println("dock title set")
 }
