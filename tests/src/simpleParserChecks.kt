@@ -68,7 +68,7 @@ public class ErrorReporter(public val keeper: LastLogKeeper) : TestWatcher() {
     }
 }
 
-RunWith(javaClass<Theories>())
+RunWith(Theories::class)
 public class SimpleCHeaderCheck : LastLogKeeper, CPlusPlusTest() {
     var lastLogBuf: StringBuilder = StringBuilder()
     override val lastLog: String get() = lastLogBuf.toString()
@@ -89,7 +89,7 @@ public class SimpleCHeaderCheck : LastLogKeeper, CPlusPlusTest() {
     // \todo reenable after fix or find a workaround
     // Rule public val onFailed : ErrorReporter = ErrorReporter(this)
 
-    Theory public fun SimpleArgsFuncs(ForAll(sampleSize = 10) From(javaClass<SimpleCHeaderGenerator>()) cunit: CSimpleTransUnit) {
+    Theory public fun SimpleArgsFuncs(ForAll(sampleSize = 10) From(SimpleCHeaderGenerator::class) cunit: CSimpleTransUnit) {
         val indexerOptions = IndexerOptions(Language.CPP, verbose = true, debugDump = false)
         assumeNotNull(cunit, cunit.name)
         lastLogBuf = StringBuilder()
