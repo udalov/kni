@@ -1,10 +1,7 @@
 package org.jetbrains.kni.tests
 
-import org.jetbrains.kni.gen.GeneratorOptions
-import org.jetbrains.kni.gen.InteropRuntime
 import org.jetbrains.kni.indexer.IndexerOptions
 import org.jetbrains.kni.indexer.Language
-import org.jetbrains.kni.indexer.buildNativeIndex
 import org.junit.Assert
 import java.io.File
 import java.nio.file.Files
@@ -29,7 +26,7 @@ class LibWinApiTests : CPlusPlusTest( idxOpts =  IndexerOptions(Language.CPP, de
         val mainClasses = File(tmpdir, "main")
         Assert.assertTrue( reportIfError( compileKotlin(listOf(kotlinSource), mainClasses, kotlinLibs + stubClasses)))
 
-        // val result = runKotlin(mainClasses, stubClasses, libpath = tmpdir)
+        // val result = runKotlin(mainClasses, stubClasses, libPath = tmpdir)
         // Assert.assertEquals("OK", result)
     }
 }

@@ -14,17 +14,11 @@ public class Native {
     public static final String KNI_OBJC_RUNTIME_LIBRARY_PATH = "/libKNIObjCRuntime.dylib";
 
     static {
-        try {
-            InputStream resource = Native.class.getResourceAsStream(KNI_OBJC_RUNTIME_LIBRARY_PATH);
-            try {
-                byte[] bytes = readBytes(resource, resource.available());
-                File dylib = File.createTempFile("libKNIObjCRuntime", ".dylib");
-                writeBytes(dylib, bytes);
-                System.load(dylib.getAbsolutePath());
-            }
-            finally {
-                resource.close();
-            }
+        try (InputStream resource = Native.class.getResourceAsStream(KNI_OBJC_RUNTIME_LIBRARY_PATH)) {
+            byte[] bytes = readBytes(resource, resource.available());
+            File dylib = File.createTempFile("libKNIObjCRuntime", ".dylib");
+            writeBytes(dylib, bytes);
+            System.load(dylib.getAbsolutePath());
         }
         catch (Throwable e) {
             throw new IllegalStateException(

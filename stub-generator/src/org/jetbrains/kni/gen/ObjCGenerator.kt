@@ -5,9 +5,12 @@ import org.jetbrains.kni.indexer.NativeIndex
 import java.io.File
 import java.util.HashMap
 
-
-class ObjCGenerator( targetPath: String, namer: Namer, nativeLib: File, options: GeneratorOptions)
-    : GeneratorBase(targetPath, namer, nativeLib, options) {
+class ObjCGenerator(
+        targetPath: String,
+        namer: Namer,
+        nativeLib: File,
+        options: GeneratorOptions
+) : GeneratorBase(targetPath, namer, nativeLib, options) {
 
     // -[NSObject finalize] conflicts with java.lang.Object.finalize
     val skipMethodsNames = hashSetOf("finalize")
@@ -259,7 +262,7 @@ class ObjCGenerator( targetPath: String, namer: Namer, nativeLib: File, options:
     private fun genClassObject(out: Printer, klass: NativeIndex.ObjCClass) {
         // TODO (!): there may be other hierarchy roots!
         out.println("companion object : NSObject(Native.objc_getClass(\"${klass.getName()}\")), metaclass, ObjCClass {")
-        // TODO: only generate this into class objects of root classes
+        // TODO: only generate this into companion objects of root classes
            .pushoneln("init { loadLibrary(interopConfig.nativeLibraryPath) }")
            .println("}")
     }

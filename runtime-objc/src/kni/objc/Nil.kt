@@ -1,7 +1,7 @@
 package kni.objc
 
 class Nil : ObjCObject(0), ObjCClass {
-    class object {
+    companion object {
         val INSTANCE = Nil()
     }
 }

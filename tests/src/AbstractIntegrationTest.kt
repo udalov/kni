@@ -1,18 +1,13 @@
 package org.jetbrains.kni.tests
 
+import org.jetbrains.kni.gen.GeneratorOptions
+import org.jetbrains.kni.gen.generateStub
+import org.jetbrains.kni.indexer.IndexerOptions
+import org.jetbrains.kni.indexer.buildNativeIndex
+import org.jetbrains.kni.indexer.buildNativeIndexCli
+import org.junit.Assert
 import java.io.File
 import java.nio.file.Files
-import org.jetbrains.kni.indexer.buildNativeIndex
-import org.jetbrains.kni.indexer.IndexerOptions
-import org.jetbrains.kni.gen.generateStub
-import org.junit.Assert
-import kotlin.properties.Delegates
-import java.nio.file.Paths
-import kni.objc.loadLibrary
-import org.jetbrains.kni.gen.InteropRuntime
-import org.jetbrains.kni.gen.GeneratorOptions
-import org.jetbrains.kni.indexer.buildNativeIndexCli
-import org.jetbrains.kni.tests.*
 
 abstract class AbstractIntegrationTest(val indexerOptions: IndexerOptions, val generatorOptions: GeneratorOptions) {
 
@@ -59,7 +54,7 @@ abstract class AbstractIntegrationTest(val indexerOptions: IndexerOptions, val g
         assert(!hasErrors)
 
         // println("Generating stub to $stubSource")
-        val stubGeneratedSources = generateStub(translationUnit, nativeLib, stubTarget, generatorOptions)
+        generateStub(translationUnit, nativeLib, stubTarget, generatorOptions)
         val stubClasses = File(stubTempDir, "stub")
         // println("Compiling stub $stubSource")
         Assert.assertTrue( reportIfError( compileKotlin(listOf(stubTarget), stubClasses, kotlinLibs)))

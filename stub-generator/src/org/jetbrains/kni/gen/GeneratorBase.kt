@@ -8,10 +8,11 @@ import java.nio.file.Paths
 import java.util.HashMap
 
 abstract class GeneratorBase(
-                    val targetPath: String,
-                    val namer: Namer,
-                    val nativeLib: File,
-                    val options: GeneratorOptions) {
+        val targetPath: String,
+        val namer: Namer,
+        val nativeLib: File,
+        val options: GeneratorOptions
+) {
 
     data class FilePrinter(targetPath: String, file_name: String) {
         val file: File = File(targetPath, file_name)
@@ -38,7 +39,7 @@ abstract class GeneratorBase(
     open fun startFile(out: Printer, sourceFile: String) {
         out.println("// generated from \"$sourceFile\"").ln()
         out.println("[file: suppress(\"UNCHECKED_CAST\")]").ln()
-        genPackage(out, sourceFile)
+        genPackage(out)
     }
 
     fun genInteropConfig(out: Printer) {
@@ -47,8 +48,8 @@ abstract class GeneratorBase(
            .println("}")
     }
 
-    fun genPackage(out: Printer, sourceFile: String) {
-        out.println("package ${namer.packageName(sourceFile)}").ln()
+    fun genPackage(out: Printer) {
+        out.println("package ${namer.packageName()}").ln()
     }
 
     public fun makeFunSignature(function: NativeIndex.Function, funcParams: Set<FunctionType> = setOf(), ifaceTypes: Set<Type> = setOf(), extPrefix: String = ""): String {
@@ -94,8 +95,6 @@ class Namer(translationUnit: NativeIndex.TranslationUnit, outputFile: File, val 
     val multifile = outputFile.isDirectory()
     val mainOutputFile = if (multifile) "${shortName}.kt" else outputFile.getName()
 
-    // TODO: all Kotlin keywords
-    val reservedWords = setOf("class", "object", "fun", "in", "as", "null", "trait", "val")
     val invalidIdChars = setOf('<', '>', '*')
 
     private fun calculateProtocolNames(translationUnit: NativeIndex.TranslationUnit) {
@@ -116,7 +115,7 @@ class Namer(translationUnit: NativeIndex.TranslationUnit, outputFile: File, val 
         }
     }
 
-    {
+    init {
         calculateProtocolNames(translationUnit)
     }
 
@@ -165,5 +164,5 @@ class Namer(translationUnit: NativeIndex.TranslationUnit, outputFile: File, val 
         if (!multifile || source_file.length() == 0|| source_file == name) mainOutputFile
         else File(source_file).getName().substringBeforeLast(".") + ".kt"
 
-    fun packageName(sourceFile: String): String = if (basePackageName.length() == 0) shortName else basePackageName
+    fun packageName(): String = if (basePackageName.isEmpty()) shortName else basePackageName
 }

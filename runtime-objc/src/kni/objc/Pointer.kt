@@ -1,7 +1,7 @@
 package kni.objc
 
 public open class Pointer<T> internal(open val peer: Long) {
-    class object {
+    companion object {
         public val NULL: Pointer<Any> = Pointer(0)
         public val CHAR_SIZE: Int = 1
 

@@ -1,14 +1,7 @@
 package org.jetbrains.kni.gen
 
+import org.jetbrains.kni.indexer.NativeIndex.TranslationUnit
 import java.io.File
-import org.jetbrains.kni.indexer.NativeIndex.*
-import java.util.HashMap
-import java.nio.file.Paths
-import org.jetbrains.kni.indexer.IndexerOptions
-import org.jetbrains.kni.indexer.Language.*
-import org.jetbrains.kotlin.renderer.KeywordStringsGenerated
-import java.util.ArrayList
-import java.util.HashSet
 
 public enum class InteropRuntime {
     ObjC
@@ -36,11 +29,12 @@ public class GeneratorOptions(
         public val charStringType: CharStringType = CharStringType.Ascii
 ) {}
 
-public fun generateStub(translationUnit: TranslationUnit,
-                        nativeLib: File,
-                        outputFile: File,
-                        generatorOptions: GeneratorOptions,
-                        basePackageName: String = ""
+public fun generateStub(
+        translationUnit: TranslationUnit,
+        nativeLib: File,
+        outputFile: File,
+        generatorOptions: GeneratorOptions,
+        basePackageName: String = ""
 ): Iterable<File> {
 
     val namer = Namer(translationUnit, outputFile,

@@ -2,41 +2,41 @@
 package org.jetbrains.kni.quickchecks
 
 import com.pholser.junit.quickcheck.ForAll
-import org.junit.contrib.theories.*
-import org.junit.runner.RunWith
-import org.junit.Assume.*
-import org.junit.Assert.*
 import com.pholser.junit.quickcheck.From
+import com.pholser.junit.quickcheck.generator.GenerationStatus
 import com.pholser.junit.quickcheck.generator.Generator
 import com.pholser.junit.quickcheck.random.SourceOfRandomness
-import com.pholser.junit.quickcheck.generator.GenerationStatus
-import org.jetbrains.kni.gen.GeneratorOptions
-import org.jetbrains.kni.gen.InteropRuntime
 import org.jetbrains.kni.gen.generateStub
 import org.jetbrains.kni.indexer.IndexerOptions
 import org.jetbrains.kni.indexer.Language
 import org.jetbrains.kni.indexer.buildNativeIndex
-import org.jetbrains.kni.tests.*
-import java.nio.file.Files
-import java.io.File
-import java.nio.file.Paths
-import java.io.FileWriter
+import org.jetbrains.kni.tests.CPlusPlusTest
+import org.jetbrains.kni.tests.compileKotlin
+import org.jetbrains.kni.tests.compileNativeC
+import org.jetbrains.kni.tests.runKotlin
+import org.junit.Assert.assertTrue
+import org.junit.Assume.assumeNotNull
+import org.junit.contrib.theories.Theories
+import org.junit.contrib.theories.Theory
 import org.junit.rules.TestWatcher
 import org.junit.runner.Description
-import org.junit.Rule
-import java.util.ArrayList
+import org.junit.runner.RunWith
+import java.io.File
+import java.nio.file.Files
 import kotlin.properties.Delegates
 
 
 public class SimpleCHeaderGenerator : Generator<CSimpleTransUnit>(javaClass<CSimpleTransUnit>()) {
-    override fun generate( random: SourceOfRandomness, status: GenerationStatus): CSimpleTransUnit {
-        val gen = CGenGrammar({ (f,l) -> random.nextChar(f,l) },
-                              { (f,l) -> random.nextLong(f,l) },
-                              { (f,l) -> random.nextDouble(f,l) },
-                              maxIdentifierSize = 10,
-                              // seems that more than 5 params lead to jffi problems
-                              // \todo investigate
-                              maxParams = 5)
+    override fun generate(random: SourceOfRandomness, status: GenerationStatus): CSimpleTransUnit {
+        val gen = CGenGrammar(
+                { f, l -> random.nextChar(f, l) },
+                { f, l -> random.nextLong(f, l) },
+                { f, l -> random.nextDouble(f, l) },
+                maxIdentifierSize = 10,
+                // seems that more than 5 params lead to jffi problems
+                // \todo investigate
+                maxParams = 5
+        )
         return gen.generateSimpleTransUnit1(random.nextInt(30,100))
     }
 }
@@ -119,7 +119,7 @@ public class SimpleCHeaderCheck : LastLogKeeper, CPlusPlusTest() {
         assertTrue( check( compileKotlin(listOf(testSource), testClasses, classpath + stubClasses)))
 
         assertTrue( check( runKotlin(arrayListOf("org.junit.runner.JUnitCore", "test.NativeTest"),
-                                     listOf(testClasses, stubClasses) + classpath, libpath = tmpdir)))
+                                     listOf(testClasses, stubClasses) + classpath, libPath = tmpdir)))
     }
 
     fun check(res: Pair<Boolean, String>): Boolean {

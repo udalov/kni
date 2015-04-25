@@ -5,7 +5,7 @@ public trait IObjCObject {
 }
 
 public abstract class ObjCObject protected(override val pointer: Long) : IObjCObject {
-    class object {
+    companion object {
         public val NIL: Nil = Nil.INSTANCE
     }
 

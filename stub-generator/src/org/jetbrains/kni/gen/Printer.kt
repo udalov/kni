@@ -26,7 +26,7 @@ class Printer(private val out: Appendable): Appendable {
 
     fun pushoneln(o: Any?): Printer = push().println(o).pop()
 
-    class object {
+    companion object {
         val INDENT = "    "
     }
 

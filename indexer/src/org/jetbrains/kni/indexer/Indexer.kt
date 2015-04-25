@@ -5,7 +5,6 @@ import org.jetbrains.kni.indexer.NativeIndex.TranslationUnit
 import java.io.BufferedReader
 import java.io.File
 import java.io.InputStreamReader
-import java.util.ArrayList
 
 public enum class Language {
     CPP
@@ -18,7 +17,8 @@ public data class IndexerOptions(
         public val debugDump: Boolean = false,
         public val debugDumpTarget: File? = null,
         public val includePaths: Collection<String> = listOf(),
-        public val args: Collection<String> = listOf()) {
+        public val args: Collection<String> = listOf()
+) {
 
     fun toParams(): Iterable<String> {
         val res = arrayListOf<String>()

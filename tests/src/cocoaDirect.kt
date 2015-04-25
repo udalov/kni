@@ -1,15 +1,11 @@
 
 package org.jetbrains.kni.tests
 
-import org.jetbrains.kni.gen.GeneratorOptions
-import org.jetbrains.kni.gen.InteropRuntime
 import org.jetbrains.kni.indexer.IndexerOptions
 import org.jetbrains.kni.indexer.Language
-import org.jetbrains.kni.indexer.buildNativeIndex
 import org.junit.Assert
 import java.io.File
 import java.nio.file.Files
-import kotlin.properties.Delegates
 import org.junit.Test as test
 
 class CocoaDirectTests : ObjCTest( idxOpts = IndexerOptions(Language.OBJC, debugDump = false, includePaths = listOf("lib"))) {
@@ -25,9 +21,8 @@ class CocoaDirectTests : ObjCTest( idxOpts = IndexerOptions(Language.OBJC, debug
         val mainClasses = File(tmpdir, "main")
         Assert.assertTrue( reportIfError( compileKotlin(listOf(kotlinSource), mainClasses, kotlinLibs + stubClasses)))
 
-        val result = runKotlin(listOf("test.TestPackage"), listOf(mainClasses, stubClasses) + kotlinLibs, libpath = tmpdir)
+        val result = runKotlin(listOf("test.TestPackage"), listOf(mainClasses, stubClasses) + kotlinLibs, libPath = tmpdir)
         Assert.assertTrue( reportIfError(result))
         Assert.assertEquals("OK", result.second.trim())
     }
 }
-

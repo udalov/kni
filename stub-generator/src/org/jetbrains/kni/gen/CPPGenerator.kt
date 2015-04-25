@@ -3,8 +3,12 @@ package org.jetbrains.kni.gen
 import org.jetbrains.kni.indexer.NativeIndex
 import java.io.File
 
-class CPPGenerator( targetPath: String, namer: Namer, nativeLib: File, options: GeneratorOptions)
-    : GeneratorBase(targetPath, namer, nativeLib, options) {
+class CPPGenerator(
+        targetPath: String,
+        namer: Namer,
+        nativeLib: File,
+        options: GeneratorOptions
+) : GeneratorBase(targetPath, namer, nativeLib, options) {
 
     override fun startFile(out: Printer, sourceFile: String) {
         super.startFile(out, sourceFile)
@@ -39,7 +43,7 @@ class CPPGenerator( targetPath: String, namer: Namer, nativeLib: File, options: 
         out.pop()
         out.println("}").ln()
         // generate extension methods that accept directly kotlin lambdas
-        genCFunctionExts(out, translationUnit, funcParams, (structs.map { it as Type } + funcParams).toHashSet(), "${namer.cFunctionsInterfaceName()}.")
+        genCFunctionExts(out, translationUnit, funcParams, (structs + funcParams).toHashSet(), "${namer.cFunctionsInterfaceName()}.")
         out.println("\npublic fun get_${namer.cFunctionsInterfaceName()}(libName: String): ${namer.cFunctionsInterfaceName()} = jnr.ffi.LibraryLoader.create(javaClass<${namer.cFunctionsInterfaceName()}>()).load(libName)\n")
     }
 
@@ -64,7 +68,7 @@ class CPPGenerator( targetPath: String, namer: Namer, nativeLib: File, options: 
 
     fun genCStruct(out: Printer, struct: NativeIndex.CStruct, funcTypes: Set<FunctionType>, ifaceTypes: Set<Type>): RecordType {
 
-        val typeMapper = { (t: Type) ->
+        val typeMapper = { t: Type ->
             if (t is FunctionType && t in funcTypes) JNRStructFunctionType(namer.funcProxyName(t.name))
             // assuming those - externs, and that structs are defined and processed in a correct order
             // \todo - doublecheck
@@ -101,7 +105,7 @@ class CPPGenerator( targetPath: String, namer: Namer, nativeLib: File, options: 
                                  extPrefix: String) {
 
         // \todo coded duplication in makeFunSignature
-        val typeMapper = { (t: Type) ->
+        val typeMapper = { t: Type ->
             if (t is FunctionType && t in funcParams) makePrefixed(SimpleType(namer.funcProxyName(t.name)), extPrefix)
             else if (t in ifaceTypes) makePrefixed(t, extPrefix)
             // assuming those - externs

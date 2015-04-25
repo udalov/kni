@@ -1,9 +1,9 @@
 package org.jetbrains.kni.tests
 
-import kotlin.platform.platformStatic
 import org.jetbrains.kni.gen.Printer
 import java.io.File
 import java.util.HashSet
+import kotlin.platform.platformStatic
 
 object GenerateTests {
     private fun generate(rootDir: String, testName: String, baseClass: String) {

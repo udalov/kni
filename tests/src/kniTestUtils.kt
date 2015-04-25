@@ -40,17 +40,17 @@ public fun compileObjC(source: File, target: File): Pair<Boolean, String> =
 
 
 public fun compileKotlin(files: Iterable<File>, destination: File, classpath: Collection<File>): Pair<Boolean, String> {
-    val kotlinc = File("lib/kotlinc/bin/kotlinc")
-    val kotlincompiler = File("lib/kotlinc/lib/kotlin-compiler.jar")
+    val kotlinCompiler = File("lib/kotlinc/lib/kotlin-compiler.jar")
     val javaBin = Paths.get(System.getProperty("java.home"), "bin", "java")
     return runProcess(
-            arrayListOf(javaBin.toString(), "-d64", "-jar", kotlincompiler.getAbsolutePath(),
+            arrayListOf(javaBin.toString(), "-d64", "-jar", kotlinCompiler.getAbsolutePath(),
                         "-d", destination.getAbsolutePath(), "-cp",
                         classpath.map { escape4cli(it.getAbsolutePath()) }.joinToString(File.pathSeparator)) +
-            files.map { escape4cli(it.getAbsolutePath()) } )
+            files.map { escape4cli(it.getAbsolutePath()) }
+    )
 }
 
-public fun runKotlin(commandLine: Iterable<String>, classpath: Iterable<File>, libpath: File? = null): Pair<Boolean, String> {
+public fun runKotlin(commandLine: Iterable<String>, classpath: Iterable<File>, libPath: File? = null): Pair<Boolean, String> {
     val baseLibs = classpath.toArrayList()
     baseLibs.add(File("lib/kotlinc/lib/kotlin-runtime.jar"))
     val cp = baseLibs
@@ -58,7 +58,7 @@ public fun runKotlin(commandLine: Iterable<String>, classpath: Iterable<File>, l
             .joinToString(File.pathSeparator)
     val javaBin = Paths.get(System.getProperty("java.home"), "bin", "java")
     return runProcess(arrayListOf(javaBin.toString(),
-                                  if (libpath == null) "" else "-Djava.library.path=${escape4cli(libpath.getAbsolutePath())}",
+                                  if (libPath == null) "" else "-Djava.library.path=${escape4cli(libPath.getAbsolutePath())}",
                                   "-cp", cp) +
                       commandLine)
 }
