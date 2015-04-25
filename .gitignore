@@ -3,6 +3,7 @@
 /dependencies
 /dist
 /lib
+/indexer/native/out
 CMakeCache.txt
 CMakeFiles
 Makefile
