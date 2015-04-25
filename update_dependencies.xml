@@ -153,14 +153,12 @@
         <download-maven-library group="com/google/protobuf" artifact="protobuf-java" version="${protobuf.version}"/>
     </target>
 
-    <!--
     <target name="jnr-ffi">
         <download-maven-library group="com/github/jnr" artifact="jnr-ffi" version="${jnr-ffi.version}"/>
         <download-maven-library group="com/github/jnr" artifact="jffi" version="${jffi.version}" native="true"/>
         <download-maven-library group="org/ow2/asm" artifact="asm-all" version="${asm-all.version}"/>
         <download-maven-library group="com/github/jnr" artifact="jnr-x86asm" version="${jnr-x86asm.version}"/>
     </target>
-    -->
 
     <target name="clang">
         <property name="cfe" value="cfe-${clang.version}"/>
