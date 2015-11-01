@@ -89,7 +89,7 @@ data class FunctionType(val paramTypes: List<Type>, val returnType: Type) : Type
 
 data class JNRStructFunctionType(val proxyName: String) : Type {
     override val expr: String get() = "jnr.ffi.Struct.Function<$proxyName>"
-    override val defaultVal: String get() = "function(javaClass<$proxyName>())"
+    override val defaultVal: String get() = "function($proxyName::class.java)"
 }
 
 val ObjCObjectType = BuiltInType("ObjCObject")

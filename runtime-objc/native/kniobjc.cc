@@ -321,18 +321,8 @@ JNIEXPORT jlong JNICALL Java_kni_objc_Native_objc_1getClass(
 void *createNativeClosureForFunction(JNIEnv *env, jobject function);
 
 bool isKotlinFunction(JNIEnv *env, jobject object) {
-    // Check if object implements any FunctionN interface
-    // TODO: check if is instance of kotlin.Function when the latter is added to Kotlin runtime
-    for (unsigned i = 0; i < 23; i++) {
-        std::ostringstream className;
-        className << "kotlin/Function" << i;
-        std::string nameStr = className.str();
-        jclass clazz = env->FindClass(nameStr.c_str());
-        if (env->IsInstanceOf(object, clazz)) {
-            return true;
-        }
-    }
-    return false;
+    jclass clazz = env->FindClass("kotlin/Function");
+    return env->IsInstanceOf(object, clazz);
 }
 
 void coerceJVMToNative(JNIEnv *env, jobject object, void *ret) {
@@ -556,12 +546,12 @@ jobject coerceNativeToJVM(JNIEnv *env, void *value, const Type& type) {
             return env->GetStaticObjectField(cache->nilClass, cache->nilInstanceField);
         }
 
-        // TODO: what if there's no such class object?
+        // TODO: what if there's no such companion object?
         std::string className = OBJC_PACKAGE_PREFIX + object_getClassName((id) value);
-        std::string classObjectDescriptor = "L" + className + "$object;";
+        std::string companionObjectDescriptor = "L" + className + "$Companion;";
         jclass clazz = env->FindClass(className.c_str());
-        jfieldID classObjectField = env->GetStaticFieldID(clazz, "OBJECT$", classObjectDescriptor.c_str());
-        return env->GetStaticObjectField(clazz, classObjectField);
+        jfieldID companionObjectField = env->GetStaticFieldID(clazz, "Companion", companionObjectDescriptor.c_str());
+        return env->GetStaticObjectField(clazz, companionObjectField);
     } else if (kind == TYPE_POINTER) {
         return env->NewObject(cache->pointerClass, cache->pointerConstructor, value);
     } else if (kind == TYPE_ID || kind == TYPE_OBJECT) {

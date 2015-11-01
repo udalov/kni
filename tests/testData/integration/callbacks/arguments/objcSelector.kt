@@ -4,7 +4,7 @@ import kni.objc.*
 import objc.*
 
 fun main(args: Array<String>) {
-    A.invoke {
-        (sel: ObjCSelector): Unit -> A.checkIfEqualsToInvoke(sel)
-    }
+    A.invoke(fun(sel: ObjCSelector) {
+        A.checkIfEqualsToInvoke(sel)
+    })
 }

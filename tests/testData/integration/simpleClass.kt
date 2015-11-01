@@ -11,7 +11,7 @@ fun main(args: Array<String>) {
 
     if (!self1.identityEquals(self2))
         print("Fail: self1 != self2")
-    else if (name != "objc.SomeClass\$object")
+    else if (name != "objc.SomeClass\$Companion")
         print("Fail name: $name")
     else
         print("OK")

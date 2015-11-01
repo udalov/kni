@@ -2,6 +2,7 @@
 <project version="4">
   <component name="CompilerConfiguration">
     <option name="DEFAULT_COMPILER" value="Javac" />
+    <option name="BUILD_PROCESS_HEAP_SIZE" value="1024" />
     <resourceExtensions />
     <wildcardResourcePatterns>
       <entry name="!?*.java" />

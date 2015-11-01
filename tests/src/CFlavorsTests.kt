@@ -36,7 +36,11 @@ open class ObjCGeneratedTest : ObjCTest() {
         val mainClasses = File(tmpdir, "main")
         Assert.assertTrue(reportIfError(compileKotlin(listOf(kotlinSource), mainClasses, kotlinLibs + stubClasses)))
 
-        val result = runKotlin(listOf("test.TestPackage"), listOf(mainClasses, stubClasses) + kotlinLibs, libPath = tmpdir)
+        val result = runKotlin(
+                listOf("test.${fileFacadeName(source)}"),
+                listOf(mainClasses, stubClasses) + kotlinLibs,
+                libPath = tmpdir
+        )
         Assert.assertTrue(reportIfError(result))
         Assert.assertEquals("OK", result.second.trim())
     }
@@ -71,8 +75,14 @@ open class CPlusPlusGeneratedTest : CPlusPlusTest() {
         val mainClasses = File(tmpdir, "main")
         Assert.assertTrue(reportIfError(compileKotlin(listOf(kotlinSource), mainClasses, kotlinLibs + stubClasses)))
 
-        val result = runKotlin(listOf("test.TestPackage"), listOf(mainClasses, stubClasses) + kotlinLibs, libPath = tmpdir)
+        val result = runKotlin(
+                listOf("test.${fileFacadeName(source)}"),
+                listOf(mainClasses, stubClasses) + kotlinLibs,
+                libPath = tmpdir
+        )
         Assert.assertTrue(reportIfError(result))
         Assert.assertEquals("OK", result.second.trim())
     }
 }
+
+private fun fileFacadeName(source: String) = source.substringAfterLast("/").capitalize().replace(".kt", "Kt")

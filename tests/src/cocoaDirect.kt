@@ -1,4 +1,3 @@
-
 package org.jetbrains.kni.tests
 
 import org.jetbrains.kni.indexer.IndexerOptions
@@ -20,7 +19,7 @@ class CocoaDirectTests : ObjCTest(idxOpts = IndexerOptions(Language.OBJC, debugD
         val mainClasses = File(tmpdir, "main")
         Assert.assertTrue(reportIfError(compileKotlin(listOf(kotlinSource), mainClasses, kotlinLibs + stubClasses)))
 
-        val result = runKotlin(listOf("test.TestPackage"), listOf(mainClasses, stubClasses) + kotlinLibs, libPath = tmpdir)
+        val result = runKotlin(listOf("test.CocoaDirectTestKt"), listOf(mainClasses, stubClasses) + kotlinLibs, libPath = tmpdir)
         Assert.assertTrue(reportIfError(result))
         Assert.assertEquals("OK", result.second.trim())
     }

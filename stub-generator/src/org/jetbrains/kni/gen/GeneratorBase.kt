@@ -37,14 +37,14 @@ abstract class GeneratorBase(
 
     open fun startFile(out: Printer, sourceFile: String) {
         out.println("// generated from \"$sourceFile\"").ln()
-        out.println("[file: suppress(\"UNCHECKED_CAST\")]").ln()
+        out.println("@file: Suppress(\"UNCHECKED_CAST\")").ln()
         genPackage(out)
     }
 
     fun genInteropConfig(out: Printer) {
         out.println("object interopConfig {")
-           .pushoneln("public var nativeLibraryPath: String = \"${nativeLib.path}\"")
-           .println("}")
+                .pushoneln("var nativeLibraryPath: String = \"${nativeLib.path}\"")
+                .println("}")
     }
 
     fun genPackage(out: Printer) {
@@ -112,8 +112,8 @@ class Namer(translationUnit: NativeIndex.TranslationUnit, outputFile: File, val 
             val protocolName = protocol.name
             var name = protocolName
             if (name in existingNames) {
-                // Since Objective-C classes and protocols exist in different namespaces and Kotlin classes and traits
-                // don't, we invent a new name here for the trait when a class with the same name exists already
+                // Since Objective-C classes and protocols exist in different namespaces but Kotlin classes and interfaces don't,
+                // we invent a new name here for the interface when a class with the same name exists already
                 // TODO: handle collisions (where both classes X and XProtocol and a protocol X exist)
                 name = protocolName + "Protocol"
             }

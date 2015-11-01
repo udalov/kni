@@ -1,7 +1,5 @@
-
 package test
 
-import kotlin.*
 import jnr.ffi.types.*
 
 fun main(args: Array<String>) {

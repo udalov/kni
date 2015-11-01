@@ -30,7 +30,7 @@ class CPPGenerator(
                         parseType(it.type, options, LexicalScope.General)
                     }
                 }).filterIsInstance<FunctionType>().distinct().toSet()
-        out.println("\npublic trait ${namer.cFunctionsInterfaceName()} {")
+        out.println("\ninterface ${namer.cFunctionsInterfaceName()} {")
         out.push()
         genFuncProxies(out, funcParams)
         out.println()
@@ -44,18 +44,20 @@ class CPPGenerator(
         out.println("}").ln()
         // generate extension methods that accept directly kotlin lambdas
         genCFunctionExts(out, translationUnit, funcParams, (structs + funcParams).toHashSet(), "${namer.cFunctionsInterfaceName()}.")
-        out.println("\npublic fun get_${namer.cFunctionsInterfaceName()}(libName: String): ${namer.cFunctionsInterfaceName()} = jnr.ffi.LibraryLoader.create(javaClass<${namer.cFunctionsInterfaceName()}>()).load(libName)\n")
+        out.println("\nfun get_${namer.cFunctionsInterfaceName()}(libName: String): ${namer.cFunctionsInterfaceName()} = jnr.ffi.LibraryLoader.create(${namer.cFunctionsInterfaceName()}::class.java).load(libName)\n")
     }
 
-    public fun genFuncProxies(out: Printer, funcs: Set<FunctionType>) {
-        if (options.runtime == InteropRuntime.JNR)
-            for (fn in funcs)
-                out.println("public trait ${namer.funcProxyName(fn.name)} {")
-                   .push()
-                   .println("jnr.ffi.annotations.Delegate")
-                   .println("public ${proxyInvokeSignature(fn)}")
-                   .pop()
-                   .println("}").ln()
+    fun genFuncProxies(out: Printer, funcs: Set<FunctionType>) {
+        if (options.runtime == InteropRuntime.JNR) {
+            for (fn in funcs) {
+                out.println("interface ${namer.funcProxyName(fn.name)} {")
+                        .push()
+                        .println("@jnr.ffi.annotations.Delegate")
+                        .println(proxyInvokeSignature(fn))
+                        .pop()
+                        .println("}").ln()
+            }
+        }
     }
 
     private fun funcTypeParamsList(fn: FunctionType, withTypes: Boolean, typeMapper: (Type) -> Type): String =
@@ -77,15 +79,15 @@ class CPPGenerator(
                      (t is JNRStructPointerType && t.pointee is RecordType && t.pointee !in ifaceTypes)) JNRStructPointerType()
             else t }
 
-        out.println("public class ${struct.name}(runtime: jnr.ffi.Runtime) : jnr.ffi.Struct(runtime) {")
+        out.println("class ${struct.name}(runtime: jnr.ffi.Runtime) : jnr.ffi.Struct(runtime) {")
         out.push()
         for (field in struct.fieldList) {
             val t = typeMapper(parseType(field.type, options, LexicalScope.Record))
             // workaround for KT-7051
             // \todo remove then fixed
             if (t is JNRStructFunctionType)
-                out.println("[suppress(\"INVISIBLE_MEMBER\", \"INVISIBLE_REFERENCE\")]")
-            out.println("public var ${field.name}: ${t.getExpr(typeMapper)} = ${t.defaultVal}")
+                out.println("@Suppress(\"INVISIBLE_MEMBER\", \"INVISIBLE_REFERENCE\")")
+            out.println("var ${field.name}: ${t.getExpr(typeMapper)} = ${t.defaultVal}")
         }
         out.pop()
         out.println("}").ln()
@@ -98,12 +100,13 @@ class CPPGenerator(
         }
     }
 
-    private fun genCFunctionExts(out: Printer,
-                                 translationUnit: NativeIndex.TranslationUnit,
-                                 funcParams: Set<FunctionType>,
-                                 ifaceTypes: Set<Type>,
-                                 extPrefix: String) {
-
+    private fun genCFunctionExts(
+            out: Printer,
+            translationUnit: NativeIndex.TranslationUnit,
+            funcParams: Set<FunctionType>,
+            ifaceTypes: Set<Type>,
+            extPrefix: String
+    ) {
         // \todo coded duplication in makeFunSignature
         val typeMapper = { t: Type ->
             if (t is FunctionType && t in funcParams) makePrefixed(SimpleType(namer.funcProxyName(t.name)), extPrefix)
@@ -131,7 +134,7 @@ class CPPGenerator(
                     }
                 }
                 .forEach {
-                    out.println("public ${makeFunSignature(it, hashSetOf(), ifaceTypes, extPrefix)} = ")
+                    out.println("${makeFunSignature(it, hashSetOf(), ifaceTypes, extPrefix)} = ")
                             .pushoneln("${namer.cFunctionName(it)}${it.parameterList
                                     .mapIndexed { i, p -> mapParam(i, p) }
                                     .joinToString(separator = ", ", prefix = "(", postfix = ")")}")

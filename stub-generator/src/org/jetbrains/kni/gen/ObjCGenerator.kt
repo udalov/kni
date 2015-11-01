@@ -47,10 +47,10 @@ class ObjCGenerator(
     fun genProtocol(protocol: NativeIndex.ObjCProtocol) {
         val out = getOutput(protocol.locationFile)
         out.println()
-        out.println("trait ${namer.protocolName(protocol.name)} {")
+        out.println("interface ${namer.protocolName(protocol.name)} {")
            .push()
             // TODO: methods
-           .println("trait metaclass")
+           .println("interface metaclass")
            .pop()
            .println("}")
     }
@@ -58,7 +58,7 @@ class ObjCGenerator(
     fun genCategory(category: NativeIndex.ObjCCategory) {
         val out = getOutput(category.locationFile)
         out.println()
-        out.println("trait ${namer.categoryName(category.name)} : IObjCObject {").push()
+        out.println("interface ${namer.categoryName(category.name)} : IObjCObject {").push()
 
         for (method in category.methodList.filter { !it.classMethod && it.function.name !in skipMethodsNames }) {
             genObjCFunction(
@@ -70,7 +70,7 @@ class ObjCGenerator(
             out.println()
         }
 
-        out.print("trait metaclass : IObjCObject")
+        out.print("interface metaclass : IObjCObject")
         val catMetaMethods = category.methodList.filter { it.classMethod && it.function.name !in skipMethodsNames }
         if (catMetaMethods.any()) {
             out.println(" {").push()
@@ -107,7 +107,7 @@ class ObjCGenerator(
                 protocols.map { namer.protocolName(it) } +
                 categories.map { namer.categoryName(it) }
 
-        out.println("public open class ${klass.name}(pointer: Long) ${baseList.joinToString(separator = ", ", prefix = ": ")} {")
+        out.println("open class ${klass.name}(pointer: Long) ${baseList.joinToString(separator = ", ", prefix = ": ")} {")
         out.push()
 
         val methods = klass.methodList.filter { it.function.name !in skipMethodsNames }
@@ -208,7 +208,7 @@ class ObjCGenerator(
         val isUnit = (returnType == UnitType)
         out.println("${
             when (qualifier) {
-                OverrideQualifier.open -> "public open "
+                OverrideQualifier.open -> "open "
                 OverrideQualifier.override -> "override "
                 else -> ""
             }}${signature ?: makeFunSignature(function, hashSetOf(), hashSetOf())}${
@@ -241,19 +241,21 @@ class ObjCGenerator(
         }
     }
 
-    private fun genMetaClass(out: Printer,
-                             klass: NativeIndex.ObjCClass,
-                             allCategories: HashMap<String, NativeIndex.ObjCCategory>,
-                             methods: List<NativeIndex.ObjCMethod>,
-                             baseMethods: Collection<Pair<String, NativeIndex.ObjCMethod>>) {
+    private fun genMetaClass(
+            out: Printer,
+            klass: NativeIndex.ObjCClass,
+            allCategories: HashMap<String, NativeIndex.ObjCCategory>,
+            methods: List<NativeIndex.ObjCMethod>,
+            baseMethods: Collection<Pair<String, NativeIndex.ObjCMethod>>
+    ) {
         val baseList =
                 (if (klass.hasBaseClass())
                     listOf(klass.baseClass + ".metaclass")
                 else listOf("IObjCObject")) +
-                klass.protocolList.map { namer.protocolName(it) + ".metaclass" } +
-                klass.categoryList.filter { allCategories.containsKey(it) }.map { namer.categoryName(it) + ".metaclass" }
+                        klass.protocolList.map { namer.protocolName(it) + ".metaclass" } +
+                        klass.categoryList.filter { allCategories.containsKey(it) }.map { namer.categoryName(it) + ".metaclass" }
 
-        out.println("trait metaclass : ${baseList.joinToString(", ")} {")
+        out.println("interface metaclass : ${baseList.joinToString(", ")} {")
         out.push()
 
         genMethods(out, methods, baseMethods)

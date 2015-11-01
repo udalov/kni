@@ -168,6 +168,7 @@
             <fileset dir="${runtime.objc.target}">
                 <include name="**/*.class"/>
                 <include name="**/*.dylib"/>
+                <include name="**/*.kotlin_module"/>
             </fileset>
 
             <manifest>

@@ -3,7 +3,7 @@ package test
 import kni.objc.*
 import objc.*
 
-[suppress("EQUALITY_NOT_APPLICABLE")] // TODO: KT-4071
+@Suppress("EQUALITY_NOT_APPLICABLE") // TODO: KT-4071
 fun test(): String {
     val nil = A.getNilObject()
     if (nil != ObjCObject.NIL)
