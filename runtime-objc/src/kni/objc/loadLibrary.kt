@@ -1,10 +1,10 @@
 package kni.objc
 
-import java.util.HashSet
+import java.util.*
 
 private val loadedLibraries = HashSet<String>()
 
-public fun loadLibrary(fileName: String) {
+fun loadLibrary(fileName: String) {
     if (loadedLibraries.add(fileName)) {
         Native.dlopen(fileName)
     }

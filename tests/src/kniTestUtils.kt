@@ -4,7 +4,7 @@ import java.io.File
 import java.nio.file.Paths
 import kotlin.concurrent.thread
 
-public fun runProcess(command: Collection<String>): Pair<Boolean, String> {
+fun runProcess(command: Collection<String>): Pair<Boolean, String> {
     // println(command.joinToString(" "))
     val process = ProcessBuilder(command.toArrayList()).redirectErrorStream(false).start()
     val result = StringBuilder()
@@ -28,17 +28,16 @@ public fun runProcess(command: Collection<String>): Pair<Boolean, String> {
                 else "Process exited with code $exitCode${format_res("result", result.toString())}${format_res("error", error.toString())}")
 }
 
-public fun escape4cli(s: String): String = if (s.contains(" ")) "\"$s\"" else s
+fun escape4cli(s: String): String = if (" " in s) "\"$s\"" else s
 
-
-public fun compileNativeC(source: File, target: File): Pair<Boolean, String> =
+fun compileNativeC(source: File, target: File): Pair<Boolean, String> =
         runProcess(arrayListOf("c++", "--std=c++11", "-fPIC", "-stdlib=libstdc++", "-dynamiclib", source.absolutePath, "-o", target.absolutePath))
 
-public fun compileObjC(source: File, target: File): Pair<Boolean, String> =
+fun compileObjC(source: File, target: File): Pair<Boolean, String> =
     runProcess(arrayListOf("clang", "-ObjC", "-dynamiclib", "-framework", "Foundation", source.absolutePath, "-o", target.absolutePath))
 
 
-public fun compileKotlin(files: Iterable<File>, destination: File, classpath: Collection<File>): Pair<Boolean, String> {
+fun compileKotlin(files: Iterable<File>, destination: File, classpath: Collection<File>): Pair<Boolean, String> {
     val kotlinCompiler = File("lib/kotlinc/lib/kotlin-compiler.jar")
     val javaBin = Paths.get(System.getProperty("java.home"), "bin", "java")
     return runProcess(
@@ -49,7 +48,7 @@ public fun compileKotlin(files: Iterable<File>, destination: File, classpath: Co
     )
 }
 
-public fun runKotlin(commandLine: Iterable<String>, classpath: Iterable<File>, libPath: File? = null): Pair<Boolean, String> {
+fun runKotlin(commandLine: Iterable<String>, classpath: Iterable<File>, libPath: File? = null): Pair<Boolean, String> {
     val baseLibs = classpath.toArrayList()
     baseLibs.add(File("lib/kotlinc/lib/kotlin-runtime.jar"))
     val cp = baseLibs

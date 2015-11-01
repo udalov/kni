@@ -3,17 +3,17 @@ package org.jetbrains.kni.gen
 import org.jetbrains.kni.indexer.NativeIndex.TranslationUnit
 import java.io.File
 
-public enum class InteropRuntime {
+enum class InteropRuntime {
     ObjC,
     JNR
 }
 
-public enum class LexicalScope {
+enum class LexicalScope {
     General,
     Record
 }
 
-public enum class CharStringType {
+enum class CharStringType {
     Ascii,
     Utf8
 }
@@ -24,12 +24,12 @@ enum class OverrideQualifier {
     `override`
 }
 
-public class GeneratorOptions(
-        public val runtime: InteropRuntime,
-        public val charStringType: CharStringType = CharStringType.Ascii
-) {}
+class GeneratorOptions(
+        val runtime: InteropRuntime,
+        val charStringType: CharStringType = CharStringType.Ascii
+)
 
-public fun generateStub(
+fun generateStub(
         translationUnit: TranslationUnit,
         nativeLib: File,
         outputFile: File,
@@ -37,13 +37,15 @@ public fun generateStub(
         basePackageName: String = ""
 ): Iterable<File> {
 
-    val namer = Namer(translationUnit, outputFile,
-                      if (basePackageName.length != 0) basePackageName
-                      else when (generatorOptions.runtime) {
-                          InteropRuntime.ObjC -> "objc"
-                          InteropRuntime.JNR -> "native"
-                          else -> error("Unknown runtime ${generatorOptions.runtime}")
-                      } )
+    val namer = Namer(
+            translationUnit, outputFile,
+            if (basePackageName.length != 0) basePackageName
+            else when (generatorOptions.runtime) {
+                InteropRuntime.ObjC -> "objc"
+                InteropRuntime.JNR -> "native"
+                else -> error("Unknown runtime ${generatorOptions.runtime}")
+            }
+    )
 
     val outputPath = if (outputFile.isDirectory) outputFile.path else outputFile.getParent()
 
@@ -56,4 +58,3 @@ public fun generateStub(
     generator.generate(translationUnit)
     return generator.closeOutputs()
 }
-

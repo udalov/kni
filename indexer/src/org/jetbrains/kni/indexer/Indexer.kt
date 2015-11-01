@@ -34,14 +34,14 @@ data class IndexerOptions(
     }
 }
 
-public fun buildNativeIndex(headerFile: File, options: IndexerOptions): TranslationUnit {
+fun buildNativeIndex(headerFile: File, options: IndexerOptions): TranslationUnit {
 //    val args: ArrayList<String> = arrayListOf(headerFile.getPath())
 //    args.addAll(options.toParams())
     val bytes = IndexerNative.buildNativeIndex((options.toParams() + headerFile.path).toTypedArray())
     return TranslationUnit.parseFrom(bytes)
 }
 
-public fun buildNativeIndexCli(kniidxPath: String, headerFile: File, options: IndexerOptions, useBinary: Boolean = false): TranslationUnit {
+fun buildNativeIndexCli(kniidxPath: String, headerFile: File, options: IndexerOptions, useBinary: Boolean = false): TranslationUnit {
     val rt = Runtime.getRuntime()
     val kniidx = if (kniidxPath.length == 0) File("kniidx") else File(kniidxPath, "kniidx")
     if (!kniidx.exists() || !kniidx.isFile || !kniidx.canExecute())

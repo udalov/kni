@@ -58,7 +58,7 @@ interface LastLogKeeper {
     val lastLog: String
 }
 
-class ErrorReporter(public val keeper: LastLogKeeper) : TestWatcher() {
+class ErrorReporter(val keeper: LastLogKeeper) : TestWatcher() {
     override fun failed(e: Throwable?, description: Description?) {
         println(keeper.lastLog)
         super.failed(e, description)
@@ -86,7 +86,7 @@ class SimpleCHeaderCheck : LastLogKeeper, CPlusPlusTest() {
 
     // doesn't work due to KT-3441
     // \todo reenable after fix or find a workaround
-    // @Rule public val onFailed : ErrorReporter = ErrorReporter(this)
+    // @Rule val onFailed : ErrorReporter = ErrorReporter(this)
 
     @Theory fun SimpleArgsFuncs(@ForAll(sampleSize = 10) @From(SimpleCHeaderGenerator::class) cunit: CSimpleTransUnit) {
         val indexerOptions = IndexerOptions(Language.CPP, verbose = true, debugDump = false)

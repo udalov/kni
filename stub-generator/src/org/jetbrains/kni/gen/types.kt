@@ -157,8 +157,10 @@ object primitiveTypesMapper {
             "F"  to JNRStructFloat,
             "D"  to JNRStructDouble
     )
-    public fun get_types(options: GeneratorOptions, scope: LexicalScope): Map<String, Type> =
-            if (options.runtime == InteropRuntime.JNR && scope == LexicalScope.Record) jnrStructTypes else generalTypes
+
+    fun get_types(options: GeneratorOptions, scope: LexicalScope): Map<String, Type> =
+            if (options.runtime == InteropRuntime.JNR && scope == LexicalScope.Record) jnrStructTypes
+            else generalTypes
 }
 
 
