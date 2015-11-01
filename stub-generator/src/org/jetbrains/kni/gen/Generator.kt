@@ -4,23 +4,23 @@ import org.jetbrains.kni.indexer.NativeIndex.TranslationUnit
 import java.io.File
 
 public enum class InteropRuntime {
-    ObjC
+    ObjC,
     JNR
 }
 
 public enum class LexicalScope {
-    General
+    General,
     Record
 }
 
 public enum class CharStringType {
-    Ascii
+    Ascii,
     Utf8
 }
 
 enum class OverrideQualifier {
-    none
-    `open`
+    none,
+    `open`,
     `override`
 }
 
@@ -38,14 +38,14 @@ public fun generateStub(
 ): Iterable<File> {
 
     val namer = Namer(translationUnit, outputFile,
-                      if (basePackageName.length() != 0) basePackageName
+                      if (basePackageName.length != 0) basePackageName
                       else when (generatorOptions.runtime) {
                           InteropRuntime.ObjC -> "objc"
                           InteropRuntime.JNR -> "native"
                           else -> error("Unknown runtime ${generatorOptions.runtime}")
                       } )
 
-    val outputPath = if (outputFile.isDirectory()) outputFile.getPath() else outputFile.getParent()
+    val outputPath = if (outputFile.isDirectory) outputFile.path else outputFile.getParent()
 
     var generator: GeneratorBase = when (generatorOptions.runtime) {
         InteropRuntime.ObjC -> ObjCGenerator(outputPath, namer, nativeLib, generatorOptions)

@@ -1,11 +1,11 @@
 package org.jetbrains.kni.gen
 
 import org.jetbrains.kni.indexer.NativeIndex
-import org.jetbrains.kotlin.renderer.KeywordStringsGenerated
 import java.io.File
 import java.io.FileWriter
 import java.nio.file.Paths
-import java.util.HashMap
+import java.util.*
+import kotlin.reflect.jvm.internal.impl.renderer.KeywordStringsGenerated
 
 abstract class GeneratorBase(
         val targetPath: String,
@@ -13,9 +13,8 @@ abstract class GeneratorBase(
         val nativeLib: File,
         val options: GeneratorOptions
 ) {
-
-    data class FilePrinter(targetPath: String, file_name: String) {
-        val file: File = File(targetPath, file_name)
+    class FilePrinter(targetPath: String, fileName: String) {
+        val file: File = File(targetPath, fileName)
         val fileWriter: FileWriter = FileWriter(file)
         val printer: Printer = Printer(fileWriter)
     }
@@ -30,8 +29,8 @@ abstract class GeneratorBase(
             }).printer
 
     fun closeOutputs() : Collection<File> {
-        outputs.forEach { it.getValue().fileWriter.close() }
-        val res = outputs.map { it.getValue().file }.toArrayList()
+        outputs.forEach { it.value.fileWriter.close() }
+        val res = outputs.map { it.value.file }.toArrayList()
         outputs.clear()
         return res
     }
@@ -44,7 +43,7 @@ abstract class GeneratorBase(
 
     fun genInteropConfig(out: Printer) {
         out.println("object interopConfig {")
-           .pushoneln("public var nativeLibraryPath: String = \"${nativeLib.getPath()}\"")
+           .pushoneln("public var nativeLibraryPath: String = \"${nativeLib.path}\"")
            .println("}")
     }
 
@@ -52,36 +51,45 @@ abstract class GeneratorBase(
         out.println("package ${namer.packageName()}").ln()
     }
 
-    public fun makeFunSignature(function: NativeIndex.Function, funcParams: Set<FunctionType> = setOf(), ifaceTypes: Set<Type> = setOf(), extPrefix: String = ""): String {
-
+    fun makeFunSignature(
+            function: NativeIndex.Function,
+            funcParams: Set<FunctionType> = setOf(),
+            ifaceTypes: Set<Type> = setOf(),
+            extPrefix: String = ""
+    ): String {
         val typeMapper = { t: Type ->
-            if (t is FunctionType && t in funcParams) makePrefixed(SimpleType(namer.funcProxyName(t.name)), extPrefix)
-            else if (t in ifaceTypes) makePrefixed(t, extPrefix)
-            // assuming those - externs
-            // \todo - doublecheck
-            else if (t is RecordType && t !in ifaceTypes) JNROpaquePointer
-            else t }
+            when {
+                t is FunctionType && t in funcParams -> makePrefixed(SimpleType(namer.funcProxyName(t.name)), extPrefix)
+                t in ifaceTypes -> makePrefixed(t, extPrefix)
+                // assuming those - externs
+                // \todo - doublecheck
+                t is RecordType && t !in ifaceTypes -> JNROpaquePointer
+                else -> t
+            }
+        }
 
-        val returnType = parseType(function.getReturnType(), options, LexicalScope.General)
+        val returnType = parseType(function.returnType, options, LexicalScope.General)
 
         val paramNames = hashSetOf<String>()
 
         // in ObjC it is possible to have parameters with the same name
         // \todo find out whether it is possible to name params by appropriate selector part
-        fun makeParamName(p: NativeIndex.Function.Parameter, idx: Int) : String {
-            var name = namer.parameterName(p.getName(), idx)
+        fun makeParamName(p: NativeIndex.Function.Parameter, idx: Int): String {
+            var name = namer.parameterName(p.name, idx)
             return if (paramNames.add(name)) name else "${name}_$idx"
         }
 
         return "fun $extPrefix${if (options.runtime == InteropRuntime.ObjC) namer.objCMethodName(function) else namer.cFunctionName(function)}" +
-            function.getParameterList()
-                    .mapIndexed { i, p -> makeParamName(p, i) + ": " + typeMapper(parseType(p.getType(), options, LexicalScope.General)).getExpr(typeMapper) }
-                    .joinToString(separator = ", ", prefix = "(", postfix = ")") +
-            ": ${typeMapper(returnType).getExpr()}"
+                function.parameterList
+                        .mapIndexed { i, p ->
+                            makeParamName(p, i) + ": " + typeMapper(parseType(p.type, options, LexicalScope.General)).getExpr(typeMapper)
+                        }
+                        .joinToString(separator = ", ", prefix = "(", postfix = ")") +
+                ": ${typeMapper(returnType).getExpr()}"
     }
 
     open fun generate(translationUnit: NativeIndex.TranslationUnit) {
-        val out = getOutput(translationUnit.getName())
+        val out = getOutput(translationUnit.name)
         out.println()
         genInteropConfig(out)
     }
@@ -90,18 +98,18 @@ abstract class GeneratorBase(
 
 class Namer(translationUnit: NativeIndex.TranslationUnit, outputFile: File, val basePackageName: String = "") {
     private val protocolNames = HashMap<String, String>()
-    val name = translationUnit.getName()
-    val shortName = File(name).getName().substringBefore(".")
-    val multifile = outputFile.isDirectory()
-    val mainOutputFile = if (multifile) "${shortName}.kt" else outputFile.getName()
+    val name = translationUnit.name
+    val shortName = File(name).name.substringBefore(".")
+    val multifile = outputFile.isDirectory
+    val mainOutputFile = if (multifile) "$shortName.kt" else outputFile.name
 
     val invalidIdChars = setOf('<', '>', '*')
 
     private fun calculateProtocolNames(translationUnit: NativeIndex.TranslationUnit) {
-        val existingNames = translationUnit.getClass_List().map { it.getName() }.toMutableSet()
+        val existingNames = translationUnit.class_List.map { it.name }.toMutableSet()
 
-        for (protocol in translationUnit.getProtocolList()) {
-            val protocolName = protocol.getName()
+        for (protocol in translationUnit.protocolList) {
+            val protocolName = protocol.name
             var name = protocolName
             if (name in existingNames) {
                 // Since Objective-C classes and protocols exist in different namespaces and Kotlin classes and traits
@@ -121,11 +129,11 @@ class Namer(translationUnit: NativeIndex.TranslationUnit, outputFile: File, val 
 
     fun cFunctionsInterfaceName(): String {
         val p = Paths.get(name)
-        return "iface_${p.getFileName().toString().replaceAll("\\.","_")}"
+        return "iface_${p.fileName.toString().replace('.', '_')}"
     }
 
     fun protocolName(name: String): String {
-        return protocolNames[name]
+        return protocolNames[name]!!
     }
 
     fun categoryName(name: String): String {
@@ -134,14 +142,14 @@ class Namer(translationUnit: NativeIndex.TranslationUnit, outputFile: File, val 
         return name.replace('+', '_')
     }
 
-    fun cFunctionName(func: NativeIndex.Function): String = escape(func.getName())
+    fun cFunctionName(func: NativeIndex.Function): String = escape(func.name)
 
     fun objCMethodName(func: NativeIndex.Function): String {
         // Objective-C method names are usually of form 'methodName:withParam:andOtherParam:'
         // The scheme should be preserved to avoid ambiguities
         // Here we replace ':' with '_', which may lead to name conflicts as well
         // \todo consider better (re)naming scheme
-        return escape(func.getName().replaceAll(":+$","").replace(':', '_'))
+        return escape(func.name.trimEnd(':').replace(':', '_'))
     }
 
     fun parameterName(name: String, idx: Int): String {
@@ -152,17 +160,17 @@ class Namer(translationUnit: NativeIndex.TranslationUnit, outputFile: File, val 
     fun funcProxyName(name: String): String = escape("fn_$name")
 
     private fun escape(name: String): String {
-        val fname: String = name.filter { it !in invalidIdChars };
-        return when (fname) {
-            in KeywordStringsGenerated.KEYWORDS -> "`$fname`"
-            else -> fname
+        val filteredName = name.filter { it !in invalidIdChars }
+        return when (filteredName) {
+            in KeywordStringsGenerated.KEYWORDS -> "`$filteredName`"
+            else -> filteredName
         }
     }
 
-    fun targetFileName(source_file: String): String =
+    fun targetFileName(sourceFile: String): String =
         // \todo consider separating same names from different source dirs (for now it is not too important though)
-        if (!multifile || source_file.length() == 0|| source_file == name) mainOutputFile
-        else File(source_file).getName().substringBeforeLast(".") + ".kt"
+        if (!multifile || sourceFile.length == 0|| sourceFile == name) mainOutputFile
+        else File(sourceFile).name.substringBeforeLast(".") + ".kt"
 
     fun packageName(): String = if (basePackageName.isEmpty()) shortName else basePackageName
 }

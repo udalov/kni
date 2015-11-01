@@ -19,27 +19,27 @@ class CPPGenerator(
     override fun generate(translationUnit: NativeIndex.TranslationUnit) {
         // \todo implement multifile output as for ObjC
         super.generate(translationUnit)
-        val out = getOutput(translationUnit.getName())
+        val out = getOutput(translationUnit.name)
         val funcParams =
-                (translationUnit.getFunctionList()
-                         .flatMap { it.getParameterList().map { parseType(it.getType(), options, LexicalScope.General) }}
-                 +
-                 translationUnit.getStructList()
-                         .flatMap { it.getFieldList().map { parseType(it.getType(), options, LexicalScope.General) }}
-                )
-                        .filter { it is FunctionType }
-                        .map { it as FunctionType }
-                        .distinct()
+                (translationUnit.functionList.flatMap {
+                    it.parameterList.map {
+                        parseType(it.type, options, LexicalScope.General)
+                    }
+                } + translationUnit.structList.flatMap {
+                    it.fieldList.map {
+                        parseType(it.type, options, LexicalScope.General)
+                    }
+                }).filterIsInstance<FunctionType>().distinct().toSet()
         out.println("\npublic trait ${namer.cFunctionsInterfaceName()} {")
         out.push()
         genFuncProxies(out, funcParams)
         out.println()
         val structs = hashSetOf<Type>()
-        for (it in translationUnit.getStructList())
+        for (it in translationUnit.structList)
         // \todo support forward defs
             structs.add( genCStruct(out, it, funcParams, structs))
         out.println()
-        genCFunctions(out, translationUnit.getFunctionList().distinct(), funcParams, structs)
+        genCFunctions(out, translationUnit.functionList.distinct(), funcParams, structs)
         out.pop()
         out.println("}").ln()
         // generate extension methods that accept directly kotlin lambdas
@@ -77,19 +77,19 @@ class CPPGenerator(
                      (t is JNRStructPointerType && t.pointee is RecordType && t.pointee !in ifaceTypes)) JNRStructPointerType()
             else t }
 
-        out.println("public class ${struct.getName()}(runtime: jnr.ffi.Runtime) : jnr.ffi.Struct(runtime) {")
+        out.println("public class ${struct.name}(runtime: jnr.ffi.Runtime) : jnr.ffi.Struct(runtime) {")
         out.push()
-        for (field in struct.getFieldList()) {
-            val t = typeMapper(parseType(field.getType(), options, LexicalScope.Record))
+        for (field in struct.fieldList) {
+            val t = typeMapper(parseType(field.type, options, LexicalScope.Record))
             // workaround for KT-7051
             // \todo remove then fixed
             if (t is JNRStructFunctionType)
                 out.println("[suppress(\"INVISIBLE_MEMBER\", \"INVISIBLE_REFERENCE\")]")
-            out.println("public var ${field.getName()}: ${t.getExpr(typeMapper)} = ${t.defaultVal}")
+            out.println("public var ${field.name}: ${t.getExpr(typeMapper)} = ${t.defaultVal}")
         }
         out.pop()
         out.println("}").ln()
-        return RecordType(struct.getName())
+        return RecordType(struct.name)
     }
 
     fun genCFunctions(out: Printer, functions: Iterable<NativeIndex.Function>, funcTypes: Set<FunctionType>, ifaceTypes: Set<Type>) {
@@ -114,26 +114,28 @@ class CPPGenerator(
             else t }
 
         fun mapParam(idx: Int, p: NativeIndex.Function.Parameter): String {
-            val type = parseType(p.getType(), options, LexicalScope.General)
-            val name = namer.parameterName(p.getName(), idx)
+            val type = parseType(p.type, options, LexicalScope.General)
+            val name = namer.parameterName(p.name, idx)
             return if (type is FunctionType && type in funcParams)
                 "object : ${namer.cFunctionsInterfaceName()}.${namer.funcProxyName(type.name)} { override ${proxyInvokeSignature(type, typeMapper)} = $name(${funcTypeParamsList(type, false, { it })})}"
             else
                 name
         }
 
-        translationUnit.getFunctionList()
+        translationUnit.functionList
                 .filter {
-                    it.getParameterList()
-                            .map { parseType(it.getType(), options, LexicalScope.General) }
-                            .any { it is FunctionType && it in funcParams }
+                    it.parameterList.map {
+                        parseType(it.type, options, LexicalScope.General)
+                    }.any {
+                        it is FunctionType && it in funcParams
+                    }
                 }
                 .forEach {
                     out.println("public ${makeFunSignature(it, hashSetOf(), ifaceTypes, extPrefix)} = ")
-                       .pushoneln("${namer.cFunctionName(it)}${it.getParameterList()
-                                                                 .mapIndexed { i, p -> mapParam(i, p) }
-                                                                 .joinToString(separator = ", ", prefix = "(", postfix = ")")}")
-                       .ln()
+                            .pushoneln("${namer.cFunctionName(it)}${it.parameterList
+                                    .mapIndexed { i, p -> mapParam(i, p) }
+                                    .joinToString(separator = ", ", prefix = "(", postfix = ")")}")
+                            .ln()
                 }
     }
 }

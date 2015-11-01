@@ -3,8 +3,8 @@ package kni.objc;
 import java.io.File;
 import java.io.InputStream;
 
-import static kotlin.io.IoPackage.readBytes;
-import static kotlin.io.IoPackage.writeBytes;
+import static kotlin.io.ByteStreamsKt.readBytes;
+import static kotlin.io.FilesKt.writeBytes;
 
 @SuppressWarnings("UnusedDeclaration")
 public class Native {
@@ -14,11 +14,17 @@ public class Native {
     public static final String KNI_OBJC_RUNTIME_LIBRARY_PATH = "/libKNIObjCRuntime.dylib";
 
     static {
-        try (InputStream resource = Native.class.getResourceAsStream(KNI_OBJC_RUNTIME_LIBRARY_PATH)) {
-            byte[] bytes = readBytes(resource, resource.available());
-            File dylib = File.createTempFile("libKNIObjCRuntime", ".dylib");
-            writeBytes(dylib, bytes);
-            System.load(dylib.getAbsolutePath());
+        try {
+            InputStream resource = Native.class.getResourceAsStream(KNI_OBJC_RUNTIME_LIBRARY_PATH);
+            try {
+                byte[] bytes = readBytes(resource, resource.available());
+                File dylib = File.createTempFile("libKNIObjCRuntime", ".dylib");
+                writeBytes(dylib, bytes);
+                System.load(dylib.getAbsolutePath());
+            }
+            finally {
+                resource.close();
+            }
         }
         catch (Throwable e) {
             throw new IllegalStateException(

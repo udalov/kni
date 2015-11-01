@@ -1,3 +1,3 @@
 package kni.objc
 
-public class ObjCSelector internal(override val peer: Long) : Pointer<Any>(peer)
+class ObjCSelector internal constructor(override val peer: Long) : Pointer<Any>(peer)

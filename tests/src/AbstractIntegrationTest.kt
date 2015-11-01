@@ -21,23 +21,23 @@ abstract class AbstractIntegrationTest(val indexerOptions: IndexerOptions, val g
         else -> "Unknown"
     }
 
-    protected fun makeStub(cHeader: File,
-                           nativeLib: File,
-                           target: File?,
-                           tempDir: File?,
-                           dumpIdx: Boolean = false,
-                           cliIface: Boolean = false)
-            : File {
-
+    protected fun makeStub(
+            cHeader: File,
+            nativeLib: File,
+            target: File?,
+            tempDir: File?,
+            dumpIdx: Boolean = false,
+            cliIface: Boolean = false
+    ): File {
         val stubTempDir : File = when {
             tempDir != null -> tempDir
-            target != null && target.isDirectory() -> target
+            target != null && target.isDirectory -> target
             else -> Files.createTempDirectory("test").toFile()
         }
         val stubTarget : File = when {
             target == null -> stubTempDir
-            target.isDirectory() -> target
-            else -> File(stubTempDir, target.getPath().substringAfterLast(File.separator))
+            target.isDirectory -> target
+            else -> File(stubTempDir, target.path.substringAfterLast(File.separator))
         }
         val translationUnit = if (cliIface) buildNativeIndexCli("indexer/native/out",cHeader, indexerOptions)
                               else buildNativeIndex(cHeader, indexerOptions)
@@ -46,10 +46,10 @@ abstract class AbstractIntegrationTest(val indexerOptions: IndexerOptions, val g
             srcIndex.writeText(translationUnit.toString())
         }
         var hasErrors = false
-        for (diag in translationUnit.getDiagnosticList())
-            if (diag.getSeverity() > 1) {
-                println("${diagSeverity(diag.getSeverity())} at (${diag.getLine()},${diag.getColumn()}: ${diag.getMessage()}")
-                hasErrors = hasErrors || (diag.getSeverity() > 2)
+        for (diag in translationUnit.diagnosticList)
+            if (diag.severity > 1) {
+                println("${diagSeverity(diag.severity)} at (${diag.line},${diag.column}: ${diag.message}")
+                hasErrors = hasErrors || (diag.severity > 2)
             }
         assert(!hasErrors)
 

@@ -1,5 +1,6 @@
-
 package org.jetbrains.kni.quickchecks
+
+import java.util.*
 
 public data class ValueSample(public val native: String, public val kotlin: String = native)
 
@@ -13,8 +14,8 @@ public class CSimpleFunc(
         public val body: String) {
 
     public val signature: String get() = "$retType $name(${params.map { "${it.type} ${it.name}" }.joinToString(", ")})"
-    public val declaration: String get() = signature + ";"
-    public val definition: String get() = "${signature}{\n$body;\n}"
+    public val declaration: String get() = "$signature;"
+    public val definition: String get() = "$signature{\n$body;\n}"
     public fun testExpression(iface: String): String = "$iface.$name(${params.map { "${it.sample.kotlin}" }.joinToString(", ")})"
     public val testResult: String = retSample.kotlin
 }
@@ -125,7 +126,7 @@ public class CGenGrammar(
 //            "unsigned char"     to { () -> ValueSample("%d".format(getRandomLong(0, java.lang.Byte.MAX_VALUE.toLong())))},
             "unsigned int"      to { val v = getRandomLong(0, java.lang.Short.MAX_VALUE.toLong()); ValueSample("%du".format(v), "%d".format(v))},
             "unsigned long"     to { val v = getRandomLong(0, java.lang.Integer.MAX_VALUE.toLong()); ValueSample("%dul".format(v), "%d".format(v))},
-            "unsigned long long"to { val v = getRandomLong(0, java.lang.Long.MAX_VALUE); ValueSample("%dull".format(v), "%dL".format(v))},
+            "unsigned long long" to { val v = getRandomLong(0, java.lang.Long.MAX_VALUE); ValueSample("%dull".format(v), "%dL".format(v))},
             "unsigned short"    to { val v = getRandomLong(0, java.lang.Short.MAX_VALUE.toLong()); ValueSample("%du".format(v), "%d.toShort()".format(v))}
 //            "wchar_t"           to { () -> val v = getRandomChar(java.lang.Character.MIN_VALUE, '\ucfff'); ValueSample("L'\\u%04x'".format(v.toInt()), "'\\u%04x'".format(v.toInt()))}
     )
@@ -138,46 +139,83 @@ public class CGenGrammar(
     }
 
     private fun getRandomPodType(): String {
-        return podTypes.keySet().drop(getRandomLong(0, podTypes.size().toLong() - 1).toInt()).first()
+        return podTypes.keys.drop(getRandomLong(0, podTypes.size.toLong() - 1).toInt()).first()
     }
 
-    public fun streamValidIds(sizes: Stream<Int>) : Stream<String> =
+    public fun streamValidIds(sizes: Sequence<Int>) : Sequence<String> =
             sizes.map {generateId(it)}
                  .filter { !reservedKeywords.contains(it) }
 
     public fun generateValidId(size: Int) : String =
-        streamValidIds(FunctionSequence<Int>({ size })).first()
+        streamValidIds(FunctionSequence({ size })).first()
 
-    public fun streamUniqueIds() : Stream<String> {
+    public fun streamUniqueIds() : Sequence<String> {
         val ids = hashSetOf<String>()
         return streamValidIds(FunctionSequence({ getRandomLong(1, maxIdentifierSize.toLong()).toInt() }))
                 .filter { if (ids.contains(it)) false else { ids.add(it); true } }
     }
 
-    public fun streamSimpleParams() : Stream<CTypedId> =
-            streamUniqueIds()
-                .map {
-                    val t = podTypes.keySet().drop(getRandomLong(0, podTypes.size().toLong() - 1).toInt()).first()
-                    CTypedId(it, t, podTypes.get(t)!!()) }
+    public fun streamSimpleParams(): Sequence<CTypedId> =
+            streamUniqueIds().map {
+                val t = podTypes.keys.drop(getRandomLong(0, podTypes.size.toLong() - 1).toInt()).first()
+                CTypedId(it, t, podTypes[t]!!())
+            }
 
-    public fun streamSimpleCheckFuncs() : Stream<CSimpleFunc> =
-            streamUniqueIds()
-                .map { func ->
-                    val ret = getRandomPodType()
-                    val retSample = podTypes.get(ret)!!()
-                    val params = streamSimpleParams().take(getRandomLong(1, maxParams.toLong()).toInt()).toArrayList()
-                    CSimpleFunc(func, ret, retSample, params,
+    public fun streamSimpleCheckFuncs(): Sequence<CSimpleFunc> =
+            streamUniqueIds().map { func ->
+                val ret = getRandomPodType()
+                val retSample = podTypes[ret]!!()
+                val params = streamSimpleParams().take(getRandomLong(1, maxParams.toLong()).toInt()).toArrayList()
+                CSimpleFunc(func, ret, retSample, params,
 """
-    ${params.map {"checkEq(\"$func.${it.name}(${it.type})\", ${it.name}, ${it.sample.native});"}.joinToString("\n    ")}
+    ${params.map { "checkEq(\"$func.${it.name}(${it.type})\", ${it.name}, ${it.sample.native});" }.joinToString("\n    ")}
     return ${retSample.native};""")
                 }
 
     public fun generateSimpleTransUnit1(numOfFuncs: Int) : CSimpleTransUnit {
         val baseName = generateValidId(getRandomLong(3, maxIdentifierSize.toLong()).toInt())
-        return CSimpleTransUnit(baseName,
-                                "$baseName.hpp",
-                                "_tests_${baseName}_hpp",
-                                listOf(),
-                                streamSimpleCheckFuncs().take(numOfFuncs).toArrayList())
+        return CSimpleTransUnit(
+                baseName,
+                "$baseName.hpp",
+                "_tests_${baseName}_hpp",
+                listOf(),
+                streamSimpleCheckFuncs().take(numOfFuncs).toArrayList()
+        )
+    }
+}
+
+// TODO: get rid of this, use stdlib instead
+class FunctionSequence<T : Any>(private val producer: () -> T?) : Sequence<T> {
+    override fun iterator(): Iterator<T> = object : Iterator<T> {
+        var nextState: Int = -1 // -1 for unknown, 0 for done, 1 for continue
+        var nextItem: T? = null
+
+        private fun calcNext() {
+            val item = producer()
+            if (item == null) {
+                nextState = 0
+            } else {
+                nextState = 1
+                nextItem = item
+            }
+        }
+
+        override fun next(): T {
+            if (nextState == -1)
+                calcNext()
+            if (nextState == 0)
+                throw NoSuchElementException()
+            val result = nextItem as T
+            // Clean next to avoid keeping reference on yielded instance
+            nextItem = null
+            nextState = -1
+            return result
+        }
+
+        override fun hasNext(): Boolean {
+            if (nextState == -1)
+                calcNext()
+            return nextState == 1
+        }
     }
 }

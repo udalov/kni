@@ -4,8 +4,8 @@ import org.jetbrains.kni.indexer.IndexerOptions
 import org.jetbrains.kni.indexer.Language
 import org.jetbrains.kni.indexer.buildNativeIndex
 import org.junit.Assert
+import org.junit.Test
 import java.io.File
-import org.junit.Test as test
 
 class IndexerTest {
     private fun doTest(content: String, expected: String) {
@@ -18,7 +18,7 @@ class IndexerTest {
         Assert.assertEquals(expected, actual)
     }
 
-    test fun simpleClass() {
+    @Test fun simpleClass() {
         doTest("""
 @interface A
 @end
@@ -32,7 +32,7 @@ class {
         )
     }
 
-    test fun simpleCategory() {
+    @Test fun simpleCategory() {
         doTest("""
 @interface A
 @end

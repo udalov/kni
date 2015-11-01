@@ -1,4 +1,3 @@
-
 package org.jetbrains.kni.quickchecks
 
 import com.pholser.junit.quickcheck.ForAll
@@ -23,10 +22,8 @@ import org.junit.runner.Description
 import org.junit.runner.RunWith
 import java.io.File
 import java.nio.file.Files
-import kotlin.properties.Delegates
 
-
-public class SimpleCHeaderGenerator : Generator<CSimpleTransUnit>(javaClass<CSimpleTransUnit>()) {
+class SimpleCHeaderGenerator : Generator<CSimpleTransUnit>(CSimpleTransUnit::class.java) {
     override fun generate(random: SourceOfRandomness, status: GenerationStatus): CSimpleTransUnit {
         val gen = CGenGrammar(
                 { f, l -> random.nextChar(f, l) },
@@ -41,7 +38,7 @@ public class SimpleCHeaderGenerator : Generator<CSimpleTransUnit>(javaClass<CSim
     }
 }
 
-public fun testGen(cunit: CSimpleTransUnit): String =
+fun testGen(cunit: CSimpleTransUnit): String =
 """
 package test
 import native.*
@@ -57,69 +54,71 @@ class NativeTest {
 """
 
 
-public trait LastLogKeeper {
-    public val lastLog: String
+interface LastLogKeeper {
+    val lastLog: String
 }
 
-public class ErrorReporter(public val keeper: LastLogKeeper) : TestWatcher() {
+class ErrorReporter(public val keeper: LastLogKeeper) : TestWatcher() {
     override fun failed(e: Throwable?, description: Description?) {
         println(keeper.lastLog)
         super.failed(e, description)
     }
 }
 
-RunWith(Theories::class)
-public class SimpleCHeaderCheck : LastLogKeeper, CPlusPlusTest() {
+@RunWith(Theories::class)
+class SimpleCHeaderCheck : LastLogKeeper, CPlusPlusTest() {
     var lastLogBuf: StringBuilder = StringBuilder()
     override val lastLog: String get() = lastLogBuf.toString()
 
-    private val classpath: Collection<File> by Delegates.lazy {
+    private val classpath: Collection<File> by lazy {
         // System.getProperty("java.class.path").split(File.pathSeparator).map { File(it) }.toArrayList()
         val libDir = File("lib")
         val res = arrayListOf<File>()
-        for (jar in libDir.listFiles())
-            if (jar.getName().contains("ffi") || jar.getName().contains("jnr") || jar.getName().contains("asm")
-                || jar.getName().contains("junit") || jar.getName().contains("hamcrest"))
+        for (jar in libDir.listFiles()) {
+            if ("ffi" in jar.name || "jnr" in jar.name || "asm" in jar.name ||
+                    "junit" in jar.name || "hamcrest" in jar.name) {
                 res.add(jar)
+            }
+        }
         //res.add(File("lib/kotlinc/lib/kotlin-runtime.jar"))
         res + kotlinLibs
     }
 
     // doesn't work due to KT-3441
     // \todo reenable after fix or find a workaround
-    // Rule public val onFailed : ErrorReporter = ErrorReporter(this)
+    // @Rule public val onFailed : ErrorReporter = ErrorReporter(this)
 
-    Theory public fun SimpleArgsFuncs(ForAll(sampleSize = 10) From(SimpleCHeaderGenerator::class) cunit: CSimpleTransUnit) {
+    @Theory fun SimpleArgsFuncs(@ForAll(sampleSize = 10) @From(SimpleCHeaderGenerator::class) cunit: CSimpleTransUnit) {
         val indexerOptions = IndexerOptions(Language.CPP, verbose = true, debugDump = false)
         assumeNotNull(cunit, cunit.name)
         lastLogBuf = StringBuilder()
         val tmpdir = Files.createTempDirectory("kniqc").toFile()
         lastLogBuf.appendln("Testing '${cunit.name}' in '$tmpdir'")
         val dylib = File(tmpdir, "libKNIQC.dylib")
-        val implFile = File(tmpdir.getAbsolutePath(), "${cunit.name}.cpp")
+        val implFile = File(tmpdir.absolutePath, "${cunit.name}.cpp")
         implFile.writeText(cunit.source)
-        val headerFile = File(tmpdir.getAbsolutePath(), "${cunit.headerName}")
+        val headerFile = File(tmpdir.absolutePath, "${cunit.headerName}")
         headerFile.writeText(cunit.header)
 
-        assertTrue( check( compileNativeC(implFile, dylib)))
+        assertTrue(check(compileNativeC(implFile, dylib)))
 
         val translationUnit = buildNativeIndex(headerFile, indexerOptions)
         val srcIndex = File(tmpdir, "idx")
-        lastLogBuf.appendln("Dumping index to ${srcIndex.getAbsolutePath()}")
+        lastLogBuf.appendln("Dumping index to ${srcIndex.absolutePath}")
         srcIndex.writeText(translationUnit.toString())
 
         val kotlinStub = File(tmpdir, "${cunit.name}.kt")
         val stubClasses = File(tmpdir, "stub")
         generateStub(translationUnit, dylib, kotlinStub, generatorOptions)
-        assertTrue( check( compileKotlin(listOf(kotlinStub), stubClasses, classpath)))
+        assertTrue(check(compileKotlin(listOf(kotlinStub), stubClasses, classpath)))
 
         val testSource = File(tmpdir, "test.kt")
         val testClasses = File(tmpdir, "test")
         testSource.writeText(testGen(cunit))
-        assertTrue( check( compileKotlin(listOf(testSource), testClasses, classpath + stubClasses)))
+        assertTrue(check(compileKotlin(listOf(testSource), testClasses, classpath + stubClasses)))
 
-        assertTrue( check( runKotlin(arrayListOf("org.junit.runner.JUnitCore", "test.NativeTest"),
-                                     listOf(testClasses, stubClasses) + classpath, libPath = tmpdir)))
+        assertTrue(check(runKotlin(arrayListOf("org.junit.runner.JUnitCore", "test.NativeTest"),
+                listOf(testClasses, stubClasses) + classpath, libPath = tmpdir)))
     }
 
     fun check(res: Pair<Boolean, String>): Boolean {
@@ -129,4 +128,3 @@ public class SimpleCHeaderCheck : LastLogKeeper, CPlusPlusTest() {
         return res.first
     }
 }
-

@@ -3,7 +3,7 @@ package org.jetbrains.kni.gen
 
 import org.jetbrains.kni.indexer.NativeIndex
 import java.io.File
-import java.util.HashMap
+import java.util.*
 
 class ObjCGenerator(
         targetPath: String,
@@ -23,21 +23,21 @@ class ObjCGenerator(
     override fun generate(translationUnit: NativeIndex.TranslationUnit) {
         super.generate(translationUnit)
 
-        for (protocol in translationUnit.getProtocolList()) {
+        for (protocol in translationUnit.protocolList) {
             genProtocol(protocol)
         }
 
         // preparing list of all classes methods signatures for finding overrides
         val classes = hashMapOf<String, NativeIndex.ObjCClass>()
-        translationUnit.getClass_List().forEach { classes.put(it.getName(), it) }
+        translationUnit.class_List.forEach { classes.put(it.name, it) }
 
         // preparing list of all categories methods signatures for finding overrides
-        val validCategories = translationUnit.getCategoryList()
-                .filter { !it.getName().endsWith('+') } // skipping private categories
+        val validCategories = translationUnit.categoryList
+                .filter { !it.name.endsWith('+') } // skipping private categories
         val categoriesMap = hashMapOf<String, NativeIndex.ObjCCategory>()
-        validCategories.forEach { categoriesMap.put(it.getName(), it) }
+        validCategories.forEach { categoriesMap.put(it.name, it) }
 
-        for (klass in translationUnit.getClass_List()) {
+        for (klass in translationUnit.class_List) {
             genClass(klass, classes, categoriesMap)
         }
 
@@ -45,9 +45,9 @@ class ObjCGenerator(
     }
 
     fun genProtocol(protocol: NativeIndex.ObjCProtocol) {
-        val out = getOutput(protocol.getLocationFile())
+        val out = getOutput(protocol.locationFile)
         out.println()
-        out.println("trait ${namer.protocolName(protocol.getName())} {")
+        out.println("trait ${namer.protocolName(protocol.name)} {")
            .push()
             // TODO: methods
            .println("trait metaclass")
@@ -56,66 +56,66 @@ class ObjCGenerator(
     }
 
     fun genCategory(category: NativeIndex.ObjCCategory) {
-        val out = getOutput(category.getLocationFile())
+        val out = getOutput(category.locationFile)
         out.println()
-        out.println("trait ${namer.categoryName(category.getName())} : IObjCObject {")
-           .push()
+        out.println("trait ${namer.categoryName(category.name)} : IObjCObject {").push()
 
-        for (method in category.getMethodList().filter { !it.getClassMethod() && it.getFunction().getName() !in skipMethodsNames }) {
-            genObjCFunction(out,
-                            method.getFunction(),
-                            qualifier = OverrideQualifier.open,
-                            signature = makeFunSignature(method.getFunction(), hashSetOf(), hashSetOf()))
+        for (method in category.methodList.filter { !it.classMethod && it.function.name !in skipMethodsNames }) {
+            genObjCFunction(
+                    out,
+                    method.function,
+                    qualifier = OverrideQualifier.open,
+                    signature = makeFunSignature(method.function, hashSetOf(), hashSetOf())
+            )
             out.println()
         }
 
         out.print("trait metaclass : IObjCObject")
-        val catMetaMethods = category.getMethodList().filter { it.getClassMethod() && it.getFunction().getName() !in skipMethodsNames }
+        val catMetaMethods = category.methodList.filter { it.classMethod && it.function.name !in skipMethodsNames }
         if (catMetaMethods.any()) {
-            out.println(" {")
-               .push()
+            out.println(" {").push()
 
             var first = true
             for (method in catMetaMethods) {
                 if (first) first = false else out.println()
-                genObjCFunction(out,
-                                method.getFunction(),
-                                qualifier = OverrideQualifier.open,
-                                signature = makeFunSignature(method.getFunction(), hashSetOf(), hashSetOf()))
+                genObjCFunction(
+                        out,
+                        method.function,
+                        qualifier = OverrideQualifier.open,
+                        signature = makeFunSignature(method.function, hashSetOf(), hashSetOf())
+                )
             }
 
-            out.pop()
-               .println("}")
+            out.pop().println("}")
         }
         else out.println()
 
-        out.pop()
-           .println("}")
+        out.pop().println("}")
     }
 
     fun genClass(klass: NativeIndex.ObjCClass, allClasses: Map<String, NativeIndex.ObjCClass>, allCategories: HashMap<String, NativeIndex.ObjCCategory>) {
-        val out = getOutput(klass.getLocationFile())
+        val out = getOutput(klass.locationFile)
         out.println()
 
         val baseClassName =
-                if (klass.hasBaseClass()) klass.getBaseClass()
+                if (klass.hasBaseClass()) klass.baseClass
                 else "ObjCObject"
-        val protocols = klass.getProtocolList()
-        val categories = klass.getCategoryList().filter { allCategories.containsKey(it) }
+        val protocols = klass.protocolList
+        val categories = klass.categoryList.filter { allCategories.containsKey(it) }
         val baseList =
                 listOf("$baseClassName(pointer)") +
                 protocols.map { namer.protocolName(it) } +
                 categories.map { namer.categoryName(it) }
 
-        out.println("public open class ${klass.getName()}(pointer: Long) ${baseList.joinToString(separator = ", ", prefix = ": ")} {")
+        out.println("public open class ${klass.name}(pointer: Long) ${baseList.joinToString(separator = ", ", prefix = ": ")} {")
         out.push()
 
-        val methods = klass.getMethodList().filter { it.getFunction().getName() !in skipMethodsNames }
+        val methods = klass.methodList.filter { it.function.name !in skipMethodsNames }
 
         val baseMethods = getAllBaseMethods(klass, allClasses, allCategories)
-        genMethods(out, methods.filter { !it.getClassMethod() }, baseMethods.filter { !it.second.getClassMethod() })
+        genMethods(out, methods.filter { !it.classMethod }, baseMethods.filter { !it.second.classMethod })
 
-        genMetaClass(out, klass, allCategories, methods.filter { it.getClassMethod() }, baseMethods.filter { it.second.getClassMethod() })
+        genMetaClass(out, klass, allCategories, methods.filter { it.classMethod }, baseMethods.filter { it.second.classMethod })
         out.println()
         genClassObject(out, klass)
 
@@ -134,12 +134,14 @@ class ObjCGenerator(
         val classMethodsIds = hashSetOf<String>()
 
         for (method in methods) {
-            val overrideId = getFunctionUniqueOverrideId(method.getFunction())
+            val overrideId = getFunctionUniqueOverrideId(method.function)
             classMethodsIds.add(overrideId)
-            genObjCFunction(out,
-                            method.getFunction(),
-                            qualifier = if (overrideId in baseMethodsIds) OverrideQualifier.override else OverrideQualifier.open,
-                            signature = makeFunSignature(method.getFunction(), hashSetOf(), hashSetOf()))
+            genObjCFunction(
+                    out,
+                    method.function,
+                    qualifier = if (overrideId in baseMethodsIds) OverrideQualifier.override else OverrideQualifier.open,
+                    signature = makeFunSignature(method.function, hashSetOf(), hashSetOf())
+            )
             out.println()
         }
 
@@ -149,10 +151,10 @@ class ObjCGenerator(
         val manyBaseMethodsImplementations = arrayListOf<NativeIndex.ObjCMethod>()
         var curMethodId: String? = null
         var alreadyAdded = false
-        for (methodId in baseMethods.map { it.first }.filter { it !in classMethodsIds }.sort())
+        for (methodId in baseMethods.map { it.first }.filter { it !in classMethodsIds }.sorted())
             if (methodId == curMethodId) {
                 if (!alreadyAdded) {
-                    manyBaseMethodsImplementations.add(baseMethodsMap.get(methodId))
+                    manyBaseMethodsImplementations.add(baseMethodsMap[methodId]!!)
                     alreadyAdded = true
                 }
             }
@@ -162,17 +164,17 @@ class ObjCGenerator(
             }
 
         for (method in manyBaseMethodsImplementations) {
-            genObjCFunction(out, method.getFunction(), OverrideQualifier.override,
-                            signature = makeFunSignature(method.getFunction(), hashSetOf(), hashSetOf()))
+            genObjCFunction(out, method.function, OverrideQualifier.override,
+                            signature = makeFunSignature(method.function, hashSetOf(), hashSetOf()))
             out.println()
         }
     }
 
     // the method id which is used to detect necessity of "override" keyword according to kotlin's rules
     private fun getFunctionUniqueOverrideId(func: NativeIndex.Function) =
-            func.getName() +
-            func.getParameterList()
-                .map { parseType(it.getType(), options, LexicalScope.General).name }
+            func.name +
+            func.parameterList
+                .map { parseType(it.type, options, LexicalScope.General).name }
                 .joinToString(",","(",")")
 
     private fun getAllBaseMethods(klass: NativeIndex.ObjCClass, allClasses: Map<String, NativeIndex.ObjCClass>,
@@ -181,27 +183,28 @@ class ObjCGenerator(
 
         val res = arrayListOf<Pair<String, NativeIndex.ObjCMethod>>()
         if (klass.hasBaseClass()) {
-            val baseClass = allClasses.get(klass.getBaseClass())
+            val baseClass = allClasses[klass.baseClass]
             if (baseClass != null) {
-                res.addAll(baseClass.getMethodList()
-                                    .filter { it.getFunction().getName() !in  skipMethodsNames }
-                                    .map { Pair(getFunctionUniqueOverrideId(it.getFunction()), it) })
+                res.addAll(baseClass.methodList
+                        .filter { it.function.name !in skipMethodsNames }
+                        .map { Pair(getFunctionUniqueOverrideId(it.function), it) })
                 res.addAll(getAllBaseMethods(baseClass, allClasses, allCategories))
             }
         }
-        for (catName in klass.getCategoryList()) {
-            val cat = allCategories.get(catName)
-            if (cat != null)
-                res.addAll(cat.getMethodList()
-                              .filter { it.getFunction().getName() !in  skipMethodsNames }
-                              .map { Pair(getFunctionUniqueOverrideId(it.getFunction()), it) })
+        for (catName in klass.categoryList) {
+            val cat = allCategories[catName]
+            if (cat != null) {
+                res.addAll(cat.methodList
+                        .filter { it.function.name !in skipMethodsNames }
+                        .map { Pair(getFunctionUniqueOverrideId(it.function), it) })
+            }
         }
         return res
     }
 
     private fun genObjCFunction(out: Printer, function: NativeIndex.Function, qualifier: OverrideQualifier = OverrideQualifier.none, signature: String? = null) {
 
-        val returnType = parseType(function.getReturnType(), options, LexicalScope.General)
+        val returnType = parseType(function.returnType, options, LexicalScope.General)
         val isUnit = (returnType == UnitType)
         out.println("${
             when (qualifier) {
@@ -211,9 +214,9 @@ class ObjCGenerator(
             }}${signature ?: makeFunSignature(function, hashSetOf(), hashSetOf())}${
             if (isUnit) " {" else " ="}")
 
-        val params = function.getParameterList()
-                             .mapIndexed { i, p -> namer.parameterName( p.getName(), i) }
-        out.pushoneln("Native.objc_msgSend(\"${returnTypeReflectString(returnType)}\", this, \"${function.getName()}\"${
+        val params = function.parameterList
+                             .mapIndexed { i, p -> namer.parameterName( p.name, i) }
+        out.pushoneln("Native.objc_msgSend(\"${returnTypeReflectString(returnType)}\", this, \"${function.name}\"${
             if (params.any()) params.joinToString(", ", prefix = ", ") else ""
             })${if (returnType != UnitType && returnType.getExpr() != "Any") " as ${returnType.getExpr()}" else ""}")
         if (isUnit) out.println("}")
@@ -233,7 +236,7 @@ class ObjCGenerator(
             ObjCClassType -> "interface kni.objc.ObjCClass"
             ObjCOpaquePointerType, is ObjCPointerType -> "class kni.objc.Pointer"
             ObjCObjectType, ObjCSelectorType -> "class kni.objc.${type.getExpr()}"
-            is FunctionType -> "class kotlin.Function${type.paramTypes.size()}"
+            is FunctionType -> "class kotlin.Function${type.paramTypes.size}"
             else -> "class objc.${type.getExpr()}"
         }
     }
@@ -245,12 +248,12 @@ class ObjCGenerator(
                              baseMethods: Collection<Pair<String, NativeIndex.ObjCMethod>>) {
         val baseList =
                 (if (klass.hasBaseClass())
-                    listOf(klass.getBaseClass() + ".metaclass")
+                    listOf(klass.baseClass + ".metaclass")
                 else listOf("IObjCObject")) +
-                klass.getProtocolList().map { namer.protocolName(it) + ".metaclass" } +
-                klass.getCategoryList().filter { allCategories.containsKey(it) }.map { namer.categoryName(it) + ".metaclass" }
+                klass.protocolList.map { namer.protocolName(it) + ".metaclass" } +
+                klass.categoryList.filter { allCategories.containsKey(it) }.map { namer.categoryName(it) + ".metaclass" }
 
-        out.println("trait metaclass : ${baseList.join(", ")} {")
+        out.println("trait metaclass : ${baseList.joinToString(", ")} {")
         out.push()
 
         genMethods(out, methods, baseMethods)
@@ -261,7 +264,7 @@ class ObjCGenerator(
 
     private fun genClassObject(out: Printer, klass: NativeIndex.ObjCClass) {
         // TODO (!): there may be other hierarchy roots!
-        out.println("companion object : NSObject(Native.objc_getClass(\"${klass.getName()}\")), metaclass, ObjCClass {")
+        out.println("companion object : NSObject(Native.objc_getClass(\"${klass.name}\")), metaclass, ObjCClass {")
         // TODO: only generate this into companion objects of root classes
            .pushoneln("init { loadLibrary(interopConfig.nativeLibraryPath) }")
            .println("}")

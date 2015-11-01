@@ -1,12 +1,12 @@
 package org.jetbrains.kni.gen
 
-import java.util.ArrayList
+import java.util.*
 
-trait Type {
-    public val expr: String get() = ""
-    public fun getExpr(typeMapper: (Type) -> Type = {it}): String = expr
-    public val name: String get() = getExpr()
-    public val defaultVal: String get() = "${getExpr()}()"
+interface Type {
+    val expr: String get() = ""
+    fun getExpr(typeMapper: (Type) -> Type = {it}): String = expr
+    val name: String get() = getExpr()
+    val defaultVal: String get() = "${getExpr()}()"
 }
 
 data class PrefixedType(val wrapped: Type, val prefix: String) : Type {
@@ -14,25 +14,31 @@ data class PrefixedType(val wrapped: Type, val prefix: String) : Type {
 }
 
 
-fun makePrefixed(t: Type, prefix: String) = if (prefix.length() == 0 || t is FunctionType) t else PrefixedType(t, prefix)
+fun makePrefixed(t: Type, prefix: String) = if (prefix.length == 0 || t is FunctionType) t else PrefixedType(t, prefix)
 
 
-open data class SimpleType(override val expr: String) : Type
+data class SimpleType(override val expr: String) : Type
 
-open data class BuiltInType(expr: String) : SimpleType(expr)
+data class BuiltInType(override val expr: String) : Type
 
-data class PODType(override val expr: String, public val defaultLiteral: String) : Type {
+data class PODType(override val expr: String, val defaultLiteral: String) : Type {
     override val defaultVal: String = defaultLiteral
 }
 
-open data class JNRType(baseName: String, annotation: String? = null)
-    : BuiltInType(if (annotation != null) "${annotation} ${baseName}" else baseName) {}
+class JNRType(val baseName: String, val annotation: String? = null) : Type {
+    override val expr: String get() = if (annotation != null) "$annotation $baseName" else baseName
 
-open class JNRStructFieldType(internal val baseName: String) : BuiltInType("jnr.ffi.Struct.$baseName") {
-    override val defaultVal: String = "super.$baseName()"
+    override fun equals(other: Any?) = other is JNRType && expr == other.expr
+    override fun hashCode() = expr.hashCode()
 }
 
-open class JNRStructPointerType(val pointee: Type = UnitType) : JNRStructFieldType("Pointer") {}
+open class JNRStructFieldType(internal val baseName: String) : Type {
+    override val expr: String get() = "jnr.ffi.Struct.$baseName"
+
+    override val defaultVal: String get() = "super.$baseName()"
+}
+
+open class JNRStructPointerType(val pointee: Type = UnitType) : JNRStructFieldType("Pointer")
 
 class JNRStructString(baseName: String, internal val size: Int = 0) : JNRStructFieldType(baseName) {
     override val defaultVal: String = "super.$baseName(${if (size > 0) size.toString() else ""})"
@@ -44,7 +50,6 @@ fun JNRStructString(isRef: Boolean, options: GeneratorOptions, size: Int = 0) =
             CharStringType.Utf8 -> JNRStructString(if (isRef) "UTF8StringRef" else "UTF8String", size)
         }
 
-fun JNRStructString(options: GeneratorOptions, size: Int = 0) = JNRStructString(false, options, size)
 fun JNRStructStringRef(options: GeneratorOptions, size: Int = 0) = JNRStructString(true, options, size)
 
 data class ObjCClassRefType(override val expr: String) : Type {
@@ -54,11 +59,11 @@ data class RecordType(override val expr: String) : Type {
     override val defaultVal: String get() = "${getExpr()}(runtime)"
 }
 
-data object ObjCOpaquePointerType : Type {
+object ObjCOpaquePointerType : Type {
     override val expr: String = "Pointer<*>"
 }
 
-data object JNROpaquePointerType : Type {
+object JNROpaquePointerType : Type {
     override val expr: String = "Pointer"
 }
 
@@ -163,12 +168,12 @@ class TypeParser(private val type: String, private val options: GeneratorOptions
     private fun at(s: String): Boolean = type.substring(at).startsWith(s)
 
     private fun expect(s: String) {
-        if (!advance(s)) error("Expecting <" + s + "> (at=" + at + ")")
+        if (!advance(s)) error("Expecting <$s> (at=$at)")
     }
 
     private fun advance(s: String): Boolean {
         if (at(s)) {
-            at += s.length()
+            at += s.length
             return true
         }
         return false
@@ -177,11 +182,12 @@ class TypeParser(private val type: String, private val options: GeneratorOptions
     private fun error(s: String) = throw IllegalStateException(s + ": " + type)
 
     fun parse(scope: LexicalScope): Type {
-        if (at == type.length()) error("No type to parse")
+        if (at == type.length) error("No type to parse")
 
+        @Suppress("UNUSED_VARIABLE")
         val isConst = advance("c")
 
-        for ((string, type) in primitiveTypesMapper.get_types(options, scope).entrySet()) {
+        for ((string, type) in primitiveTypesMapper.get_types(options, scope).entries) {
             if (advance(string)) return type
         }
 
@@ -231,25 +237,26 @@ class TypeParser(private val type: String, private val options: GeneratorOptions
             val pointee = parse(scope)
             expect(";")
             // if pointer to struct - omit pointer
-            return if (options.runtime == InteropRuntime.JNR)
-                   when {
-                       pointee is RecordType -> pointee
-                       pointee == JNRStructSInt8 -> JNRStructStringRef(options)
-                       pointee == CharType ->  JNRType("String") // \todo consider: JNRType(if (isConst) "String" else "StringBuilder")
-                       else -> if (scope == LexicalScope.Record) JNRStructPointerType(pointee)
-                               else JNRPointerType(pointee)
-                   }
-                else when {
-                       pointee == ObjCSelectorType -> ObjCSelectorType
-                       else -> ObjCPointerType(pointee)
-                   }
+            return if (options.runtime == InteropRuntime.JNR) {
+                when (pointee) {
+                    is RecordType -> pointee
+                    JNRStructSInt8 -> JNRStructStringRef(options)
+                    CharType -> JNRType("String") // \todo consider: JNRType(if (isConst) "String" else "StringBuilder")
+                    else -> if (scope == LexicalScope.Record) JNRStructPointerType(pointee) else JNRPointerType(pointee)
+                }
+            } else {
+                when (pointee) {
+                    ObjCSelectorType -> ObjCSelectorType
+                    else -> ObjCPointerType(pointee)
+                }
+            }
         }
 
         if (at("X(")) {
             at = type.indexOf(')', at) + 1
         }
         else {
-            throw UnsupportedOperationException("Unsupported type (at=" + at + "): " + type)
+            throw UnsupportedOperationException("Unsupported type (at=$at): $type")
         }
 
         return ObjCClassRefType("Any")

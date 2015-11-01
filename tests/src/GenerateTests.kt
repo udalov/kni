@@ -2,8 +2,7 @@ package org.jetbrains.kni.tests
 
 import org.jetbrains.kni.gen.Printer
 import java.io.File
-import java.util.HashSet
-import kotlin.platform.platformStatic
+import java.util.*
 
 object GenerateTests {
     private fun generate(rootDir: String, testName: String, baseClass: String) {
@@ -14,28 +13,28 @@ object GenerateTests {
         val out = Printer(sb)
 
         out.println("// This file is auto-generated. You can mute individual tests by commenting them:")
-        out.println("// '// test fun ...'. All other changes will be lost!")
+        out.println("// '// @Test fun ...'. All other changes will be lost!")
         out.println()
         out.println("package org.jetbrains.kni.tests")
         out.println()
-        out.println("import org.junit.Test as test")
+        out.println("import org.junit.Test")
         out.println()
         out.println("class ${testName}Generated : $baseClass() {")
         out.push()
 
         val root = File(rootDir)
-        root.recurse { file ->
-            if (file.isFile() && file.getPath().endsWith(".kt")) {
+        root.walkTopDown().forEach { file ->
+            if (file.isFile && file.path.endsWith(".kt")) {
                 val name = root.relativePath(file).substringBeforeLast(".kt").replace(File.separatorChar, '_')
                 val mute = if (name in mutedTests) "// " else ""
-                out.println("${mute}test fun $name() = doTest(\"$file\")")
+                out.println("$mute@Test fun $name() = doTest(\"$file\")")
             }
         }
 
         out.pop()
         out.println("}")
 
-        output.getParentFile().mkdirs()
+        output.parentFile.mkdirs()
         output.writeText(sb.toString())
     }
 
@@ -44,15 +43,15 @@ object GenerateTests {
 
         val result = HashSet<String>()
         file.forEachLine { line ->
-            val rest = line.trim().substringAfter("// test fun ", "")
+            val rest = line.trim().substringAfter("// @Test fun ", "")
             if (rest != "") {
-                result add rest.substringBefore('(')
+                result.add(rest.substringBefore('('))
             }
         }
         return result
     }
 
-    platformStatic fun main(args: Array<String>) {
+    @JvmStatic fun main(args: Array<String>) {
         generate("tests/testData/integration", "IntegrationTest", "ObjCGeneratedTest")
         generate("tests/testData/integration_cpp", "CPPIntegrationTest", "CPlusPlusGeneratedTest")
     }

@@ -1,15 +1,13 @@
 package org.jetbrains.kni.jnrator
 
-import java.io.File
-import org.jetbrains.kni.indexer.buildNativeIndex
-import org.jetbrains.kni.indexer.IndexerOptions
-import org.jetbrains.kni.indexer.Language
-import org.jetbrains.kni.gen.generateStub
 import org.jetbrains.kni.gen.GeneratorOptions
 import org.jetbrains.kni.gen.InteropRuntime
+import org.jetbrains.kni.gen.generateStub
+import org.jetbrains.kni.indexer.IndexerOptions
+import org.jetbrains.kni.indexer.Language
+import org.jetbrains.kni.indexer.buildNativeIndex
+import java.io.File
 import java.util.regex.Pattern
-import kotlin.properties.Delegates
-
 
 fun dequote(arg: String): String = arg.trim().removeSurrounding("\"")
 
@@ -18,28 +16,36 @@ fun dequote(arg: String): String = arg.trim().removeSurrounding("\"")
 // \todo think about more reliable approach, copy source iterator or something like this
 class TruIterator<T>(val iterator: Iterator<T>) {
     val internalValue: T? = if (iterator.hasNext()) iterator.next() else null
-    public val valid : Boolean get() = internalValue != null
-    public val value : T get() = internalValue ?: throw java.util.NoSuchElementException()
-    public val hasNext : Boolean = iterator.hasNext()
-    public val next : TruIterator<T> by Delegates.lazy { TruIterator(iterator) }
+    val valid: Boolean get() = internalValue != null
+    val value: T get() = internalValue ?: throw java.util.NoSuchElementException()
+    val hasNext: Boolean = iterator.hasNext()
+    val next: TruIterator<T> by lazy { TruIterator(iterator) }
 }
 
 abstract class OptionBase {
-    abstract fun match(args: TruIterator<String>) : Boolean
-    abstract fun consume(args: TruIterator<String>) : TruIterator<String>
+    abstract fun match(args: TruIterator<String>): Boolean
+    abstract fun consume(args: TruIterator<String>): TruIterator<String>
 }
 
 abstract class KeyOptionBase(val keys: List<String>, val description: String) : OptionBase() {
-    override fun match(args: TruIterator<String>) : Boolean = args.value in keys
+    override fun match(args: TruIterator<String>): Boolean =
+            args.value in keys
 }
 
-data class SwitchOption(keys: List<String>, description: String, val process: (key: String) -> Unit) : KeyOptionBase(keys, description) {
-    override fun consume(args: TruIterator<String>): TruIterator<String> { process(args.value); return args.next }
+class SwitchOption(
+        keys: List<String>, description: String, val process: (key: String) -> Unit
+) : KeyOptionBase(keys, description) {
+    override fun consume(args: TruIterator<String>): TruIterator<String> {
+        process(args.value)
+        return args.next
+    }
 }
 
-data class ArgumentOption<T>(keys: List<String>, description: String,
-                           val mapper: (arg: String) -> T,
-                           val process: (arg: T) -> Unit) : KeyOptionBase(keys, description) {
+class ArgumentOption<T>(
+        keys: List<String>, description: String,
+        val mapper: (arg: String) -> T,
+        val process: (arg: T) -> Unit
+) : KeyOptionBase(keys, description) {
     override fun consume(args: TruIterator<String>): TruIterator<String> {
         if (!args.hasNext) throw Exception("argument expected")
         val argIt = args.next
@@ -48,23 +54,31 @@ data class ArgumentOption<T>(keys: List<String>, description: String,
     }
 }
 
-data class ListOption<T>(keys: List<String>, description: String,
-                         val splitRE: Pattern,
-                         val mapper: (arg: String) -> T,
-                         val process: (args: Iterable<T>) -> Unit) : KeyOptionBase(keys, description) {
+class ListOption<T>(
+        keys: List<String>, description: String,
+        val splitRE: Pattern,
+        val mapper: (arg: String) -> T,
+        val process: (args: Iterable<T>) -> Unit
+) : KeyOptionBase(keys, description) {
     override fun consume(args: TruIterator<String>): TruIterator<String> {
         if (!args.hasNext) throw Exception("argument expected")
         val argIt = args.next
-        process(argIt.value.split(splitRE).map{ mapper(dequote(it)) })
+        process(argIt.value.split(splitRE).map { mapper(dequote(it)) })
         return argIt.next
     }
 }
 
-data class FreeOption<T>(val mapper: (arg: String) -> T,
-                         val process: (arg: T) -> Unit,
-                         val matcher: (arg: String) -> Boolean = { true}) : OptionBase() {
+class FreeOption<T>(
+        val mapper: (arg: String) -> T,
+        val process: (arg: T) -> Unit,
+        val matcher: (arg: String) -> Boolean = { true }
+) : OptionBase() {
     override fun match(args: TruIterator<String>): Boolean = matcher(args.value)
-    override fun consume(args: TruIterator<String>): TruIterator<String> { process(mapper(args.value)); return args.next }
+
+    override fun consume(args: TruIterator<String>): TruIterator<String> {
+        process(mapper(args.value))
+        return args.next
+    }
 }
 
 fun parseArgs(args: Iterable<String>, options: Collection<OptionBase>) {
@@ -90,7 +104,7 @@ fun optionsString(options: Collection<OptionBase>, linePrefix: String = "    ") 
 
 // ------------------------------
 
-data class Params {
+class Params {
     val inputFiles = arrayListOf<File>()
     var inputLanguage : Language? = null
     val inputIncludeDirs = arrayListOf<String>()
@@ -158,7 +172,7 @@ fun parseCmdLine(args: Array<String>): Params {
             ArgumentOption(listOf("-t", "--target"),
                            "path to stub target",
                            { File(it) },
-                           { if (it.isDirectory()) {
+                           { if (it.isDirectory) {
                                  if (!it.exists()) throw Exception("Target directory '$it' not found")
                                  if (params.multiFileStub != null && params.multiFileStub == false)
                                      throw Exception("Target directory '$it' not found")
@@ -188,7 +202,7 @@ fun parseCmdLine(args: Array<String>): Params {
                 throw Exception("Neither language nor runtime is specified")
         }
         catch (e: Exception) {
-            params.parsingMsg = e.getMessage() ?: e.toString()
+            params.parsingMsg = e.message ?: e.toString()
             params.help = true
         }
     if (params.help) {
@@ -203,14 +217,18 @@ fun parseCmdLine(args: Array<String>): Params {
 
 fun main(args: Array<String>) {
     val params = parseCmdLine(args)
-    if (params.parsingMsg.length() > 0)
+    if (params.parsingMsg.isNotEmpty())
         System.err.println(params.parsingMsg)
     if (params.help)
         println(params.helpText)
     else {
-        val indexerOptions = IndexerOptions(params.inputLanguage!!, includePaths = params.inputIncludeDirs,
-                                            verbose = params.verbose, debugDump = params.debugDumps,
-                                            debugDumpTarget = if (params.stubTarget!!.isDirectory()) params.stubTarget!! else params.stubTarget!!.parent)
+        val indexerOptions = IndexerOptions(
+                params.inputLanguage!!,
+                includePaths = params.inputIncludeDirs,
+                verbose = params.verbose,
+                debugDump = params.debugDumps,
+                debugDumpTarget = if (params.stubTarget!!.isDirectory) params.stubTarget!! else params.stubTarget!!.parentFile
+        )
         for (src in params.inputFiles) {
             val tu = buildNativeIndex(src, indexerOptions)
             generateStub(tu, params.nativeLibrary!!, params.stubTarget!!, GeneratorOptions(params.interopRuntime!!))

@@ -1,7 +1,7 @@
 package kni.objc
 
-public trait ObjCClass {
+interface ObjCClass {
     companion object {
-        public val NIL: Nil = Nil.INSTANCE
+        val NIL: Nil = Nil.INSTANCE
     }
 }

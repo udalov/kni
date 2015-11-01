@@ -5,7 +5,7 @@ class Printer(private val out: Appendable): Appendable {
     private var lineStart = true
 
     fun push(): Printer { indent += INDENT; return this }
-    fun pop(): Printer { indent = indent.substring(INDENT.length()); return this }
+    fun pop(): Printer { indent = indent.substring(INDENT.length); return this }
 
     fun print(o: Any?): Printer {
         if (lineStart) out.append(indent)
